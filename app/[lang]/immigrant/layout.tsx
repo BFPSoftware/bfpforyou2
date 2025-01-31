@@ -17,7 +17,7 @@ export default async function RootLayout({
     params: Promise<{ lang: Locale }>;
 }>) {
     const lang = (await params).lang;
-    const dictionary = await getDictionary(lang, "immigrant"); // en
+    const dictionary = await getDictionary(lang); // en
     return (
         <html lang={lang}>
             <body>

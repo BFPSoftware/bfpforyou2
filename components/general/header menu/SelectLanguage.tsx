@@ -4,10 +4,11 @@ import LanguageIcon from "../../icons/LanguageIcon";
 import ReactModal from "react-modal";
 import Link from "next/link";
 import { Locale } from "@/app/[lang]/dictionaries";
+import { useDictionary } from "@/common/locales/Dictionary-provider";
 
-export default function SelectLanguage({ lang }: { lang: Locale }) {
+export default function SelectLanguage() {
+    const dictionary = useDictionary();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    // const { t } = useTranslation(lang, "common", { useSuspense: false });
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -32,7 +33,7 @@ export default function SelectLanguage({ lang }: { lang: Locale }) {
         <>
             <button className="flex justify-between items-center ml-2 w-24" onClick={toggleMenu}>
                 <LanguageIcon />
-                {getLangName(lang)}
+                {getLangName(dictionary.lang as Locale)}
             </button>
             <ReactModal
                 isOpen={isMenuOpen}

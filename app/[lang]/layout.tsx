@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./../globals.css";
+// import "./../globals.css";
 //import { dir } from "i18next";
 import { getDictionary, Locale } from "./dictionaries";
 import DictionaryProvider from "@/common/locales/Dictionary-provider";
@@ -18,7 +18,7 @@ export default async function RootLayout({
     params: Promise<{ lang: Locale }>;
 }>) {
     const lang = (await params).lang;
-    const dictionary = await getDictionary(lang, "common"); // en
+    const dictionary = await getDictionary(lang);
     return (
         <html lang={lang}>
             <body>

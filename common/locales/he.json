@@ -1,0 +1,229 @@
+{
+    "comment": "########## Common ##########",
+    "lang": "he",
+    "home": {
+        "missionStatement": "גשרים לשלום: נוצרים התומכים בישראל ובונים קשרים בין נוצרים ליהודים בישראל וברחבי העולם.",
+        "startHere": "BFP בשבילך",
+        "haveCode": "הזן את הקוד שלך כאן",
+        "noCode": "אין לי קוד",
+        "noCodeDialog": "אם אתה עולה חדש שמבקש מתנת ברוכים הבאים, אנו חווים כעת כמות עצומה של בקשות. למרבה הצער, אנחנו לא יכולים להציע לעולים חדשים מתנות קבלת פנים בשלב זה. נא לא להשאיר הודעה מכיוון שאיננו יכולים להשיב להודעות. בעתיד, אנו מקווים לשוב ולחלק מתנות אלו באמצעות מרכזי קליטה וארגונים קהילתיים נוספים.",
+        "invalidCode": "קוד לא תקין",
+        "gotoSupport": "נתקלת בבעיה? צור קשר כאן."
+    },
+
+    "confirmation": {
+        "type": "סוג",
+        "code": "קוד"
+    },
+
+    "error": {
+        "required": "שדה זה הוא חובה",
+        "too_big": "אורך הערך חורג מהמגבלה"
+    },
+
+    "button": {
+        "select": "בחר",
+        "next": "הבא",
+        "back": "חזור",
+        "submit": "שמור ושלח",
+        "check": "בדוק"
+    },
+
+    "select": {
+        "select": "בחר...",
+        "Yes": "כן",
+        "No": "לא"
+    },
+
+    "#comment": "########## New Immigrant ##########",
+    "immigrant": {
+        "title": "בקשה למתנה לעולה חדשה",
+        "subtitle": "אם עליתם לארץ בחצי השנה האחרונה וברצונכם לקבל שמיכה, סירים ומחבתות וכלי מטבח, אנא מלאו את הטופס למטה. ניצור איתך קשר עם פרטים נוספים."
+    },
+
+    "sectionTitle": {
+        "personalInformation": "פרטים אישיים",
+        "contactInformation": "פרטי התקשרות",
+        "familyInformation": "מידע משפחתי",
+        "questionnarie": "שְׁאֵלוֹן"
+    },
+
+    "_comment": "##### Personal Information #####",
+    "firstName": "שם פרטי",
+    "lastName": "שם משפחה",
+    "fullNameEnglish": "שם מלא באנגלית",
+    "idType": {
+        "title": "תעודה מזהה",
+        "options": {
+            "0": "ת.ז",
+            "1": "תעודת עולה"
+        }
+    },
+    "idNumber": "מספר תעודת זהות",
+    "attachmentLabel": "העלה תמונה ברורה של תעודת עולה שלך:",
+    "attachment1": "תעודת עולה מתוך: עמודים 2-3",
+    "attachment2": "תעודת עולה מתוך: עמודים 4-5",
+    "attachment3": "תעודת עולה מתוך: עמודים 16",
+    "birthday": "תאריך לידה",
+    "gender": {
+        "title": "מגדר",
+        "options": {
+            "1": "נְקֵבָה",
+            "2": "זָכָר"
+        }
+    },
+    "originCity": "עיר מוצא",
+    "originCountry": "מדינת מוצא",
+    "nativeLanguage": {
+        "title": "שפת אם",
+        "options": {
+            "1": "עברית",
+            "2": "אנגלית",
+            "3": "רוסית",
+            "4": "ספרדית",
+            "5": "צרפתית",
+            "6": "אוקראינית",
+            "7": "אחר"
+        }
+    },
+    "phone": { "title": "מס' טלפון ", "placeholder": "050-1234-5678" },
+    "email": { "title": "אימייל", "placeholder": "example@mail.com" },
+    "address1": {
+        "title": "שורת כתובת 1",
+        "placeholder": "מספר בית ושם רחוב"
+    },
+    "address2": {
+        "title": "שורת כתובת 2 (לא חובה)",
+        "placeholder": "לדוגמא חברה, דירה, בניין"
+    },
+    "city": "עיר",
+    "zip": "מיקוד/ת.ד",
+
+    "_comment.": "##### Family Information #####",
+    "maritalStatus": {
+        "title": "מצב משפחתי",
+        "options": {
+            "0": "נָשׂוּי/נשואה",
+            "1": "רווק/רווקה",
+            "2": "אלמן/אלמנה",
+            "3": "גרוש/גרושה"
+        }
+    },
+    "spouse": {
+        "spouseFirstName": "שם פרטי של בן הזוג",
+        "spouseFamilyName": "שם משפחה של בן הזוג",
+        "spouseBirthday": "תאריך לידה של בן הזוג",
+        "spouseIDType": "סוג זיהוי בן/בת זוג",
+        "spouseIDNumber": "מספר תעודת זהות של בן הזוג"
+    },
+    "children": {
+        "title": "האם יש לך ילדים?",
+        "childFirstName": "שם פרטי",
+        "childLastName": "שם משפחה",
+        "childGender": "מגדר",
+        "childBirthday": "תאריך לידה",
+        "childAccompanied": "מלווה בישראל"
+    },
+
+    "_comment..": "##### Questionnaire #####",
+    "aliyahDate": "תאריך עלייה",
+    "aliyahContent": "מתי הגעת לארץ?",
+    "whereHeardOfUs": {
+        "title": "היכן שמעת עלינו?",
+        "options": {
+            "0": "מפה לאוזן",
+            "1": "צוות של גשרים למען השלום",
+            "2": "סוֹכְנוּת",
+            "3": "פרויקט הצלה"
+        }
+    },
+
+    "##comment": "########## FAC ##########",
+    "fac": {
+        "title": "Student Enrichment Scholarship Application",
+        "subtitle": "Instructions: Application must include a clear head and shoulder picture of the student. Photos that are tilted, have filters, masks, or have hands or headphones shown, will NOT be accepted.",
+        "thankYou": "Thank you for submitting the application"
+    },
+    "elementary": {
+        "schools": {
+            "Jabutinsky": "Jabutinsky",
+            "Levi Eshkol": "Levi Eshkol",
+            "Uziel": "Uziel",
+            "HaDekel": "HaDekel",
+            "Zalman Aran": "Zalman Aran",
+            "Ben Zvi": "Ben Zvi"
+        },
+        "sectionTitle": {
+            "funFacts": "Fun Facts about Me:",
+            "meAndMyFamily": "Me and My Family:",
+            "meAndSchool": "Me and School:",
+            "littleMoreAboutMyself": "A Little More About Myself:"
+        },
+
+        "instruction": "Each student or parent should fill in their own answers.",
+
+        "name": "Name",
+        "photo": "Photo",
+        "tz": "T.Z.",
+        "birthYear": "Birthday/Year",
+        "birthMonth": "Birthday/Month",
+        "birthDay": "Birthday/Day",
+        "age": "Age",
+        "birthCountry": "Country of Birth",
+        "grade": "Grade",
+        "school": "School",
+        "isFirstTime": "Is this your first time applying for the scholarship?",
+
+        "comment": "section",
+        "q1": "Who do you live with?",
+        "q2": "How many brothers do you have?",
+        "q3": "How many sisters do you have?",
+        "q4": "My family is from:",
+        "q5": "Spoken language at home:",
+        "q6": "What is your favorite subject in school?",
+        "q7": "What do you like about your family?",
+
+        "comment.": "section",
+        "q8": "Favorite subjects in school:",
+        "q9": "School subjects I have difficulties in:",
+        "q10": "What I like about my teacher and why:",
+        "q11": "What my teacher says about me:",
+
+        "comment..": "section",
+        "favoriteColor": "Favorite Color:",
+        "favoriteFood": "Favorite Food:",
+        "hobby": "Favorite things to do / Hobbies:",
+        "interest": "Interests or talents:",
+        "makesMeSad": "What makes me sad:",
+        "loveMost": "What I love most in this world:",
+        "dream": "My future dreams are:",
+
+        "comment...": "section",
+        "check1": "I understand that I will need to write a thank you to the donors of the scholarship.",
+        "check2": "I agree to the use of my photo by Bridges for Peace for the advancement of the scholarship program.",
+        "submittedBy": "Submitted by:",
+        "relationship": "Relationship",
+        "relationship_helper": "himself/herself/parent/teacher/etc.",
+        "forTeacher1": "For the Teacher: Please describe the family situation if possible.",
+        "forTeacher2": "For the Teacher: Please describe the school situation for the child."
+    },
+    "highschool": {
+        "schools": {
+            "Devir": "Devir",
+            "Shachar": "Shachar",
+            "Branco Weiss": "Branco Weiss"
+        },
+
+        "sectionTitle": {
+            "introduction": "Introduction:",
+            "school": "School:",
+            "personalLife": "Personal Life:",
+            "yourFuture": "Your Future:"
+        },
+
+        "introduction": "Introduce yourself and describe your family. Include how many siblings you have, and/or who you live with, and how long your family has been in Israel.",
+        "school": "What is school like for you? What are you good at and what is challenging?",
+        "personalLife": "What do you like to do in your free time? What are some of your favorite things? ",
+        "yourFuture": "What do you want to do for a career? What dreams do you have? How do you see yourself in 10 years?"
+    }
+}

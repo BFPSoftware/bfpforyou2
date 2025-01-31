@@ -1,0 +1,229 @@
+{
+    "comment": "########## Common ##########",
+    "lang": "fr",
+    "home": {
+        "missionStatement": "Ponts Pour la Paix : Chrétiens soutenant Israël et construisant des relations entre chrétiens et juifs en Israël et dans le monde entier.",
+        "startHere": "BFP POUR VOUS",
+        "haveCode": "Entrez votre code ici",
+        "noCode": "Je n'ai pas de code",
+        "noCodeDialog": "If you are a new immigrant looking for a welcome gift we are currently experiencing an overwhelming volume of requests. Unfortunately, we cannot offer new immigrants welcome gifts at this time. Please do not leave a message as we cannot reply to your message. In the future, we hope to distribute these gifts again through absorption centers and other community organizations.",
+        "invalidCode": "Code invalide",
+        "gotoSupport": "Vous avez des problèmes ? Contactez-nous ici."
+    },
+
+    "confirmation": {
+        "type": "Type",
+        "code": "Code"
+    },
+
+    "error": {
+        "required": "Ce champ est requis",
+        "too_big": "La longueur de la valeur dépasse la limite"
+    },
+
+    "button": {
+        "select": "Sélectionner",
+        "next": "Suivant",
+        "back": "Retour",
+        "submit": "Enregistrer et Soumettre",
+        "check": "Vérifier"
+    },
+
+    "select": {
+        "select": "Sélectionner...",
+        "Yes": "Oui",
+        "No": "Non"
+    },
+
+    "#comment": "########## New Immigrant ##########",
+    "immigrant": {
+        "title": "Demande de cadeau pour nouvel",
+        "subtitle": "Si vous avez fait l'alyah au cours des six derniers mois et que vous souhaitez recevoir une couverture, des casseroles et des poêles et des ustensiles de cuisine, veuillez remplir le formulaire ci-dessous. Nous vous contacterons pour obtenir plus de détails."
+    },
+
+    "sectionTitle": {
+        "personalInformation": "Informations personnelles",
+        "contactInformation": "Coordonnées",
+        "familyInformation": "Informations familiales",
+        "questionnarie": "Questionnaire"
+    },
+
+    "_comment": "##### Personal Information #####",
+    "firstName": "Prénom",
+    "lastName": "Nom de famille",
+    "fullNameEnglish": "Nom complet en anglais",
+    "idType": {
+        "title": "Type d'identification",
+        "options": {
+            "0": "Carte d'identité",
+            "1": "Carte d'ident"
+        }
+    },
+    "idNumber": "Numéro d'identification",
+    "attachmentLabel": "Pièce d'identité - veuillez télécharger",
+    "attachment1": "Carte d'identité",
+    "attachment2": "Carte d'identité",
+    "attachment3": "Carte d'identité",
+    "birthday": "Date de naissance",
+    "gender": {
+        "title": "Sexe",
+        "options": {
+            "1": "Féminin",
+            "2": "Masculin"
+        }
+    },
+    "originCity": "Ville d'origine",
+    "originCountry": "Pays d'origine",
+    "nativeLanguage": {
+        "title": "Langue maternelle",
+        "options": {
+            "1": "Hébreu",
+            "2": "Anglais",
+            "3": "Russe",
+            "4": "Espagnol",
+            "5": "Français",
+            "6": "Ukrainien",
+            "7": "Autre"
+        }
+    },
+    "phone": { "title": "Numéro de téléphone", "placeholder": "050-1234-5678" },
+    "email": { "title": "Adresse e-mail", "placeholder": "example@mail.il" },
+    "address1": {
+        "title": "Adresse 1",
+        "placeholder": "Numéro de maison et rue"
+    },
+    "address2": {
+        "title": "Adresse 2 (facultatif)",
+        "placeholder": "Par exemple entreprise, appartement, immeuble"
+    },
+    "city": "Ville",
+    "zip": "Code postal / Boîte postale",
+
+    "_comment.": "##### Family Information #####",
+    "maritalStatus": {
+        "title": "État civil",
+        "options": {
+            "0": "Marié",
+            "1": "Célibataire",
+            "2": "Veuf/veuve",
+            "3": "Divorcé"
+        }
+    },
+    "spouse": {
+        "spouseFirstName": "Prénom du conjoint",
+        "spouseFamilyName": "Nom de famille du conjoint",
+        "spouseBirthday": "Date de naissance du conjoint",
+        "spouseIDType": "Type d'identification du conjoint",
+        "spouseIDNumber": "Numéro d'identification du conjoint"
+    },
+    "children": {
+        "title": "Avez-vous des enfants?",
+        "childFirstName": "Prénom",
+        "childLastName": "Nom de famille",
+        "childGender": "Sexe",
+        "childBirthday": "Date de naissance",
+        "childAccompanied": "Accompagné en Israël"
+    },
+
+    "_comment..": "##### Questionnaire #####",
+    "aliyahDate": "Date de l'alyah",
+    "aliyahContent": "Quand êtes-vous arrivé",
+    "whereHeardOfUs": {
+        "title": "Où avez-vous entendu parler de nous?",
+        "options": {
+            "0": "De bouche à oreille",
+            "1": "Équipe de Ponts pour la Paix",
+            "2": "Agence",
+            "3": "Projet de sauvetage"
+        }
+    },
+
+    "##comment": "########## FAC ##########",
+    "fac": {
+        "title": "Student Enrichment Scholarship Application",
+        "subtitle": "Instructions: Application must include a clear head and shoulder picture of the student. Photos that are tilted, have filters, masks, or have hands or headphones shown, will NOT be accepted.",
+        "thankYou": "Thank you for submitting the application"
+    },
+    "elementary": {
+        "schools": {
+            "Jabutinsky": "Jabutinsky",
+            "Levi Eshkol": "Levi Eshkol",
+            "Uziel": "Uziel",
+            "HaDekel": "HaDekel",
+            "Zalman Aran": "Zalman Aran",
+            "Ben Zvi": "Ben Zvi"
+        },
+        "sectionTitle": {
+            "funFacts": "Fun Facts about Me:",
+            "meAndMyFamily": "Me and My Family:",
+            "meAndSchool": "Me and School:",
+            "littleMoreAboutMyself": "A Little More About Myself:"
+        },
+
+        "instruction": "Each student or parent should fill in their own answers.",
+
+        "name": "Name",
+        "photo": "Photo",
+        "tz": "T.Z.",
+        "birthYear": "Birthday/Year",
+        "birthMonth": "Birthday/Month",
+        "birthDay": "Birthday/Day",
+        "age": "Age",
+        "birthCountry": "Country of Birth",
+        "grade": "Grade",
+        "school": "School",
+        "isFirstTime": "Is this your first time applying for the scholarship?",
+
+        "comment": "section",
+        "q1": "Who do you live with?",
+        "q2": "How many brothers do you have?",
+        "q3": "How many sisters do you have?",
+        "q4": "My family is from:",
+        "q5": "Spoken language at home:",
+        "q6": "What is your favorite subject in school?",
+        "q7": "What do you like about your family?",
+
+        "comment.": "section",
+        "q8": "Favorite subjects in school:",
+        "q9": "School subjects I have difficulties in:",
+        "q10": "What I like about my teacher and why:",
+        "q11": "What my teacher says about me:",
+
+        "comment..": "section",
+        "favoriteColor": "Favorite Color:",
+        "favoriteFood": "Favorite Food:",
+        "hobby": "Favorite things to do / Hobbies:",
+        "interest": "Interests or talents:",
+        "makesMeSad": "What makes me sad:",
+        "loveMost": "What I love most in this world:",
+        "dream": "My future dreams are:",
+
+        "comment...": "section",
+        "check1": "I understand that I will need to write a thank you to the donors of the scholarship.",
+        "check2": "I agree to the use of my photo by Bridges for Peace for the advancement of the scholarship program.",
+        "submittedBy": "Submitted by:",
+        "relationship": "Relationship",
+        "relationship_helper": "himself/herself/parent/teacher/etc.",
+        "forTeacher1": "For the Teacher: Please describe the family situation if possible.",
+        "forTeacher2": "For the Teacher: Please describe the school situation for the child."
+    },
+    "highschool": {
+        "schools": {
+            "Devir": "Devir",
+            "Shachar": "Shachar",
+            "Branco Weiss": "Branco Weiss"
+        },
+
+        "sectionTitle": {
+            "introduction": "Introduction:",
+            "school": "School:",
+            "personalLife": "Personal Life:",
+            "yourFuture": "Your Future:"
+        },
+
+        "introduction": "Introduce yourself and describe your family. Include how many siblings you have, and/or who you live with, and how long your family has been in Israel.",
+        "school": "What is school like for you? What are you good at and what is challenging?",
+        "personalLife": "What do you like to do in your free time? What are some of your favorite things? ",
+        "yourFuture": "What do you want to do for a career? What dreams do you have? How do you see yourself in 10 years?"
+    }
+}

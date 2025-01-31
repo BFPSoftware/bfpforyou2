@@ -1,4 +1,5 @@
-import { z } from 'zod';
+import { Dictionary } from "@/common/locales/Dictionary-provider";
+import { z } from "zod";
 
 const ticket: z.ZodString = z.string().min(1).max(9);
 const formLang: z.ZodString = z.string().min(1).max(20);
@@ -14,17 +15,17 @@ const gender = z
     .transform((value, ctx): string => {
         if (value == null) {
             ctx.addIssue({
-                code: 'custom',
-                message: 'This field is required'
+                code: "custom",
+                message: "This field is required",
             });
-            return '';
+            return "";
         }
         return value;
     });
 const birthday = z.object({
-    day: z.string().max(5, { message: 'Required' }),
-    month: z.string().max(5, { message: 'Required' }),
-    year: z.string().max(5, { message: 'Required' })
+    day: z.string().max(5, { message: "Required" }),
+    month: z.string().max(5, { message: "Required" }),
+    year: z.string().max(5, { message: "Required" }),
 });
 // attachment 1-3 contains file key
 const attachment1: z.ZodString = z.string().min(1).max(200);
@@ -33,11 +34,8 @@ const attachment3: z.ZodString = z.string().min(1).max(200);
 const originCity: z.ZodString = z.string().min(1).max(50);
 const originCountry: z.ZodString = z.string().min(1).max(50);
 const nativeLanguage: z.ZodString = z.string().min(1).max(50);
-const phone: z.ZodString = z
-    .string({ required_error: 'This field is required' })
-    .min(6, { message: 'Invalid phone number' })
-    .max(20, { message: 'The value length exceeds the limit' });
-const email: z.ZodString = z.string().min(1).max(100).email({ message: 'Invalid email format' });
+const phone: z.ZodString = z.string({ required_error: "This field is required" }).min(6, { message: "Invalid phone number" }).max(20, { message: "The value length exceeds the limit" });
+const email: z.ZodString = z.string().min(1).max(100).email({ message: "Invalid email format" });
 const address1: z.ZodString = z.string().min(1).max(100);
 const address2: z.ZodOptional<z.ZodString> = z.string().optional();
 const city: z.ZodString = z.string().min(1).max(50);
@@ -45,21 +43,21 @@ const zip: z.ZodOptional<z.ZodString> = z.string().optional();
 
 // Page 2
 const spouse = z
-    .discriminatedUnion('maritalStatus', [
+    .discriminatedUnion("maritalStatus", [
         z.object({
-            maritalStatus: z.literal('0'),
+            maritalStatus: z.literal("0"),
             spouseFirstName: z.string().min(1).max(50),
             spouseFamilyName: z.string().min(1).max(50),
             spouseIDType: z.string().min(1).max(30),
             spouseIDNumber: z.string().min(1).max(50),
             spouseBirthday: z.object({
-                day: z.string().max(5, { message: 'Required' }),
-                month: z.string().max(5, { message: 'Required' }),
-                year: z.string().max(5, { message: 'Required' })
-            })
+                day: z.string().max(5, { message: "Required" }),
+                month: z.string().max(5, { message: "Required" }),
+                year: z.string().max(5, { message: "Required" }),
+            }),
         }),
         z.object({
-            maritalStatus: z.enum(['1', '2', '3', '']),
+            maritalStatus: z.enum(["1", "2", "3", ""]),
             spouseFirstName: z.string().optional(),
             spouseFamilyName: z.string().optional(),
             spouseIDType: z.string().optional(),
@@ -68,25 +66,25 @@ const spouse = z
                 .object({
                     day: z.string().optional(),
                     month: z.string().optional(),
-                    year: z.string().optional()
+                    year: z.string().optional(),
                 })
-                .optional()
-        })
+                .optional(),
+        }),
     ])
     .refine(
         (data) => {
-            if (data.maritalStatus == '') return false;
+            if (data.maritalStatus == "") return false;
             else return true;
         },
         {
-            message: 'This field is required',
-            path: ['maritalStatus']
+            message: "This field is required",
+            path: ["maritalStatus"],
         }
     );
 const children = z
-    .discriminatedUnion('childStatus', [
+    .discriminatedUnion("childStatus", [
         z.object({
-            childStatus: z.literal('Yes'),
+            childStatus: z.literal("Yes"),
             childTable: z.array(
                 z.object({
                     childFirstName: z.string().min(1).max(50),
@@ -94,15 +92,15 @@ const children = z
                     childGender: z.string().min(2).max(30),
                     childAccompanied: z.string().min(2).max(30),
                     childBirthday: z.object({
-                        day: z.string().max(5, { message: 'Required' }),
-                        month: z.string().max(5, { message: 'Required' }),
-                        year: z.string().max(5, { message: 'Required' })
-                    })
+                        day: z.string().max(5, { message: "Required" }),
+                        month: z.string().max(5, { message: "Required" }),
+                        year: z.string().max(5, { message: "Required" }),
+                    }),
                 })
-            )
+            ),
         }),
         z.object({
-            childStatus: z.enum(['No']),
+            childStatus: z.enum(["No"]),
             childTable: z.array(
                 z.object({
                     childFirstName: z.string().optional(),
@@ -113,16 +111,16 @@ const children = z
                         .object({
                             day: z.string().optional(),
                             month: z.string().optional(),
-                            year: z.string().optional()
+                            year: z.string().optional(),
                         })
-                        .optional()
+                        .optional(),
                 })
-            )
+            ),
         }),
         z.object({
             childStatus: z.null(),
-            childTable: z.array(z.null())
-        })
+            childTable: z.array(z.null()),
+        }),
     ])
     .refine(
         (data) => {
@@ -130,8 +128,8 @@ const children = z
             else return true;
         },
         {
-            message: 'This field is required',
-            path: ['childStatus']
+            message: "This field is required",
+            path: ["childStatus"],
         }
     );
 // Page 3
@@ -139,13 +137,13 @@ const aliyahDate: z.ZodString = z.string().min(1).max(50);
 const whereHeardOfUs: z.ZodString = z.string().min(1).max(50);
 
 export const customErrorMap =
-    (t: any): z.ZodErrorMap =>
+    (t: Dictionary): z.ZodErrorMap =>
     (error, ctx) => {
         switch (error.code) {
             case z.ZodIssueCode.too_small:
-                return { message: t('error.required') };
+                return { message: t.error.required };
             case z.ZodIssueCode.too_big:
-                return { message: t('error.too_big') };
+                return { message: t.error.too_big };
 
             case z.ZodIssueCode.custom:
                 // produce a custom message using error.params
@@ -190,7 +188,7 @@ export const ContactSchema = z.object({
     children: children,
     // Page 3
     aliyahDate: aliyahDate,
-    whereHeardOfUs: whereHeardOfUs
+    whereHeardOfUs: whereHeardOfUs,
 });
 export type ContactType = z.infer<typeof ContactSchema>;
 export type FormType = keyof ContactType;
