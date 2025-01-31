@@ -1,0 +1,103 @@
+{
+    "immigrant": {
+        "title": "New Immigrant Gift Application",
+        "subtitle": "If you have made aliyah within the last six months and would like to receive a blanket, pots & pans and kitchen utensils, please complete the form below. We will contact you with more details."
+    },
+
+    "sectionTitle": {
+        "personalInformation": "Personal Information",
+        "contactInformation": "Contact Information",
+        "familyInformation": "Family Information",
+        "questionnarie": "Questionnaire"
+    },
+
+    "_comment": "##### Personal Information #####",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "fullNameEnglish": "Full Name in English",
+    "idType": {
+        "title": "ID Type",
+        "options": {
+            "0": "Teudat Zehut",
+            "1": "Teudat Oleh"
+        }
+    },
+    "idNumber": "ID Number",
+    "attachmentLabel": "Please upload a clear picture of your Teudat Oleh from:",
+    "attachment1": "Teudat Oleh p.2-3",
+    "attachment2": "Teudat Oleh p.4-5",
+    "attachment3": "Teudat Oleh p.16",
+    "birthday": "Date of Birth",
+    "gender": {
+        "title": "Gender",
+        "options": {
+            "1": "Female",
+            "2": "Male"
+        }
+    },
+    "originCity": "Origin City",
+    "originCountry": "Origin Country",
+    "nativeLanguage": {
+        "title": "Native Language",
+        "options": {
+            "1": "Hebrew",
+            "2": "English",
+            "3": "Russian",
+            "4": "Spanish",
+            "5": "French",
+            "6": "Ukrainian",
+            "7": "Other"
+        }
+    },
+    "phone": { "title": "Phone Number", "placeholder": "050-1234-5678" },
+    "email": { "title": "Email", "placeholder": "example@mail.com" },
+    "address1": {
+        "title": "Address Line 1",
+        "placeholder": "House number and street name"
+    },
+    "address2": {
+        "title": "Address Line 2(optional)",
+        "placeholder": "Apartment, suite, unit, building, floor, etc."
+    },
+    "city": "City",
+    "zip": "Zip/Postal Code",
+
+    "_comment.": "##### Family Information #####",
+    "maritalStatus": {
+        "title": "Marital Status",
+        "options": {
+            "0": "Married",
+            "1": "Single",
+            "2": "Widowed",
+            "3": "Divorced"
+        }
+    },
+    "spouse": {
+        "spouseFirstName": "Spouse First Name",
+        "spouseFamilyName": "Spouse Last Name",
+        "spouseBirthday": "Spouse Date of Birth",
+        "spouseIDType": "Spouse ID Type",
+        "spouseIDNumber": "Spouse ID Number"
+    },
+    "children": {
+        "title": "Do you have any children?",
+        "childFirstName": "First Name",
+        "childLastName": "Last Name",
+        "childGender": "Gender",
+        "childBirthday": "Date of Birth",
+        "childAccompanied": "Accompanied in Israel"
+    },
+
+    "_comment..": "##### Questionnaire #####",
+    "aliyahDate": "Arrival Date",
+    "aliyahContent": "When did you come into the country?",
+    "whereHeardOfUs": {
+        "title": "Where did you hear about us?",
+        "options": {
+            "0": "Word of Mouth",
+            "1": "BFP Team",
+            "2": "Agency",
+            "3": "Project Rescue"
+        }
+    }
+}

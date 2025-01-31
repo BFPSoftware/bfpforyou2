@@ -1,0 +1,34 @@
+{
+    "home": {
+        "missionStatement": "Bridges For Peace: Christians supporting Israel and building relationships between Christians and Jews in Israel and around the world.",
+        "startHere": "BFP FOR YOU",
+        "haveCode": "Enter your code here",
+        "noCode": "I don't have a code",
+        "invalidCode": "Invalid code",
+        "gotoSupport": "Having Trouble? Contact us here."
+    },
+
+    "confirmation": {
+        "type": "Type",
+        "code": "Code"
+    },
+
+    "error": {
+        "required": "This field is required",
+        "too_big": "The value length exceeds the limit"
+    },
+
+    "button": {
+        "select": "Select",
+        "next": "Next",
+        "back": "Back",
+        "submit": "Save & Submit",
+        "check": "Check"
+    },
+
+    "select": {
+        "select": "Select...",
+        "Yes": "Yes",
+        "No": "No"
+    }
+}

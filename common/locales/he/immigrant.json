@@ -1,0 +1,103 @@
+{
+    "immigrant": {
+        "title": "בקשה למתנה לעולה חדשה",
+        "subtitle": "אם עליתם לארץ בחצי השנה האחרונה וברצונכם לקבל שמיכה, סירים ומחבתות וכלי מטבח, אנא מלאו את הטופס למטה. ניצור איתך קשר עם פרטים נוספים."
+    },
+
+    "sectionTitle": {
+        "personalInformation": "פרטים אישיים",
+        "contactInformation": "פרטי התקשרות",
+        "familyInformation": "מידע משפחתי",
+        "questionnarie": "שְׁאֵלוֹן"
+    },
+
+    "_comment": "##### Personal Information #####",
+    "firstName": "שם פרטי",
+    "lastName": "שם משפחה",
+    "fullNameEnglish": "שם מלא באנגלית",
+    "idType": {
+        "title": "תעודה מזהה",
+        "options": {
+            "0": "ת.ז",
+            "1": "תעודת עולה"
+        }
+    },
+    "idNumber": "מספר תעודת זהות",
+    "attachmentLabel": "העלה תמונה ברורה של תעודת עולה שלך:",
+    "attachment1": "תעודת עולה מתוך: עמודים 2-3",
+    "attachment2": "תעודת עולה מתוך: עמודים 4-5",
+    "attachment3": "תעודת עולה מתוך: עמודים 16",
+    "birthday": "תאריך לידה",
+    "gender": {
+        "title": "מגדר",
+        "options": {
+            "1": "נְקֵבָה",
+            "2": "זָכָר"
+        }
+    },
+    "originCity": "עיר מוצא",
+    "originCountry": "מדינת מוצא",
+    "nativeLanguage": {
+        "title": "שפת אם",
+        "options": {
+            "1": "עברית",
+            "2": "אנגלית",
+            "3": "רוסית",
+            "4": "ספרדית",
+            "5": "צרפתית",
+            "6": "אוקראינית",
+            "7": "אחר"
+        }
+    },
+    "phone": { "title": "מס' טלפון ", "placeholder": "050-1234-5678" },
+    "email": { "title": "אימייל", "placeholder": "example@mail.com" },
+    "address1": {
+        "title": "שורת כתובת 1",
+        "placeholder": "מספר בית ושם רחוב"
+    },
+    "address2": {
+        "title": "שורת כתובת 2 (לא חובה)",
+        "placeholder": "לדוגמא חברה, דירה, בניין"
+    },
+    "city": "עיר",
+    "zip": "מיקוד/ת.ד",
+
+    "_comment.": "##### Family Information #####",
+    "maritalStatus": {
+        "title": "מצב משפחתי",
+        "options": {
+            "0": "נָשׂוּי/נשואה",
+            "1": "רווק/רווקה",
+            "2": "אלמן/אלמנה",
+            "3": "גרוש/גרושה"
+        }
+    },
+    "spouse": {
+        "spouseFirstName": "שם פרטי של בן הזוג",
+        "spouseFamilyName": "שם משפחה של בן הזוג",
+        "spouseBirthday": "תאריך לידה של בן הזוג",
+        "spouseIDType": "סוג זיהוי בן/בת זוג",
+        "spouseIDNumber": "מספר תעודת זהות של בן הזוג"
+    },
+    "children": {
+        "title": "האם יש לך ילדים?",
+        "childFirstName": "שם פרטי",
+        "childLastName": "שם משפחה",
+        "childGender": "מגדר",
+        "childBirthday": "תאריך לידה",
+        "childAccompanied": "מלווה בישראל"
+    },
+
+    "_comment..": "##### Questionnaire #####",
+    "aliyahDate": "תאריך עלייה",
+    "aliyahContent": "מתי הגעת לארץ?",
+    "whereHeardOfUs": {
+        "title": "היכן שמעת עלינו?",
+        "options": {
+            "0": "מפה לאוזן",
+            "1": "צוות של גשרים למען השלום",
+            "2": "סוֹכְנוּת",
+            "3": "פרויקט הצלה"
+        }
+    }
+}

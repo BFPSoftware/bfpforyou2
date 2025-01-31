@@ -1,0 +1,34 @@
+{
+    "home": {
+        "missionStatement": "Ponts Pour la Paix : Chrétiens soutenant Israël et construisant des relations entre chrétiens et juifs en Israël et dans le monde entier.",
+        "startHere": "BFP POUR VOUS",
+        "haveCode": "Entrez votre code ici",
+        "noCode": "Je n'ai pas de code",
+        "invalidCode": "Code invalide",
+        "gotoSupport": "Vous avez des problèmes ? Contactez-nous ici."
+    },
+
+    "confirmation": {
+        "type": "Type",
+        "code": "Code"
+    },
+
+    "error": {
+        "required": "Ce champ est requis",
+        "too_big": "La longueur de la valeur dépasse la limite"
+    },
+
+    "button": {
+        "select": "Sélectionner",
+        "next": "Suivant",
+        "back": "Retour",
+        "submit": "Enregistrer et Soumettre",
+        "check": "Vérifier"
+    },
+
+    "select": {
+        "select": "Sélectionner...",
+        "Yes": "Oui",
+        "No": "Non"
+    }
+}
