@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -10,35 +10,43 @@ import { useDictionary } from "@/common/locales/Dictionary-provider";
 import { customErrorMap, fachighSchema, FachighType, submitLangsShort } from "../schema/fachighSchema";
 import { handleSubmit_fachigh } from "../hooks/handleSubmit_fachigh";
 import Loading from "@/app/loading";
+import Spinner from "@/components/spinner/Spinner";
+import logError from "@/common/logError";
 // import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogHeader, AlertDialogFooter, AlertDialogCancel } from "@/components/ui/alert-dialog";
 
 type FachighFormProps = { ticket: string };
 
 const FachighForm: FC<FachighFormProps> = ({ ticket }) => {
+    const [isLoading, setIsLoading] = useState(false);
     const t = useDictionary();
     // zod error with custom language
     z.setErrorMap(customErrorMap(t));
 
     const handleOnSubmit: SubmitHandler<FachighType> = async (data) => {
-        // validation
-        const validate = async () => {
-            const isValids = await trigger();
-            console.log("isValid All: " + isValids);
-            if (isValids) return true;
-            else {
-                const firstErrorField = Object.keys(formatError)[0];
-                const errorElement = document.querySelector(`[name="${firstErrorField}"]`);
-                console.log("errorElement", firstErrorField);
-                if (errorElement) {
-                    errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (!window.confirm(t.common.wantToSubmit)) return;
+        setIsLoading(true);
+        try {
+            const validate = async () => {
+                const isValids = await trigger();
+                if (isValids) return true;
+                else {
+                    const firstErrorField = Object.keys(formatError)[0];
+                    const errorElement = document.querySelector(`[name="${firstErrorField}"]`);
+                    if (errorElement) {
+                        errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
+                    return false;
                 }
-                return false;
-            }
-        };
-        if (!(await validate())) return;
-        const res = await handleSubmit_fachigh(data, t);
-        if (res) location.href = "/fachigh/thank-you";
-        else console.log("error");
+            };
+            if (!(await validate())) return;
+            const res = await handleSubmit_fachigh(data, t);
+            if (res) location.href = "/fachigh/thank-you";
+            else alert("Something went wrong. Please try again later.");
+        } catch (e) {
+            logError(e, { data }, "handleSubmit_fachigh");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const {
@@ -60,17 +68,11 @@ const FachighForm: FC<FachighFormProps> = ({ ticket }) => {
             ticket: ticket,
         },
     });
-
-    // useFieldArray for Children table
-
-    console.log("erros: " + Object.keys(formatError));
-    console.log("validAll: " + isValid);
-    console.log(getValues());
-
     setValue("submitLang", (t.lang as (typeof submitLangsShort)[number]) || "en");
+
     return (
         <div className="w-full max-w-[1095px] h-full bg-white rounded-md ">
-            {isSubmitting && <Loading />}
+            {isLoading && <Spinner isLoading={isLoading} />}
             <form
                 method="post"
                 onSubmit={(event) => {

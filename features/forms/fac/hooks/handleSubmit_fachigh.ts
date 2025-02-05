@@ -79,9 +79,7 @@ const createAddRecord = (formResponse: FachighType) => {
 
 export const handleSubmit_fachigh = async (formResponse: FachighType, t: any) => {
     try {
-        console.log("dataimmigrant", formResponse);
         const addRecord = createAddRecord(formResponse);
-        console.log("addRecord", addRecord);
         const res = await fetch("/api/kintone/postKintone_fac", {
             method: "POST",
             headers: {

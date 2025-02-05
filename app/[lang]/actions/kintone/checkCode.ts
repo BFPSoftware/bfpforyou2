@@ -2,10 +2,10 @@
 
 import { z } from "zod";
 import { actionClient } from "@/lib/safe-action";
-import { KintoneUserName, KintonePassword, BeneficiaryApplicationFormAppID, BfpforyouMasterAPPID } from "@/common/env";
-import { KintoneRestAPIClient } from "@kintone/rest-api-client";
+import { BeneficiaryApplicationFormAppID, BfpforyouMasterAPPID } from "@/common/env";
 import logError from "@/common/logError";
 import { isProgramIncluded, programs } from "@/types/program";
+import client from "@/hooks/useKintone";
 
 // This schema is used to validate input from client.
 const schema = z.object({
@@ -14,13 +14,6 @@ const schema = z.object({
 
 export const checkCode = actionClient.schema(schema).action(async ({ parsedInput: { code } }) => {
     try {
-        const client = new KintoneRestAPIClient({
-            baseUrl: "https://bfp.kintone.com",
-            auth: {
-                username: KintoneUserName,
-                password: KintonePassword,
-            },
-        });
         const query1 = `status in ("Active")`;
         const settings = await client.record.getAllRecords({
             app: BfpforyouMasterAPPID as string,

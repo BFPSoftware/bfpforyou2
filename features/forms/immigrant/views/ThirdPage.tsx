@@ -28,11 +28,11 @@ const ThirdPage: FC<ThirdPageProps> = ({ setPage, errors, register, t }) => {
             </div>
 
             <div className="flex flex-col mt-5">
-                <button type="button" className="btn-gray" onClick={() => setPage(1)}>
-                    {t.button.back}
-                </button>
                 <button className="btn-theme" type="submit">
                     {t.button.submit}
+                </button>
+                <button type="button" className="btn-gray" onClick={() => setPage(1)}>
+                    {t.button.back}
                 </button>
             </div>
         </>

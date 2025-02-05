@@ -1,13 +1,11 @@
 "use client";
-import React, { EventHandler, useEffect, useState } from "react";
+import React, { useState } from "react";
 import LanguageIcon from "../../icons/LanguageIcon";
 import ReactModal from "react-modal";
 import Link from "next/link";
-import { Locale, locales } from "@/types/locales";
-import { Dictionary, useDictionary } from "@/common/locales/Dictionary-provider";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { AlertDialogHeader, AlertDialogFooter } from "@/components/ui/alert-dialog";
-import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogDescription, AlertDialogAction } from "@radix-ui/react-alert-dialog";
+import { Locale } from "@/types/locales";
+import { useDictionary } from "@/common/locales/Dictionary-provider";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export default function SelectLanguage() {
     const t = useDictionary();
@@ -60,7 +58,7 @@ export default function SelectLanguage() {
                         right: "0",
                         bottom: "0",
                         width: "40%",
-                        maxWidth: "16rem",
+                        maxWidth: "25rem",
                         backgroundColor: "#1a202c",
                         color: "white",
                         overflow: "auto",
@@ -69,19 +67,19 @@ export default function SelectLanguage() {
                 }}
                 ariaHideApp={false}
             >
-                <button className="ml-2 md:hidden" onClick={toggleMenu}>
+                <button className="ml-2" onClick={toggleMenu}>
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} className="transition-transform duration-300 transform" />
                     </svg>
                 </button>
-                <div className="flex flex-col content-between justify-between">
+                <div className="flex flex-col content-between justify-between text-xl md:text-2xl">
                     {/* {locales.map((locale) => (
                         <Link key={locale} className="mt-2 text-center" href={getNewPath(locale as Locale)}>
                             {getLangName(locale)}
                         </Link>
                     ))} */}
                     {(["en", "he", "ru"] as const).map((locale) => (
-                        <Link key={locale} className="mt-2 text-center" href={getNewPath(locale as Locale)}>
+                        <Link key={locale} className="py-2 rounded-full text-center hover:bg-slate-400" href={getNewPath(locale as Locale)}>
                             {getLangName(locale)}
                         </Link>
                     ))}

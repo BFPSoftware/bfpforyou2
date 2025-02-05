@@ -6,12 +6,10 @@ import { useDictionary } from "@/common/locales/Dictionary-provider";
 import HeaderNoSelectLang from "@/components/general/header menu/HeaderNoSelectLang";
 
 const Immigrant: React.FC = () => {
-    const dictionary = useDictionary();
     // validate ticket
     const router = useRouter();
     const searchParams = useSearchParams();
     const ticket = searchParams.get("ticket");
-    console.log("query", ticket);
     if (typeof window !== "undefined" && !ticket) router.push("/");
     return (
         <>
