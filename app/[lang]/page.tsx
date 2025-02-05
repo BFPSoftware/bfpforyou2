@@ -5,12 +5,12 @@ import Image from "next/image";
 import flag from "@/public/images/flags.jpg";
 import Spinner from "@/components/spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { Locale } from "./dictionaries";
 import { Dictionary, useDictionary } from "@/common/locales/Dictionary-provider";
 import { AlertDialogHeader, AlertDialogFooter } from "@/components/ui/alert-dialog";
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
-import { loginUser } from "./actions/login";
-import { checkCode } from "./actions/checkCode";
+import { checkCode } from "./actions/kintone/checkCode";
+import { useRouter, usePathname } from "next/navigation";
+import { Locale } from "@/types/locales";
 
 export default function Home({ params }: { params: Usable<{ lang: Locale }> }) {
     const { lang } = use(params);
@@ -22,26 +22,70 @@ export default function Home({ params }: { params: Usable<{ lang: Locale }> }) {
     //const router = useRouter();
     // 10 digits number
     const isInputValid = /^\d{1,9}$/.test(code);
+    const router = useRouter();
+    const pathname = usePathname();
+    const handleNavigation = (path: string, params: { [key: string]: string }) => {
+        const segments = pathname.split("/");
+        const currentLocale = segments[1]; // Assuming the locale is the first segment of the path
+        const queryString = new URLSearchParams(params).toString();
+        router.push(`/${currentLocale}${path}?${queryString}`);
+    };
     const handleCheckCode = async (e: any) => {
-        const res = await checkCode({ code });
+        e.preventDefault();
+        if (!isInputValid) {
+            setIsCodeValid(false);
+            return;
+        } else if (isLoading) return;
+        setIsLoading(true);
+        try {
+            const res = await checkCode({ code });
 
-        // Result keys.
-        if (res?.data) {
-            if (res?.data?.success) {
-                console.log("res", res?.data);
-                setIsCodeValid(true);
-            } else if (res?.data?.failure) {
+            // Result keys.
+            if (res?.data) {
+                const { success, failure } = res?.data;
+                if (success) {
+                    console.log("res", res?.data);
+                    switch (success) {
+                        case "FAC Elementary":
+                            handleNavigation("/facelem", { ticket: code });
+                            break;
+                        case "FAC Highschool":
+                            handleNavigation("/fachigh", { ticket: code });
+                            break;
+                        case "New Immigrant":
+                            handleNavigation("/immigrant", { ticket: code });
+                            break;
+                        default:
+                            setIsCodeValid(false);
+                            alert("Something went wrong. Please try again later.");
+                            console.log("res", res?.data);
+                            break;
+                    }
+                    setIsCodeValid(true);
+                } else if (failure) {
+                    setIsCodeValid(false);
+                    console.log("res", res?.data);
+                }
+            } else if (res?.validationErrors) {
                 setIsCodeValid(false);
-                console.log("res", res?.data);
+                console.log("res", res?.validationErrors);
+            } else if (res?.serverError) {
+                setIsCodeValid(false);
+                console.log("res", res?.serverError);
             }
-        } else if (res?.validationErrors) {
+        } catch (e) {
+            console.log(e);
             setIsCodeValid(false);
-            console.log("res", res?.validationErrors);
-        } else if (res?.serverError) {
-            setIsCodeValid(false);
-            console.log("res", res?.serverError);
+        } finally {
+            setIsLoading(false);
         }
         return;
+    };
+    const handleOnChange = (e: any) => {
+        if (isInputValid) {
+            setIsCodeValid(null);
+        }
+        setCode(e.currentTarget.value);
     };
     return (
         <>
@@ -49,17 +93,20 @@ export default function Home({ params }: { params: Usable<{ lang: Locale }> }) {
             <Header />
             <main className="flex bg-slate-300 h-auto flex-col items-center text-center justify-evenly p-[10%] md:p-24">
                 <h1 className="text-3xl md:text-4xl font-semibold text-slate-800 font-serif mb-5">{t.home.startHere}</h1>
-                <div className="w-screen flex justify-center">
-                    <Image src={flag} alt="flag" width={1000} height={2000} />
+                <div className="w-[95svw] flex justify-center">
+                    <div className="relative w-full h-[400px]">
+                        <Image src={flag} alt="flag" className="absolute inset-0 w-full h-full object-cover" quality={100} />
+                    </div>
                 </div>
                 <h2 className="my-4 text-lg text-gray-500 italic font-serif">{t.home.missionStatement}</h2>
-                <form className="w-full">
-                    <input placeholder={t.home.haveCode} pattern="[0-9]*" inputMode="numeric" value={code} onChange={(e) => setCode(e.currentTarget.value)} className="w-full max-w-80 border text-md md:text-xl p-5 mt-5 mx-4" />
-                    {isCodeValid == false && <p className="text-red-500">{t.home.invalidCode}</p>}
-                    <Button type="button" variant="default" size="default" onClick={handleCheckCode}>
+                <form onSubmit={handleCheckCode} className="flex justify-center items-center w-full">
+                    <input placeholder={t.home.haveCode} value={code} onChange={handleOnChange} className="w-full max-w-80 text-md text-center md:text-2xl p-5 mx-4" />
+                    <Button type="submit" variant="default" size="default">
                         {t.button.check}
                     </Button>
                 </form>
+                {isCodeValid == false && <p className="text-red-500">{t.home.invalidCode}</p>}
+
                 <div className="mt-8">
                     <AlertHaveNoCode t={t} />
                 </div>
@@ -73,7 +120,7 @@ const AlertHaveNoCode = ({ t }: { t: Dictionary }) => (
         <AlertDialogTrigger className="btn-theme">{t.home.noCode}</AlertDialogTrigger>
         <AlertDialogContent>
             <AlertDialogHeader>
-                {/* <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle> */}
+                <AlertDialogTitle hidden>Have No Code?</AlertDialogTitle>
                 <AlertDialogDescription className="text-lg">{t.home.noCodeDialog}</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

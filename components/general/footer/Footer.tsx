@@ -1,4 +1,5 @@
-import { getDictionary, Locale } from "@/app/[lang]/dictionaries";
+import { getDictionary } from "@/app/[lang]/dictionaries";
+import { Locale } from "@/types/locales";
 import Link from "next/link";
 import React from "react";
 

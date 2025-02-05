@@ -3,7 +3,7 @@
     "lang": "he",
     "home": {
         "missionStatement": "גשרים לשלום: נוצרים התומכים בישראל ובונים קשרים בין נוצרים ליהודים בישראל וברחבי העולם.",
-        "startHere": "BFP בשבילך",
+        "startHere": "BFP FOR YOU",
         "haveCode": "הזן את הקוד שלך כאן",
         "noCode": "אין לי קוד",
         "noCodeDialog": "אם אתה עולה חדש שמבקש מתנת ברוכים הבאים, אנו חווים כעת כמות עצומה של בקשות. למרבה הצער, אנחנו לא יכולים להציע לעולים חדשים מתנות קבלת פנים בשלב זה. נא לא להשאיר הודעה מכיוון שאיננו יכולים להשיב להודעות. בעתיד, אנו מקווים לשוב ולחלק מתנות אלו באמצעות מרכזי קליטה וארגונים קהילתיים נוספים.",
@@ -33,6 +33,11 @@
         "select": "בחר...",
         "Yes": "כן",
         "No": "לא"
+    },
+
+    "common": {
+        "enterHere": "הזן טקסט",
+        "wantToSubmit": "האם ברצונך לשלוח את הטופס?"
     },
 
     "#comment": "########## New Immigrant ##########",
@@ -141,89 +146,95 @@
     "##comment": "########## FAC ##########",
     "fac": {
         "title": "Student Enrichment Scholarship Application",
-        "subtitle": "Instructions: Application must include a clear head and shoulder picture of the student. Photos that are tilted, have filters, masks, or have hands or headphones shown, will NOT be accepted.",
-        "thankYou": "Thank you for submitting the application"
+        "subtitle": "הנחיות: על הבקשה לכלול תמונת ראש וכתף ברורה של התלמיד. תמונות שמוטות, בעלות מסננים, מסכות או שמוצגות בהן ידיים או אוזניות, לא יתקבלו.",
+        "thankYou": "תודה על הגשת הבקשה"
     },
     "elementary": {
         "schools": {
-            "Jabutinsky": "Jabutinsky",
-            "Levi Eshkol": "Levi Eshkol",
-            "Uziel": "Uziel",
-            "HaDekel": "HaDekel",
-            "Zalman Aran": "Zalman Aran",
-            "Ben Zvi": "Ben Zvi"
+            "Jabutinsky": "יבוטינסקי",
+            "Levi Eshkol": "לוי אשכול",
+            "Uziel": "עוזי",
+            "HaDekel": "האדקל",
+            "Zalman Aran": "זלמן ארן",
+            "Ben Zvi": "בן צבי",
+            "Orot - Boys": "אורות - בנים",
+            "Orot - Girls": "אורות - בנות"
         },
         "sectionTitle": {
-            "funFacts": "Fun Facts about Me:",
-            "meAndMyFamily": "Me and My Family:",
-            "meAndSchool": "Me and School:",
-            "littleMoreAboutMyself": "A Little More About Myself:"
+            "funFacts": "עובדות משעשעות עליי:",
+            "meAndMyFamily": "אני ומשפחתי:",
+            "meAndSchool": "אני ובית הספר:",
+            "littleMoreAboutMyself": "עוד קצת על עצמי:"
         },
 
-        "instruction": "Each student or parent should fill in their own answers.",
+        "instruction": "כל תלמיד או הורה צריכים למלא את התשובות שלו.",
 
-        "name": "Name",
-        "photo": "Photo",
+        "name": "שֵׁם",
+        "photo": "תמונה",
         "tz": "T.Z.",
-        "birthYear": "Birthday/Year",
-        "birthMonth": "Birthday/Month",
-        "birthDay": "Birthday/Day",
-        "age": "Age",
-        "birthCountry": "Country of Birth",
-        "grade": "Grade",
-        "school": "School",
-        "isFirstTime": "Is this your first time applying for the scholarship?",
+        "birthYear": "יום הולדת/שנה",
+        "birthMonth": "יום הולדת/חודש",
+        "birthDay": "יום הולדת/יום",
+        "age": "גיל",
+        "birthCountry": "ארץ לידה",
+        "grade": "כיתה",
+        "school": "בית ספר",
+        "isFirstTime": "האם זו הפעם הראשונה שאתה מגיש בקשה למלגה?",
 
         "comment": "section",
-        "q1": "Who do you live with?",
-        "q2": "How many brothers do you have?",
-        "q3": "How many sisters do you have?",
-        "q4": "My family is from:",
-        "q5": "Spoken language at home:",
-        "q6": "What is your favorite subject in school?",
-        "q7": "What do you like about your family?",
+        "q1": "כמה חברים יש במשפחתכם?",
+        "q2": "כמה אחים יש לך?",
+        "q3": "כמה אחיות יש לך?",
+        "q4": "המשפחה שלי מ:",
+        "q5": "שפה מדוברת בבית:",
+        "q7": "מה אתה אוהב במשפחה שלך?",
 
         "comment.": "section",
-        "q8": "Favorite subjects in school:",
-        "q9": "School subjects I have difficulties in:",
-        "q10": "What I like about my teacher and why:",
-        "q11": "What my teacher says about me:",
+        "q8": "מקצועות אהובים בבית הספר:",
+        "q9": "מקצועות בית הספר בהם אני מתקשה:",
+        "q10": "מה אני אוהב במורה שלי ולמה:",
+        "q11": "מה המורה שלי אומר עלי:",
 
         "comment..": "section",
-        "favoriteColor": "Favorite Color:",
-        "favoriteFood": "Favorite Food:",
-        "hobby": "Favorite things to do / Hobbies:",
-        "interest": "Interests or talents:",
-        "makesMeSad": "What makes me sad:",
-        "loveMost": "What I love most in this world:",
-        "dream": "My future dreams are:",
+        "nickname": "כינוי",
+        "favoriteColor": "צבע אהוב:",
+        "favoriteFood": "אוכל מועדף:",
+        "hobbies": "דברים מועדפים לעשות / תחביבים:",
+        "interests": "תחומי עניין או כישרונות:",
+        "makesMeSad": "מה שעושה אותי עצוב:",
+        "loveMost": "מה שאני הכי אוהב בעולם הזה:",
+        "futureDreams": "חלומות העתיד שלי הם:",
 
         "comment...": "section",
-        "check1": "I understand that I will need to write a thank you to the donors of the scholarship.",
-        "check2": "I agree to the use of my photo by Bridges for Peace for the advancement of the scholarship program.",
-        "submittedBy": "Submitted by:",
-        "relationship": "Relationship",
-        "relationship_helper": "himself/herself/parent/teacher/etc.",
-        "forTeacher1": "For the Teacher: Please describe the family situation if possible.",
-        "forTeacher2": "For the Teacher: Please describe the school situation for the child."
+        "check1": "אני מסכים לשימוש בתמונה שלי על ידי Bridges for Peace לקידום תוכנית המלגות.",
+        "check2": "אני מבין שאצטרך לכתוב תודה לתורמים של המלגה.",
+        "submittedBy": "שהוגש על ידי:",
+        "relationship": "מערכת יחסים",
+        "relationship_helper": "עצמו/עצמה/הורה/מורה/וכו'.",
+        "forTeacher1": "למורה: נא לתאר את המצב המשפחתי במידת האפשר.",
+        "forTeacher2": "למורה: נא לתאר את מצב בית הספר עבור הילד."
     },
     "highschool": {
         "schools": {
-            "Devir": "Devir",
-            "Shachar": "Shachar",
-            "Branco Weiss": "Branco Weiss"
+            "Devir": "דוויר",
+            "Shachar": "שאחר",
+            "Branco Weiss": "ברנקו ויס"
         },
+
+        "enter100": "נא להזין יותר מ-100 תווים",
 
         "sectionTitle": {
-            "introduction": "Introduction:",
-            "school": "School:",
-            "personalLife": "Personal Life:",
-            "yourFuture": "Your Future:"
+            "introduction": "מבוא:",
+            "school": "בית ספר:",
+            "personalLife": "חיים אישיים:",
+            "yourFuture": "העתיד שלך:",
+            "scholarship": "מלגה:"
         },
 
-        "introduction": "Introduce yourself and describe your family. Include how many siblings you have, and/or who you live with, and how long your family has been in Israel.",
-        "school": "What is school like for you? What are you good at and what is challenging?",
-        "personalLife": "What do you like to do in your free time? What are some of your favorite things? ",
-        "yourFuture": "What do you want to do for a career? What dreams do you have? How do you see yourself in 10 years?"
+        "introduction": "הצג את עצמך ותאר את המשפחה שלך. כלול כמה אחים יש לך ו/או עם מי אתה גר וכמה זמן המשפחה שלך נמצאת בישראל.",
+        "school": "איך בית ספר בשבילך? במה אתה טוב ומה מאתגר?",
+        "personalLife": "מה אתה אוהב לעשות בזמנך הפנוי? מהם כמה מהדברים האהובים עליך?",
+        "yourFuture": "מה אתה רוצה לעשות לקריירה? איזה חלומות יש לך? איך אתה רואה את עצמך בעוד 10 שנים?",
+        "scholarship": "למה אתה רוצה את המלגה הזו?"
     }
 }

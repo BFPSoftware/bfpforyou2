@@ -1,118 +1,96 @@
-import { useState } from "react";
-import { useFieldArray } from "react-hook-form";
+import { FC, useState } from "react";
+import { useWatch, Control, useFieldArray, UseFormRegisterReturn, UseFormWatch, UseFormRegister, FieldErrors } from "react-hook-form";
 
 // import { Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, IconButton } from '@chakra-ui/react';
 // import { DeleteIcon } from '@chakra-ui/icons';
 
-import { Input, Radio } from "./FormComponents";
-import { Birthday } from "./Birthday";
+import { Input, Radio } from "../../components/FormComponents";
+import { Birthday } from "../../components/Birthday";
 import { Gender, YesNo } from "@/common/enums";
 
-export default function Children(props: any) {
-    return <>Children Table</>;
-    // const register = props.register;
-    // const control = props.control;
-    // const useWatch = props.useWatch;
-    // const errors = props.errors;
-    // const useChildren = useWatch({ control, name: 'children' });
-    // const t = props.t;
-    // const { fields, append, remove } = useFieldArray({
-    //     name: 'children.childTable',
-    //     control
-    // });
-    // const childNameLabel = (index: number): string => {
-    //     const child = useChildren.childTable[index];
-    //     const bday = `${child?.childBirthday.day == 'default' ? '' : child?.childBirthday.day} ${
-    //         child?.childBirthday.month == 'default' ? '' : child?.childBirthday.month
-    //     } ${child?.childBirthday.year == 'default' ? '' : child?.childBirthday.year}`;
-    //     const label = child?.childFirstName + ' ' + (child?.childGender == 'Male' ? 'M' : child?.childGender == 'Female' ? 'F' : '') + ' ' + bday;
-    //     return label;
-    // };
-    // const appendRow = () => {
-    //     append({
-    //         childFirstName: '',
-    //         childLastName: '',
-    //         childGender: 'd',
-    //         childBirthday: '',
-    //         childAccompanied: 'd'
-    //     });
-    // };
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { ImmigrantType } from "../schema/immigrantSchema";
+import { Dictionary } from "@/common/locales/Dictionary-provider";
+import Delete from "@/components/icons/Delete";
+type ChildrenProps = {
+    label: string;
+    errors: FieldErrors<ImmigrantType>;
+    register: UseFormRegister<ImmigrantType>;
+    control: Control<ImmigrantType>;
+    useWatch: any; // TODO: fix type
+    t: Dictionary;
+};
+const Children: FC<ChildrenProps> = ({ label, errors, register, control, useWatch, t }) => {
+    const [openItem, setOpenItem] = useState<string>("item-0");
+    const useChildren = useWatch({ control, name: "children" });
+    const { fields, append, remove } = useFieldArray({
+        name: "children.childTable",
+        control,
+    });
 
-    // const [accordionIndex, setAccordionIndex] = useState(0);
-    // return (
-    //     <div className="max-w-4xl">
-    //         <label className="font-bold">Children</label>
-    //         <Accordion allowToggle index={accordionIndex} onChange={(e: number) => setAccordionIndex(e)}>
-    //             {fields.map((field, index) => {
-    //                 if (fields.length == 0) appendRow();
-    //                 return (
-    //                     <AccordionItem key={field.id}>
-    //                         <div className="flex">
-    //                             <AccordionButton>
-    //                                 <label className="text-xl my-2">{childNameLabel(index)}</label>
-    //                                 <AccordionIcon />
-    //                             </AccordionButton>
-    //                             <IconButton
-    //                                 isRound={true}
-    //                                 aria-label="delete row"
-    //                                 size="sm"
-    //                                 className="ml-auto mr-1 my-auto"
-    //                                 icon={<DeleteIcon color="red" />}
-    //                                 onClick={() => remove(index)}
-    //                             />
-    //                         </div>
-    //                         <AccordionPanel pb={4}>
-    //                             <div key={field.id}>
-    //                                 <section className={'ml-1'} key={field.id}>
-    //                                     <div className="flex flex-wrap mb-6">
-    //                                         <Input
-    //                                             label={t('children.childFirstName')}
-    //                                             register={register(`children.childTable.${index}.childFirstName`)}
-    //                                             error={errors.children?.childTable?.[index]?.childFirstName || undefined}
-    //                                         />
-    //                                         <Input
-    //                                             label={t('children.childLastName')}
-    //                                             register={register(`children.childTable.${index}.childLastName`)}
-    //                                             error={errors.children?.childTable?.[index]?.childLastName || undefined}
-    //                                         />
-    //                                     </div>
-    //                                     <div className="flex flex-wrap mb-6">
-    //                                         <Radio
-    //                                             label={t('children.childGender')}
-    //                                             register={register(`children.childTable.${index}.childGender`)}
-    //                                             options={Gender(t)}
-    //                                             error={errors.children?.childTable?.[index]?.childGender || undefined}
-    //                                         />
-    //                                         <Birthday
-    //                                             label={t('children.childBirthday')}
-    //                                             register_day={register(`children.childTable.${index}.childBirthday.day`)}
-    //                                             register_month={register(`children.childTable.${index}.childBirthday.month`)}
-    //                                             register_year={register(`children.childTable.${index}.childBirthday.year`)}
-    //                                             error={errors.children?.childTable?.[index]?.childBirthday || undefined}
-    //                                         />
-    //                                         <Radio
-    //                                             label={t('children.childAccompanied')}
-    //                                             register={register(`children.childTable.${index}.childAccompanied`)}
-    //                                             options={YesNo(t)}
-    //                                             error={errors.children?.childTable?.[index]?.childAccompanied || undefined}
-    //                                         />
-    //                                     </div>
-    //                                 </section>
-    //                             </div>
-    //                         </AccordionPanel>
-    //                     </AccordionItem>
-    //                 );
-    //             })}
-    //         </Accordion>
-    //         <button
-    //             type="button"
-    //             onClick={() => {
-    //                 appendRow(), setAccordionIndex(fields.length);
-    //             }}
-    //             className="btn-theme"
-    //         >
-    //             Add Child
-    //         </button>
-    //     </div>
-    // );
-}
+    const childNameLabel = (index: number): string => {
+        const child = useChildren.childTable[index];
+        const bday = `${child?.childBirthday.day == "default" ? "" : child?.childBirthday.day} ${child?.childBirthday.month == "default" ? "" : child?.childBirthday.month} ${child?.childBirthday.year == "default" ? "" : child?.childBirthday.year}`;
+        const label = child?.childFirstName + " " + (child?.childGender == "2" ? "M" : child?.childGender == "1" ? "F" : "") + " " + bday;
+        return label;
+    };
+    const appendRow = () => {
+        append({
+            childFirstName: "",
+            childLastName: "",
+            childGender: "d",
+            childBirthday: { month: "default", day: "default", year: "default" },
+            childAccompanied: "d",
+        });
+        setOpenItem(`item-${fields.length}`); // Open the newly added item
+    };
+    console.log("errors.children?.childTable", errors.children?.childTable);
+
+    return (
+        <div className="max-w-4xl">
+            <label className="font-bold">Children</label>
+            <Accordion type="single" collapsible value={openItem} onValueChange={setOpenItem}>
+                {/* <AccordionItem value="item-1">
+                    <AccordionTrigger>Is it accessible?</AccordionTrigger>
+                    <AccordionContent>Yes. It adheres to the WAI-ARIA design pattern.</AccordionContent>
+                </AccordionItem> */}
+                {fields.map((field, index) => {
+                    if (fields.length == 0) appendRow();
+                    return (
+                        <AccordionItem key={field.id} value={`item-${index}`}>
+                            <div className="flex items-center">
+                                <>
+                                    <AccordionTrigger>
+                                        <label className="text-xl m-2 min-w-40">{childNameLabel(index)}</label>
+                                    </AccordionTrigger>
+                                    <div className="px-4 hover:text-red-500 cursor-pointer" onClick={() => remove(index)}>
+                                        <Delete />
+                                    </div>
+                                </>
+                            </div>
+                            <AccordionContent className="pb-4">
+                                <div key={field.id}>
+                                    <section className={"ml-1"} key={field.id}>
+                                        <div className="flex flex-wrap mb-6">
+                                            <Input label={t.children.childFirstName} register={register(`children.childTable.${index}.childFirstName`)} error={(errors.children?.childTable?.[index]?.childFirstName as any) || undefined} />
+                                            <Input label={t.children.childLastName} register={register(`children.childTable.${index}.childLastName`)} error={errors.children?.childTable?.[index]?.childLastName || undefined} />
+                                        </div>
+                                        <div className="flex flex-wrap mb-6">
+                                            <Radio label={t.children.childGender} register={register(`children.childTable.${index}.childGender`)} options={Gender(t)} error={errors.children?.childTable?.[index]?.childGender || undefined} />
+                                            <Birthday label={t.children.childBirthday} register_day={register(`children.childTable.${index}.childBirthday.day`)} register_month={register(`children.childTable.${index}.childBirthday.month`)} register_year={register(`children.childTable.${index}.childBirthday.year`)} error={errors.children?.childTable?.[index]?.childBirthday || undefined} />
+                                            <Radio label={t.children.childAccompanied} register={register(`children.childTable.${index}.childAccompanied`)} options={YesNo(t)} error={errors.children?.childTable?.[index]?.childAccompanied || undefined} />
+                                        </div>
+                                    </section>
+                                </div>
+                            </AccordionContent>
+                        </AccordionItem>
+                    );
+                })}
+            </Accordion>
+            <button type="button" onClick={() => appendRow()} className="btn-theme">
+                Add Child
+            </button>
+        </div>
+    );
+};
+export default Children;

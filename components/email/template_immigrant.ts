@@ -1,137 +1,134 @@
-import { ContactType } from '@/components/application forms/New Immigrant/schema/contact';
+import { Dictionary } from "@/common/locales/Dictionary-provider";
+import { ImmigrantType } from "@/features/forms/immigrant/schema/immigrantSchema";
 
-const template_immigrant = (formResponse: ContactType, t: any) => {
+const template_immigrant = (formResponse: ImmigrantType, t: Dictionary) => {
     return `<div className="font-sans">
             <h2>Thank you for contacting Bridges for Peace.</h2>
             <h2>Below is a copy of the form you submitted.</h2>
             <br />
             <section>
                 <div>
-                    ${t('confirmation.type')}: ${t('immigrant.title')}
+                    ${t.confirmation.type}: ${t.immigrant.title}
                 </div>
                 <div>
-                    ${t('confirmation.code')}: ${formResponse.ticket}
+                    ${t.confirmation.code}: ${formResponse.ticket}
                 </div>
                 <div>
-                    ${t('firstName')}: ${formResponse.firstName}
+                    ${t.firstName}: ${formResponse.firstName}
                 </div>
                 <div>
-                    ${t('lastName')}: ${formResponse.lastName}
+                    ${t.lastName}: ${formResponse.lastName}
                 </div>
                 ${
-                    formResponse.formLang != 'en'
+                    formResponse.formLang != "en"
                         ? `<div>
-                            ${t('fullNameEnglish')}: ${formResponse.fullNameEnglish}
+                            ${t.fullNameEnglish}: ${formResponse.fullNameEnglish}
                         </div>`
-                        : ''
+                        : ""
                 }
                 <div>
-                    ${t('idType.title')}: ${t(`idType.options.${formResponse.idType}`)}
+                    ${t.idType.title}: ${t.idType.options[formResponse.idType as keyof typeof t.idType.options]} 
                 </div>
                 <div>
-                    ${t('idNumber')}: ${formResponse.idNumber}
+                    ${t.idNumber}: ${formResponse.idNumber}
                 </div>
                 <div>
-                    ${t('birthday')}: ${`${formResponse.birthday.day}-${formResponse.birthday.month}-${formResponse.birthday.year}`}
+                    ${t.birthday}: ${`${formResponse.birthday.day}-${formResponse.birthday.month}-${formResponse.birthday.year}`}
                 </div>
                 <div>
-                    ${t('gender.title')}: ${t(`gender.options.${formResponse.gender}`)}
+                    ${t.gender.title}: ${t.gender.options[formResponse.gender as keyof typeof t.gender.options]}
                 </div>
                 <div>
-                    ${t('originCity')}: ${formResponse.originCity}
+                    ${t.originCity}: ${formResponse.originCity}
                 </div>
                 <div>
-                    ${t('originCountry')}: ${formResponse.originCountry}
+                    ${t.originCountry}: ${formResponse.originCountry}
                 </div>
                 <div>
-                    ${t('nativeLanguage.title')}: ${t(`nativeLanguage.options.${formResponse.nativeLanguage}`)}
+                    ${t.nativeLanguage.title}: ${t.nativeLanguage.options[formResponse.nativeLanguage as keyof typeof t.nativeLanguage.options]}
                 </div>
                 <div>
-                    ${t('phone.title')}: ${formResponse.phone}
+                    ${t.phone.title}: ${formResponse.phone}
                 </div>
                 <div>
-                    ${t('email.title')}: ${formResponse.email}
+                    ${t.email.title}: ${formResponse.email}
                 </div>
                 <div>
-                    ${t('address1.title')}: ${formResponse.address1}
+                    ${t.address1.title}: ${formResponse.address1}
                 </div>
                 ${
                     formResponse.address2
                         ? `<div>
-                            ${t('address2.title')}: ${formResponse.address2}
+                            ${t.address2.title}: ${formResponse.address2}
                         </div>`
-                        : ''
+                        : ""
                 }
                 <div>
-                    ${t('city')}: ${formResponse.city}
+                    ${t.city}: ${formResponse.city}
                 </div>
                 <div>
-                    ${t('zip')}: ${formResponse.zip}
+                    ${t.zip}: ${formResponse.zip}
                 </div>
                 <div>
-                    ${t('maritalStatus.title')}: ${t(`maritalStatus.options.${formResponse.spouse.maritalStatus}`)}
+                    ${t.maritalStatus.title}: ${t.maritalStatus.options[formResponse.spouse.maritalStatus as keyof typeof t.maritalStatus.options]}
                 </div>
                 ${
-                    formResponse.spouse.maritalStatus == '0'
+                    formResponse.spouse.maritalStatus == "0"
                         ? `
                             <div>
-                                ${t('spouse.spouseFirstName')}: ${formResponse.spouse.spouseFirstName}
+                                ${t.spouse.spouseFirstName}: ${formResponse.spouse.spouseFirstName}
                             </div>
                             <div>
-                                ${t('spouse.spouseFamilyName')}: ${formResponse.spouse.spouseFamilyName}
+                                ${t.spouse.spouseFamilyName}: ${formResponse.spouse.spouseFamilyName}
                             </div>
                             <div>
-                                ${t('spouse.spouseBirthday')}: ${formResponse.spouse.spouseBirthday.day}-${
-                              formResponse.spouse.spouseBirthday.month
-                          }-${formResponse.spouse.spouseBirthday.year}
+                                ${t.spouse.spouseBirthday}: ${formResponse.spouse.spouseBirthday.day}-${formResponse.spouse.spouseBirthday.month}-${formResponse.spouse.spouseBirthday.year}
                             </div>
                             <div>
-                                ${t('spouse.spouseIDType')}: ${t(`idType.options.${formResponse.spouse.spouseIDType}`)}
+                                ${t.spouse.spouseIDType}: ${t.idType.options[formResponse.spouse.spouseIDType as keyof typeof t.idType.options]}
                             </div>
                             <div>
-                                ${t('spouse.spouseIDNumber')}: ${formResponse.spouse.spouseIDNumber}
+                                ${t.spouse.spouseIDNumber}: ${formResponse.spouse.spouseIDNumber}
                             </div>
                         `
-                        : ''
+                        : ""
                 }
                 <div>
-                    ${t('children.title')}: ${t(`select.${formResponse.children.childStatus}`)}
+                    ${t.children.title}: ${t.select[formResponse.children.childStatus]}
                 </div>
                 ${
-                    formResponse.children.childStatus == 'Yes'
+                    formResponse.children.childStatus == "Yes"
                         ? `
                             ${formResponse.children.childTable.map(
                                 (child, index) =>
                                     `
                                     <div>
-                                        ${t('children.childFirstName')}: ${child.childFirstName}
+                                        ${t.children.childFirstName}: ${child.childFirstName}
                                     </div>
                                     <div>
-                                        ${t('children.childLastName')}: ${child.childLastName}
+                                        ${t.children.childLastName}: ${child.childLastName}
                                     </div>
                                     <div>
-                                        ${t('children.childGender')}: ${t(`gender.options.${child.childGender}`)}
+                                        ${t.children.childGender}: ${t.gender.options[child.childGender as keyof typeof t.gender.options]}
                                     </div>
                                     <div>
-                                        ${t('children.childBirthday')}: ${child.childBirthday.day}-${child.childBirthday.month}-${
-                                        child.childBirthday.year
-                                    }
+                                        ${t.children.childBirthday}: ${child.childBirthday.day}-${child.childBirthday.month}-${child.childBirthday.year}
                                     </div>
                                     <div>
-                                        ${t('children.childAccompanied')}: ${t(`select.${child.childAccompanied}`)}
+                                        ${t.children.childAccompanied}: ${t.select[child.childAccompanied as keyof typeof t.select]}
                                     </div>
                                     <br />
                                 `
                             )}
                         `
-                        : ''
+                        : ""
                 }
 
                 <div>
-                    ${t('aliyahDate')}: ${formResponse.aliyahDate}
+                    ${t.aliyahDate}: ${formResponse.aliyahDate}
                 </div>
                 <div>
-                    ${t('whereHeardOfUs.title')}: ${t(`whereHeardOfUs.options.${formResponse.whereHeardOfUs}`)}
+                    ${t.whereHeardOfUs.title}: ${t.whereHeardOfUs.options[formResponse.whereHeardOfUs as keyof typeof t.whereHeardOfUs.options]}
                 </div>
             </section>
             <br />

@@ -4,7 +4,7 @@ import "./globals.css";
 import Footer from "@/components/general/footer/Footer";
 import Head from "next/head";
 
-import { getDictionary, Locale } from "./[lang]/dictionaries";
+import { Locale } from "@/types/locales";
 
 const languages = ["en", "de"];
 
@@ -34,13 +34,10 @@ export default async function RootLayout({
     children: React.ReactNode;
     params: Promise<{ lang: Locale }>;
 }>) {
-    //const lang = (await params).lang;
+    const lang = (await params).lang;
     // const dictionary = await getDictionary(lang, "common"); // en
     return (
-        <html
-            lang="en"
-            //  dir={dir(lang)}
-        >
+        <html lang="en" dir={lang === "he" ? "rtl" : "ltr"}>
             <Head>
                 <title>BFP Gifts</title>
                 <meta property="og:title" content="BFP Gifts" key="title" />

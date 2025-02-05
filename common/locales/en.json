@@ -35,6 +35,11 @@
         "No": "No"
     },
 
+    "common": {
+        "enterHere": "Enter Here",
+        "wantToSubmit": "Do you want to submit the form?"
+    },
+
     "#comment": "########## New Immigrant ##########",
     "immigrant": {
         "title": "New Immigrant Gift Application",
@@ -151,7 +156,9 @@
             "Uziel": "Uziel",
             "HaDekel": "HaDekel",
             "Zalman Aran": "Zalman Aran",
-            "Ben Zvi": "Ben Zvi"
+            "Ben Zvi": "Ben Zvi",
+            "Orot - Boys": "Orot - Boys",
+            "Orot - Girls": "Orot - Girls"
         },
         "sectionTitle": {
             "funFacts": "Fun Facts about Me:",
@@ -175,12 +182,12 @@
         "isFirstTime": "Is this your first time applying for the scholarship?",
 
         "comment": "section",
-        "q1": "Who do you live with?",
+        "q1": "How many members are there in your family?",
         "q2": "How many brothers do you have?",
         "q3": "How many sisters do you have?",
         "q4": "My family is from:",
         "q5": "Spoken language at home:",
-        "q6": "What is your favorite subject in school?",
+        "archive_q6": "What is your favorite subject in school?",
         "q7": "What do you like about your family?",
 
         "comment.": "section",
@@ -190,13 +197,14 @@
         "q11": "What my teacher says about me:",
 
         "comment..": "section",
+        "nickname": "Nick name:",
         "favoriteColor": "Favorite Color:",
         "favoriteFood": "Favorite Food:",
-        "hobby": "Favorite things to do / Hobbies:",
-        "interest": "Interests or talents:",
+        "hobbies": "Favorite things to do / Hobbies:",
+        "interests": "Interests or talents:",
         "makesMeSad": "What makes me sad:",
         "loveMost": "What I love most in this world:",
-        "dream": "My future dreams are:",
+        "futureDreams": "My future dreams are:",
 
         "comment...": "section",
         "check1": "I understand that I will need to write a thank you to the donors of the scholarship.",
@@ -214,16 +222,20 @@
             "Branco Weiss": "Branco Weiss"
         },
 
+        "enter100": "Please enter more than 100 characters",
+
         "sectionTitle": {
             "introduction": "Introduction:",
             "school": "School:",
             "personalLife": "Personal Life:",
-            "yourFuture": "Your Future:"
+            "yourFuture": "Your Future:",
+            "scholarship": "Scholarship:"
         },
 
         "introduction": "Introduce yourself and describe your family. Include how many siblings you have, and/or who you live with, and how long your family has been in Israel.",
         "school": "What is school like for you? What are you good at and what is challenging?",
         "personalLife": "What do you like to do in your free time? What are some of your favorite things? ",
-        "yourFuture": "What do you want to do for a career? What dreams do you have? How do you see yourself in 10 years?"
+        "yourFuture": "What do you want to do for a career? What dreams do you have? How do you see yourself in 10 years?",
+        "scholarship": "Why do you want this scholarship?"
     }
 }

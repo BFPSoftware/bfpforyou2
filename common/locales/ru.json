@@ -3,7 +3,7 @@
     "lang": "ru",
     "home": {
         "missionStatement": "Мосты для мира: Христиане, поддерживающие Израиль и строящие отношения между христианами и евреями в Израиле и по всему миру.",
-        "startHere": "BFP ДЛЯ ВАС",
+        "startHere": "BFP FOR YOU",
         "haveCode": "Введите ваш код здесь",
         "noCode": "У меня нет кода",
         "noCodeDialog": "Если вы новый репатриант и ищете приветственный подарок, мы в настоящее время сталкиваемся с огромным количеством запросов. К сожалению, в настоящее время мы не можем предложить новым репатриантам приветственные подарки. Пожалуйста, не оставляйте сообщение, так как мы не можем ответить на ваше сообщение. В будущем мы надеемся снова раздать эти подарки через центры абсорбции и другие общественные организации.",
@@ -33,6 +33,11 @@
         "select": "Выбрать...",
         "Yes": "Да",
         "No": "Нет"
+    },
+
+    "common": {
+        "enterHere": "Введите здесь",
+        "wantToSubmit": "Вы хотите отправить форму?"
     },
 
     "#comment": "########## New Immigrant ##########",
@@ -140,90 +145,96 @@
 
     "##comment": "########## FAC ##########",
     "fac": {
-        "title": "Student Enrichment Scholarship Application",
-        "subtitle": "Instructions: Application must include a clear head and shoulder picture of the student. Photos that are tilted, have filters, masks, or have hands or headphones shown, will NOT be accepted.",
-        "thankYou": "Thank you for submitting the application"
+        "title": "Заявление на получение студенческой стипендии",
+        "subtitle": "Инструкции: Заявка должна включать четкое изображение головы и плеч студента. Фотографии с наклоном, с фильтрами, масками, руками или наушниками НЕ ПРИНИМАЮТСЯ. ",
+        "thankYou": "Спасибо за от правку заявки"
     },
     "elementary": {
         "schools": {
-            "Jabutinsky": "Jabutinsky",
-            "Levi Eshkol": "Levi Eshkol",
-            "Uziel": "Uziel",
-            "HaDekel": "HaDekel",
-            "Zalman Aran": "Zalman Aran",
-            "Ben Zvi": "Ben Zvi"
+            "Jabutinsky": "джабутинский",
+            "Levi Eshkol": "леви эшколь",
+            "Uziel": "узиэль",
+            "HaDekel": "hädekel",
+            "Zalman Aran": "залман аран",
+            "Ben Zvi": "бен зви",
+            "Orot - Boys": "Орот - ребята",
+            "Orot - Girls": "Орот - девчата"
         },
         "sectionTitle": {
-            "funFacts": "Fun Facts about Me:",
-            "meAndMyFamily": "Me and My Family:",
-            "meAndSchool": "Me and School:",
-            "littleMoreAboutMyself": "A Little More About Myself:"
+            "funFacts": "Интересные факты обо мне:",
+            "meAndMyFamily": "Я и моя семья:",
+            "meAndSchool": "Я и школа:",
+            "littleMoreAboutMyself": "Еще немного о себе:"
         },
 
-        "instruction": "Each student or parent should fill in their own answers.",
+        "instruction": "Каждый учащийся или родитель должен заполнить свои ответы.",
 
-        "name": "Name",
-        "photo": "Photo",
-        "tz": "T.Z.",
-        "birthYear": "Birthday/Year",
-        "birthMonth": "Birthday/Month",
-        "birthDay": "Birthday/Day",
-        "age": "Age",
-        "birthCountry": "Country of Birth",
-        "grade": "Grade",
-        "school": "School",
-        "isFirstTime": "Is this your first time applying for the scholarship?",
+        "name": "Имя",
+        "photo": "Фото",
+        "tz": "ТЗ",
+        "birthYear": "День рождения/год",
+        "birthMonth": "День рождения/месяц",
+        "birthDay": "День рождения/день",
+        "age": "Возраст",
+        "birthCountry": "Страна рождения",
+        "grade": "Оценка",
+        "school": "Школа",
+        "isFirstTime": "Вы впервые подаете заявку на стипендию?",
 
         "comment": "section",
-        "q1": "Who do you live with?",
-        "q2": "How many brothers do you have?",
-        "q3": "How many sisters do you have?",
-        "q4": "My family is from:",
-        "q5": "Spoken language at home:",
-        "q6": "What is your favorite subject in school?",
-        "q7": "What do you like about your family?",
+        "q1": "Сколько членов в вашей семье?",
+        "q2": "Сколько у тебя братьев?",
+        "q3": "Сколько у тебя сестер?",
+        "q4": "Моя семья из:",
+        "q5": "Разговорный язык дома:",
+        "q7": "Что вам нравится в вашей семье?",
 
         "comment.": "section",
-        "q8": "Favorite subjects in school:",
-        "q9": "School subjects I have difficulties in:",
-        "q10": "What I like about my teacher and why:",
-        "q11": "What my teacher says about me:",
+        "q8": "Любимые предметы в школе:",
+        "q9": "Школьные предметы, в которых у меня есть трудности:",
+        "q10": "Что мне нравится в моем учителе и почему:",
+        "q11": "Что мой учитель говорит обо мне:",
 
         "comment..": "section",
-        "favoriteColor": "Favorite Color:",
-        "favoriteFood": "Favorite Food:",
-        "hobby": "Favorite things to do / Hobbies:",
-        "interest": "Interests or talents:",
-        "makesMeSad": "What makes me sad:",
-        "loveMost": "What I love most in this world:",
-        "dream": "My future dreams are:",
+        "nickname": "Никнейм:",
+        "favoriteColor": "Любимый цвет:",
+        "favoriteFood": "Любимая еда:",
+        "hobbies": "Любимые занятия/Хобби:",
+        "interests": "Интересы или таланты:",
+        "makesMeSad": "Что меня огорчает:",
+        "loveMost": "Что я люблю больше всего в этом мире:",
+        "futureDreams": "Мои будущие мечты:",
 
         "comment...": "section",
-        "check1": "I understand that I will need to write a thank you to the donors of the scholarship.",
-        "check2": "I agree to the use of my photo by Bridges for Peace for the advancement of the scholarship program.",
-        "submittedBy": "Submitted by:",
-        "relationship": "Relationship",
-        "relationship_helper": "himself/herself/parent/teacher/etc.",
-        "forTeacher1": "For the Teacher: Please describe the family situation if possible.",
-        "forTeacher2": "For the Teacher: Please describe the school situation for the child."
+        "check1": "Я понимаю, что мне нужно будет написать благодарность жертвователям стипендии.",
+        "check2": "Я согласен на использование моей фотографии Bridges for Peace для продвижения стипендиальной программы.",
+        "submittedBy": "Представленный:",
+        "relationship": "Отношение",
+        "relationship_helper": "себя/себя/родителя/учителя/и т.д.",
+        "forTeacher1": "Учителю: Пожалуйста, опишите семейную ситуацию, если это возможно.",
+        "forTeacher2": "Для учителя: Пожалуйста, опишите школьную ситуацию для ребенка."
     },
     "highschool": {
         "schools": {
-            "Devir": "Devir",
-            "Shachar": "Shachar",
-            "Branco Weiss": "Branco Weiss"
+            "Devir": "девир",
+            "Shachar": "шахар",
+            "Branco Weiss": "бранко уайс"
         },
+
+        "enter100": "Пожалуйста, введите более 100 символов",
 
         "sectionTitle": {
-            "introduction": "Introduction:",
-            "school": "School:",
-            "personalLife": "Personal Life:",
-            "yourFuture": "Your Future:"
+            "introduction": "Введение:",
+            "school": "Школа:",
+            "personalLife": "Личная жизнь:",
+            "yourFuture": "Твое будущее:",
+            "scholarship": "Стипендия:"
         },
 
-        "introduction": "Introduce yourself and describe your family. Include how many siblings you have, and/or who you live with, and how long your family has been in Israel.",
-        "school": "What is school like for you? What are you good at and what is challenging?",
-        "personalLife": "What do you like to do in your free time? What are some of your favorite things? ",
-        "yourFuture": "What do you want to do for a career? What dreams do you have? How do you see yourself in 10 years?"
+        "introduction": "Представьтесь и опишите свою семью. Укажите, сколько у вас братьев и сестер и/или с кем вы живете, и как долго ваша семья находится в Израиле.",
+        "school": "Что для вас школа? Что у вас хорошо получается, а что сложно?",
+        "personalLife": "Чем ты любишь заниматься в свободное время? Какие ваши любимые вещи?",
+        "yourFuture": "Что вы хотите сделать для карьеры? Какие мечты у вас есть? Какой вы видите себя через 10 лет?",
+        "scholarship": "Почему вы хотите получить эту стипендию?"
     }
 }

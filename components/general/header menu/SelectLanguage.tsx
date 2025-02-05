@@ -1,14 +1,19 @@
 "use client";
-import React, { useState } from "react";
+import React, { EventHandler, useEffect, useState } from "react";
 import LanguageIcon from "../../icons/LanguageIcon";
 import ReactModal from "react-modal";
 import Link from "next/link";
-import { Locale } from "@/app/[lang]/dictionaries";
-import { useDictionary } from "@/common/locales/Dictionary-provider";
+import { Locale, locales } from "@/types/locales";
+import { Dictionary, useDictionary } from "@/common/locales/Dictionary-provider";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { AlertDialogHeader, AlertDialogFooter } from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogDescription, AlertDialogAction } from "@radix-ui/react-alert-dialog";
 
 export default function SelectLanguage() {
-    const dictionary = useDictionary();
+    const t = useDictionary();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const pathName = usePathname();
+    const searchParams = useSearchParams();
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -29,11 +34,18 @@ export default function SelectLanguage() {
                 return "English";
         }
     };
+    const getNewPath = (newLocale: Locale) => {
+        const segments = pathName.split("/");
+        segments[1] = newLocale; // Replace the locale segment
+        const newPath = segments.join("/");
+        const queryString = searchParams.toString();
+        return queryString ? `${newPath}?${queryString}` : newPath;
+    };
     return (
         <>
             <button className="flex justify-between items-center ml-2 w-24" onClick={toggleMenu}>
                 <LanguageIcon />
-                {getLangName(dictionary.lang as Locale)}
+                {getLangName(t.lang as Locale)}
             </button>
             <ReactModal
                 isOpen={isMenuOpen}
@@ -63,21 +75,16 @@ export default function SelectLanguage() {
                     </svg>
                 </button>
                 <div className="flex flex-col content-between justify-between">
-                    <Link className="mt-2 text-center" href={"/en"}>
-                        {getLangName("en")}
-                    </Link>
-                    <Link className="mt-2 text-center" href={"/he"}>
-                        {getLangName("he")}
-                    </Link>
-                    <Link className="mt-2 text-center" href={"/ru"}>
-                        {getLangName("ru")}
-                    </Link>
-                    <Link className="mt-2 text-center" href={"/es"}>
-                        {getLangName("es")}
-                    </Link>
-                    <Link className="mt-2 text-center" href={"/fr"}>
-                        {getLangName("fr")}
-                    </Link>
+                    {/* {locales.map((locale) => (
+                        <Link key={locale} className="mt-2 text-center" href={getNewPath(locale as Locale)}>
+                            {getLangName(locale)}
+                        </Link>
+                    ))} */}
+                    {(["en", "he", "ru"] as const).map((locale) => (
+                        <Link key={locale} className="mt-2 text-center" href={getNewPath(locale as Locale)}>
+                            {getLangName(locale)}
+                        </Link>
+                    ))}
                 </div>
             </ReactModal>
         </>

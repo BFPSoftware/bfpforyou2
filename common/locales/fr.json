@@ -3,7 +3,7 @@
     "lang": "fr",
     "home": {
         "missionStatement": "Ponts Pour la Paix : Chrétiens soutenant Israël et construisant des relations entre chrétiens et juifs en Israël et dans le monde entier.",
-        "startHere": "BFP POUR VOUS",
+        "startHere": "BFP FOR YOU",
         "haveCode": "Entrez votre code ici",
         "noCode": "Je n'ai pas de code",
         "noCodeDialog": "If you are a new immigrant looking for a welcome gift we are currently experiencing an overwhelming volume of requests. Unfortunately, we cannot offer new immigrants welcome gifts at this time. Please do not leave a message as we cannot reply to your message. In the future, we hope to distribute these gifts again through absorption centers and other community organizations.",
@@ -33,6 +33,11 @@
         "select": "Sélectionner...",
         "Yes": "Oui",
         "No": "Non"
+    },
+
+    "common": {
+        "enterHere": "Entrer ici",
+        "wantToSubmit": "Souhaitez-vous soumettre le formulaire ?"
     },
 
     "#comment": "########## New Immigrant ##########",
@@ -151,7 +156,9 @@
             "Uziel": "Uziel",
             "HaDekel": "HaDekel",
             "Zalman Aran": "Zalman Aran",
-            "Ben Zvi": "Ben Zvi"
+            "Ben Zvi": "Ben Zvi",
+            "Orot - Boys": "Orot - Boys",
+            "Orot - Girls": "Orot - Girls"
         },
         "sectionTitle": {
             "funFacts": "Fun Facts about Me:",
@@ -175,7 +182,7 @@
         "isFirstTime": "Is this your first time applying for the scholarship?",
 
         "comment": "section",
-        "q1": "Who do you live with?",
+        "q1": "Combien de membres compte votre famille ?",
         "q2": "How many brothers do you have?",
         "q3": "How many sisters do you have?",
         "q4": "My family is from:",
@@ -190,13 +197,14 @@
         "q11": "What my teacher says about me:",
 
         "comment..": "section",
+        "nickname": "Nick name:",
         "favoriteColor": "Favorite Color:",
         "favoriteFood": "Favorite Food:",
-        "hobby": "Favorite things to do / Hobbies:",
-        "interest": "Interests or talents:",
+        "hobbies": "Favorite things to do / Hobbies:",
+        "interests": "Interests or talents:",
         "makesMeSad": "What makes me sad:",
         "loveMost": "What I love most in this world:",
-        "dream": "My future dreams are:",
+        "futureDreams": "My future dreams are:",
 
         "comment...": "section",
         "check1": "I understand that I will need to write a thank you to the donors of the scholarship.",
@@ -214,16 +222,20 @@
             "Branco Weiss": "Branco Weiss"
         },
 
+        "enter100": "Veuillez saisir plus de 100 caractères",
+
         "sectionTitle": {
             "introduction": "Introduction:",
             "school": "School:",
             "personalLife": "Personal Life:",
-            "yourFuture": "Your Future:"
+            "yourFuture": "Your Future:",
+            "scholarship": "Bourse d'études:"
         },
 
         "introduction": "Introduce yourself and describe your family. Include how many siblings you have, and/or who you live with, and how long your family has been in Israel.",
         "school": "What is school like for you? What are you good at and what is challenging?",
         "personalLife": "What do you like to do in your free time? What are some of your favorite things? ",
-        "yourFuture": "What do you want to do for a career? What dreams do you have? How do you see yourself in 10 years?"
+        "yourFuture": "What do you want to do for a career? What dreams do you have? How do you see yourself in 10 years?",
+        "scholarship": "Pourquoi voulez-vous cette bourse ?"
     }
 }

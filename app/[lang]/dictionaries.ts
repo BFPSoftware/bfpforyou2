@@ -1,7 +1,6 @@
+import { locales, Locale } from "@/types/locales";
 import "server-only";
 
-const locales = ["en", "he", "ru", "es", "fr"] as const;
-export type Locale = (typeof locales)[number];
 const dictionaries = {
     en: () => import("@/common/locales/en.json").then((module) => module.default),
     he: () => import("@/common/locales/he.json").then((module) => module.default),

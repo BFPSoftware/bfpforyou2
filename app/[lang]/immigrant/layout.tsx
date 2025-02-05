@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 
-import { getDictionary, Locale } from "../dictionaries";
+import { getDictionary } from "../dictionaries";
 import DictionaryProvider from "@/common/locales/Dictionary-provider";
 import { Usable, use } from "react";
+import { Locale } from "@/types/locales";
 
 export const metadata: Metadata = {
     title: "BFP for You",
@@ -19,10 +20,8 @@ export default async function RootLayout({
     const lang = (await params).lang;
     const dictionary = await getDictionary(lang); // en
     return (
-        <html lang={lang}>
-            <body>
-                <DictionaryProvider dictionary={dictionary}>{children}</DictionaryProvider>
-            </body>
-        </html>
+        <section>
+            <DictionaryProvider dictionary={dictionary}>{children}</DictionaryProvider>
+        </section>
     );
 }

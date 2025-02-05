@@ -40,3 +40,20 @@ export const YesNo = (t: Dictionary) => ({
     Yes: t.select.Yes,
     No: t.select.No,
 });
+
+export const ElemSchools = (t: Dictionary) => ({
+    Jabutinsky: t.elementary.schools.Jabutinsky,
+    "Levi Eshkol": t.elementary.schools["Levi Eshkol"],
+    Uziel: t.elementary.schools.Uziel,
+    HaDekel: t.elementary.schools.HaDekel,
+    "Zalman Aran": t.elementary.schools["Zalman Aran"],
+    "Ben Zvi": t.elementary.schools["Ben Zvi"],
+    "Orot - Boys": t.elementary.schools["Orot - Boys"],
+    "Orot - Girls": t.elementary.schools["Orot - Girls"],
+});
+
+export const Highschools = (t: Dictionary) => ({
+    Devir: t.highschool.schools.Devir,
+    Shachar: t.highschool.schools.Shachar,
+    "Branco Weiss": t.highschool.schools["Branco Weiss"],
+});
