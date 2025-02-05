@@ -1,19 +1,10 @@
 "use client";
-import React, { Usable, use } from "react";
-import SelectLanguage from "./SelectLanguage";
-import Link from "next/link";
+import React from "react";
 import Image from "next/image";
 import logo from "@/public/images/logo.jpg";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const HeaderNoSelectLang = () => {
-    const pathname = usePathname();
-    const getNewPath = () => {
-        const segments = pathname.split("/");
-        const currentLocale = segments[1]; // Assuming the locale is the first segment of the path
-        return `/${currentLocale}`;
-    };
-
     return (
         <header className="flex justify-around content-center bg-theme">
             {/* <Link href={getNewPath()}> */}

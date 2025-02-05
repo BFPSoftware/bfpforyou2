@@ -3,14 +3,14 @@
 import { Select, Date } from "../../components/FormComponents";
 import { Dispatch, FC, SetStateAction } from "react";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
-import { ContactType } from "../schema/immigrantSchema";
+import { ImmigrantType } from "../schema/immigrantSchema";
 import { whereHeardOfUs } from "@/common/enums";
 import { Dictionary } from "@/common/locales/Dictionary-provider";
 
 type ThirdPageProps = {
     setPage: Dispatch<SetStateAction<number>>;
-    errors: FieldErrors<ContactType>;
-    register: UseFormRegister<ContactType>;
+    errors: FieldErrors<ImmigrantType>;
+    register: UseFormRegister<ImmigrantType>;
     t: Dictionary;
 };
 const ThirdPage: FC<ThirdPageProps> = ({ setPage, errors, register, t }) => {

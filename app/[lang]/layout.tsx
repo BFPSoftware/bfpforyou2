@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-// import "./../globals.css";
-//import { dir } from "i18next";
 import { getDictionary } from "./dictionaries";
 import DictionaryProvider from "@/common/locales/Dictionary-provider";
-import { Usable, use } from "react";
 import { Locale } from "@/types/locales";
 
 export const metadata: Metadata = {

@@ -1,6 +1,6 @@
 "use client";
 import Header from "@/components/general/header menu/Header";
-import React, { Usable, use, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import flag from "@/public/images/flags.jpg";
 import Spinner from "@/components/spinner/Spinner";
@@ -10,16 +10,12 @@ import { AlertDialogHeader, AlertDialogFooter } from "@/components/ui/alert-dial
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
 import { checkCode } from "./actions/kintone/checkCode";
 import { useRouter, usePathname } from "next/navigation";
-import { Locale } from "@/types/locales";
 
-export default function Home({ params }: { params: Usable<{ lang: Locale }> }) {
-    const { lang } = use(params);
+export default function Home() {
     const t = useDictionary();
-    //const { t } = useTranslation(lang, "common", { useSuspense: false });
     const [code, setCode] = useState("");
     const [isCodeValid, setIsCodeValid] = useState<true | false | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    //const router = useRouter();
     // 10 digits number
     const isInputValid = /^\d{1,9}$/.test(code);
     const router = useRouter();

@@ -13,14 +13,13 @@ import { ImmigrantType } from "../schema/immigrantSchema";
 import { Dictionary } from "@/common/locales/Dictionary-provider";
 import Delete from "@/components/icons/Delete";
 type ChildrenProps = {
-    label: string;
     errors: FieldErrors<ImmigrantType>;
     register: UseFormRegister<ImmigrantType>;
     control: Control<ImmigrantType>;
     useWatch: any; // TODO: fix type
     t: Dictionary;
 };
-const Children: FC<ChildrenProps> = ({ label, errors, register, control, useWatch, t }) => {
+const Children: FC<ChildrenProps> = ({ errors, register, control, useWatch, t }) => {
     const [openItem, setOpenItem] = useState<string>("item-0");
     const useChildren = useWatch({ control, name: "children" });
     const { fields, append, remove } = useFieldArray({
