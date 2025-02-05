@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-
-let locales = ["en", "he", "ru", "es", "fr"];
+import { locales } from "./types/locales";
 
 // Get the preferred locale, similar to the above or using a library
 function getLocale(request: NextRequest) {
@@ -24,8 +23,8 @@ export function middleware(request: NextRequest) {
 
 export const config = {
     matcher: [
-        // Skip all internal paths (_next)
-        "/((?!_next).*)",
+        // Skip all internal paths (_next) and API routes (/api)
+        "/((?!_next|api).*)",
         // Optional: only run on root (/) URL
         // '/'
     ],

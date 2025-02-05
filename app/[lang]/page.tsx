@@ -1,85 +1,127 @@
 "use client";
 import Header from "@/components/general/header menu/Header";
-import React, { Usable, use, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import flag from "@/public/images/flags.jpg";
 import Spinner from "@/components/spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { Locale } from "./dictionaries";
-import { useDictionary } from "@/common/locales/Dictionary-provider";
+import { Dictionary, useDictionary } from "@/common/locales/Dictionary-provider";
+import { AlertDialogHeader, AlertDialogFooter } from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
+import { checkCode } from "./actions/kintone/checkCode";
+import { useRouter, usePathname } from "next/navigation";
 
-export default function Home({ params }: { params: Usable<{ lang: Locale }> }) {
-    const { lang } = use(params);
-    const dictionary = useDictionary();
-    //const { t } = useTranslation(lang, "common", { useSuspense: false });
+export default function Home() {
+    const t = useDictionary();
     const [code, setCode] = useState("");
     const [isCodeValid, setIsCodeValid] = useState<true | false | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    //const router = useRouter();
     // 10 digits number
     const isInputValid = /^\d{1,9}$/.test(code);
+    const router = useRouter();
+    const pathname = usePathname();
+    const handleNavigation = (path: string, params: { [key: string]: string }) => {
+        const segments = pathname.split("/");
+        const currentLocale = segments[1]; // Assuming the locale is the first segment of the path
+        const queryString = new URLSearchParams(params).toString();
+        router.push(`/${currentLocale}${path}?${queryString}`);
+    };
     const handleCheckCode = async (e: any) => {
-        return console.log("e", e);
-        // try {
-        //     e.preventDefault();
-        //     if (!isInputValid) return setIsCodeValid(false);
-        //     setIsLoading(true);
-        //     if (!code) return setIsCodeValid(null);
-        //     const res = await checkCode(code);
-        //     if (!res) {
-        //         setIsCodeValid(false);
-        //         console.log("res", res);
-        //     } else if (res) {
-        //         setIsCodeValid(true);
-        //         switch (res.program) {
-        //             case "New Immigrant":
-        //                 router.push({
-        //                     pathname: "/immigrant",
-        //                     query: { ticket: code },
-        //                 });
-        //                 break;
-        //             case "FAC Elementary":
-        //                 router.push({
-        //                     pathname: "/fac",
-        //                     query: { ticket: code },
-        //                 });
-        //                 break;
-        //             case "FAC Highschool":
-        //                 router.push({
-        //                     pathname: "/fac",
-        //                     query: { ticket: code },
-        //                 });
-        //                 break;
-        //             default:
-        //                 alert("Something went wrong");
-        //                 throw new Error("program not found");
-        //         }
-        //     }
-        //     setIsLoading(false);
-        // } catch (e) {
-        //     handleCatch(e, { code: code }, "handleCheckCode");
-        // }
+        e.preventDefault();
+        if (!isInputValid) {
+            setIsCodeValid(false);
+            return;
+        } else if (isLoading) return;
+        setIsLoading(true);
+        try {
+            const res = await checkCode({ code });
+
+            // Result keys.
+            if (res?.data) {
+                const { success, failure } = res?.data;
+                if (success) {
+                    console.log("res", res?.data);
+                    switch (success) {
+                        case "FAC Elementary":
+                            handleNavigation("/facelem", { ticket: code });
+                            break;
+                        case "FAC Highschool":
+                            handleNavigation("/fachigh", { ticket: code });
+                            break;
+                        case "New Immigrant":
+                            handleNavigation("/immigrant", { ticket: code });
+                            break;
+                        default:
+                            setIsCodeValid(false);
+                            alert("Something went wrong. Please try again later.");
+                            console.log("res", res?.data);
+                            break;
+                    }
+                    setIsCodeValid(true);
+                } else if (failure) {
+                    setIsCodeValid(false);
+                    console.log("res", res?.data);
+                }
+            } else if (res?.validationErrors) {
+                setIsCodeValid(false);
+                console.log("res", res?.validationErrors);
+            } else if (res?.serverError) {
+                setIsCodeValid(false);
+                console.log("res", res?.serverError);
+            }
+        } catch (e) {
+            console.log(e);
+            setIsCodeValid(false);
+        } finally {
+            setIsLoading(false);
+        }
+        return;
+    };
+    const handleOnChange = (e: any) => {
+        if (isInputValid) {
+            setIsCodeValid(null);
+        }
+        setCode(e.currentTarget.value);
     };
     return (
         <>
             {isLoading && <Spinner isLoading={isLoading} />}
-            <Header lang={lang} />
+            <Header />
             <main className="flex bg-slate-300 h-auto flex-col items-center text-center justify-evenly p-[10%] md:p-24">
-                <h1 className="text-3xl md:text-4xl font-semibold text-slate-800 font-serif mb-5">{dictionary.home.startHere}</h1>
-                <div className="w-screen flex justify-center">
-                    <Image src={flag} alt="flag" width={1000} height={2000} />
+                <h1 className="text-3xl md:text-4xl font-semibold text-slate-800 font-serif mb-5">{t.home.startHere}</h1>
+                <div className="w-[95svw] flex justify-center">
+                    <div className="relative w-full h-[400px]">
+                        <Image src={flag} alt="flag" className="absolute inset-0 w-full h-full object-cover" quality={100} />
+                    </div>
                 </div>
-                <h2 className="my-4 text-lg text-gray-500 italic font-serif">{dictionary.home.missionStatement}</h2>
-                <form className="w-full">
-                    <input placeholder={dictionary.home.haveCode} pattern="[0-9]*" inputMode="numeric" value={code} onChange={(e) => setCode(e.currentTarget.value)} className="w-full max-w-80 border text-md md:text-xl p-5 mt-5 mx-4" />
-                    {isCodeValid == false && <p className="text-red-500">{dictionary.home.invalidCode}</p>}
-                    <Button type="button" variant="default" size="default" onClick={handleCheckCode}>
-                        {dictionary.button.check}
+                <h2 className="my-4 text-lg text-gray-500 italic font-serif">{t.home.missionStatement}</h2>
+                <form onSubmit={handleCheckCode} className="flex justify-center items-center w-full">
+                    <input placeholder={t.home.haveCode} value={code} onChange={handleOnChange} className="w-full max-w-80 text-md text-center md:text-2xl p-5 mx-4" />
+                    <Button type="submit" variant="default" size="default">
+                        {t.button.check}
                     </Button>
                 </form>
+                {isCodeValid == false && <p className="text-red-500">{t.home.invalidCode}</p>}
 
-                <p className="btn-theme">{dictionary.home.noCode}</p>
+                <div className="mt-8">
+                    <AlertHaveNoCode t={t} />
+                </div>
             </main>
         </>
     );
 }
+
+const AlertHaveNoCode = ({ t }: { t: Dictionary }) => (
+    <AlertDialog>
+        <AlertDialogTrigger className="btn-theme">{t.home.noCode}</AlertDialogTrigger>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+                <AlertDialogTitle hidden>Have No Code?</AlertDialogTitle>
+                <AlertDialogDescription className="text-lg">{t.home.noCodeDialog}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+                <AlertDialogAction>{t.button.back}</AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+    </AlertDialog>
+);
