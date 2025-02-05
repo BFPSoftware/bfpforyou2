@@ -1,6 +1,15 @@
 import { Dictionary } from "@/common/locales/Dictionary-provider";
 import { z } from "zod";
 
+const validateRadio = (value: string | null) => value !== null;
+
+const error_required = {
+    message: "This field is required",
+};
+
+// common
+const yesNo: z.ZodEffects<z.ZodNullable<z.ZodString>> = z.string().nullable().refine(validateRadio, error_required);
+
 const ticket: z.ZodString = z.string().min(1).max(9);
 const formLang: z.ZodString = z.string().min(1).max(20);
 // Page 1
@@ -112,7 +121,7 @@ const children = z
             ),
         }),
         z.object({
-            childStatus: z.enum(["No"]),
+            childStatus: z.enum(["No", ""]),
             childTable: z.array(
                 z.object({
                     childFirstName: z.string().optional(),
@@ -132,7 +141,7 @@ const children = z
     ])
     .refine(
         (data) => {
-            if (data.childStatus == null) return false;
+            if (data.childStatus == "") return false;
             else return true;
         },
         {
