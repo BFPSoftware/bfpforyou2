@@ -94,7 +94,7 @@ const template_immigrant = (formResponse: ImmigrantType, t: Dictionary) => {
                         : ""
                 }
                 <div>
-                    ${t.children.title}: ${t.select[formResponse.children.childStatus]}
+                    ${t.children.title}: ${t.select[formResponse.children.childStatus as keyof typeof t.select]}
                 </div>
                 ${
                     formResponse.children.childStatus == "Yes"
