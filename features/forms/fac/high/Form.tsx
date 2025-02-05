@@ -9,7 +9,6 @@ import { z } from "zod";
 import { useDictionary } from "@/common/locales/Dictionary-provider";
 import { customErrorMap, fachighSchema, FachighType, submitLangsShort } from "../schema/fachighSchema";
 import { handleSubmit_fachigh } from "../hooks/handleSubmit_fachigh";
-import Loading from "@/app/loading";
 import Spinner from "@/components/spinner/Spinner";
 import logError from "@/common/logError";
 // import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogHeader, AlertDialogFooter, AlertDialogCancel } from "@/components/ui/alert-dialog";
