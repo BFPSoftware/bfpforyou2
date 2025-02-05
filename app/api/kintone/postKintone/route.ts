@@ -1,18 +1,11 @@
-import { KintoneRestAPIClient } from "@kintone/rest-api-client";
 import { NextRequest, NextResponse } from "next/server";
 import logError from "@/common/logError";
-import { BeneficiaryApplicationFormAppID, KintonePassword, KintoneUserName } from "@/common/env";
+import { BeneficiaryApplicationFormAppID } from "@/common/env";
+import client from "@/hooks/useKintone";
 
 export async function POST(req: NextRequest) {
     try {
         const reqs = await req.json();
-        const client = new KintoneRestAPIClient({
-            baseUrl: "https://bfp.kintone.com",
-            auth: {
-                username: KintoneUserName,
-                password: KintonePassword,
-            },
-        });
         const resp = await client.record.addRecord({
             app: BeneficiaryApplicationFormAppID!,
             record: reqs,

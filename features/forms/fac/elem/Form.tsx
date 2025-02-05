@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -9,56 +9,45 @@ import { z } from "zod";
 import { useDictionary } from "@/common/locales/Dictionary-provider";
 import { customErrorMap, facelemSchema, FacelemType, submitLangsShort } from "../schema/facelemSchema";
 import { handleSubmit_facelem } from "../hooks/handleSubmit_facelem";
+import logError from "@/common/logError";
+import Spinner from "@/components/spinner/Spinner";
 
 type FacelemFormProps = { ticket: string };
 
 const FacelemForm: FC<FacelemFormProps> = ({ ticket }) => {
-    // confirm before leaving page
-    const onBeforeUnload = (ev: Event) => {
-        if (isSubmitting) {
-            window.removeEventListener("beforeunload", onBeforeUnload);
-            return true;
-        }
-        if (isDirty) {
-            ev.preventDefault();
-        }
-        ev.returnValue = isDirty;
-        return isDirty;
-    };
-    useEffect(() => {
-        window.addEventListener("beforeunload", onBeforeUnload);
-        return () => {
-            window.removeEventListener("beforeunload", onBeforeUnload);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const [isLoading, setIsLoading] = useState(false);
+
     const t = useDictionary();
     // zod error with custom language
     z.setErrorMap(customErrorMap(t));
 
     const handleOnSubmit: SubmitHandler<FacelemType> = async (data) => {
-        // remove
-        window.removeEventListener("beforeunload", onBeforeUnload);
-        if (!window.confirm("Do you want to submit?")) return;
-        // validation on third page
-        const validate = async () => {
-            const isValids = await trigger();
-            console.log("isValid All: " + isValids);
-            if (isValids) return true;
-            else {
-                const firstErrorField = Object.keys(formatError)[0];
-                const errorElement = document.querySelector(`[name="${firstErrorField}"]`);
-                console.log("errorElement", firstErrorField);
-                if (errorElement) {
-                    errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        setIsLoading(true);
+        try {
+            // validation on third page
+            const validate = async () => {
+                const isValids = await trigger();
+                console.log("isValid All: " + isValids);
+                if (isValids) return true;
+                else {
+                    const firstErrorField = Object.keys(formatError)[0];
+                    const errorElement = document.querySelector(`[name="${firstErrorField}"]`);
+                    console.log("errorElement", firstErrorField);
+                    if (errorElement) {
+                        errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
+                    return false;
                 }
-                return false;
-            }
-        };
-        if (!(await validate())) return;
-        const res = await handleSubmit_facelem(data, t);
-        if (res) location.href = "/facelem/thank-you";
-        else console.log("error");
+            };
+            if (!(await validate())) return;
+            const res = await handleSubmit_facelem(data, t);
+            if (res) location.href = "/facelem/thank-you";
+            else console.log("error");
+        } catch (e) {
+            logError(e, { data }, "handleSubmit_fachigh");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const {
@@ -89,6 +78,7 @@ const FacelemForm: FC<FacelemFormProps> = ({ ticket }) => {
     setValue("submitLang", (t.lang as (typeof submitLangsShort)[number]) || "en");
     return (
         <div className="w-full max-w-[1095px] h-full bg-white rounded-md ">
+            {isLoading && <Spinner isLoading={isLoading} />}
             <form
                 method="post"
                 onSubmit={(event) => {
