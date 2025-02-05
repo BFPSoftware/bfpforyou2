@@ -22,7 +22,6 @@ const SecondPage: FC<SecondPageProps> = ({ setPage, errors, register, control, u
     const fields: (keyof ImmigrantType)[] = ["spouse", "children"];
     const validate = async () => {
         const isValids = await trigger(fields);
-        console.log("isValid SecondPage: " + isValids);
         if (isValids) return true;
         else return false;
     };
@@ -59,9 +58,6 @@ const SecondPage: FC<SecondPageProps> = ({ setPage, errors, register, control, u
             </div>
 
             <div className="flex flex-col mt-5">
-                <button type="button" className="btn-gray" onClick={() => setPage(0)}>
-                    {t.button.back}
-                </button>
                 <button
                     className="btn-theme"
                     onClick={async () => {
@@ -69,6 +65,9 @@ const SecondPage: FC<SecondPageProps> = ({ setPage, errors, register, control, u
                     }}
                 >
                     {t.button.next}
+                </button>
+                <button type="button" className="btn-gray" onClick={() => setPage(0)}>
+                    {t.button.back}
                 </button>
             </div>
         </>

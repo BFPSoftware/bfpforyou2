@@ -43,7 +43,6 @@ const Children: FC<ChildrenProps> = ({ errors, register, control, useWatch, t })
         });
         setOpenItem(`item-${fields.length}`); // Open the newly added item
     };
-    console.log("errors.children?.childTable", errors.children?.childTable);
 
     return (
         <div className="max-w-4xl">

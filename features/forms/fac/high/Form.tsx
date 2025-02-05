@@ -23,17 +23,15 @@ const FachighForm: FC<FachighFormProps> = ({ ticket }) => {
     z.setErrorMap(customErrorMap(t));
 
     const handleOnSubmit: SubmitHandler<FachighType> = async (data) => {
-        // validation
+        if (!window.confirm(t.common.wantToSubmit)) return;
         setIsLoading(true);
         try {
             const validate = async () => {
                 const isValids = await trigger();
-                console.log("isValid All: " + isValids);
                 if (isValids) return true;
                 else {
                     const firstErrorField = Object.keys(formatError)[0];
                     const errorElement = document.querySelector(`[name="${firstErrorField}"]`);
-                    console.log("errorElement", firstErrorField);
                     if (errorElement) {
                         errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
                     }
@@ -43,7 +41,7 @@ const FachighForm: FC<FachighFormProps> = ({ ticket }) => {
             if (!(await validate())) return;
             const res = await handleSubmit_fachigh(data, t);
             if (res) location.href = "/fachigh/thank-you";
-            else console.log("error");
+            else alert("Something went wrong. Please try again later.");
         } catch (e) {
             logError(e, { data }, "handleSubmit_fachigh");
         } finally {
@@ -70,13 +68,6 @@ const FachighForm: FC<FachighFormProps> = ({ ticket }) => {
             ticket: ticket,
         },
     });
-
-    // useFieldArray for Children table
-
-    console.log("erros: " + Object.keys(formatError));
-    console.log("validAll: " + isValid);
-    console.log(getValues());
-
     setValue("submitLang", (t.lang as (typeof submitLangsShort)[number]) || "en");
 
     return (

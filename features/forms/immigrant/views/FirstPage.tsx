@@ -21,15 +21,8 @@ const FirstPage: FC<FirstPageProps> = ({ setPage, errors, register, setValue, tr
     const fields: (keyof ImmigrantType)[] = ["firstName", "lastName", "idType", "idNumber", "birthday", "attachment1", "attachment2", "attachment3", "gender", "originCity", "originCountry", "nativeLanguage", "phone", "email", "address1", "address2", "city", "zip"];
     const validate = async () => {
         const isValids = await trigger(fields);
-        console.log("isValid FirstPage: " + isValids);
         if (isValids) return true;
         else {
-            // const firstErrorField = Object.keys(errors)[0];
-            // const errorElement = document.querySelector(`[name="${firstErrorField}"]`);
-            // console.log("errorElement", errorElement);
-            // if (errorElement) {
-            //     errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
-            // }
             return false;
         }
     };

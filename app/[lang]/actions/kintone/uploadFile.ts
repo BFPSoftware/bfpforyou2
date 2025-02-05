@@ -21,8 +21,6 @@ export const uploadFile = actionClient.schema(schema).action(async ({ parsedInpu
                 data: buffer,
             },
         });
-
-        console.log("fileKey", fileKey);
         return { success: fileKey };
     } catch (e) {
         logError(e, { file: JSON.stringify(file) }, "uploadFile");

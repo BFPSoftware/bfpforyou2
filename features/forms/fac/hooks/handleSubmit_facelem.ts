@@ -97,9 +97,7 @@ const createAddRecord = (formResponse: FacelemType) => {
 
 export const handleSubmit_facelem = async (formResponse: FacelemType, t: any) => {
     try {
-        console.log("dataimmigrant", formResponse);
         const addRecord = createAddRecord(formResponse);
-        console.log("addRecord", addRecord);
         const res = await fetch("/api/kintone/postKintone_fac", {
             method: "POST",
             headers: {

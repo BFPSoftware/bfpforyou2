@@ -40,7 +40,6 @@ export default function Home() {
             if (res?.data) {
                 const { success, failure } = res?.data;
                 if (success) {
-                    console.log("res", res?.data);
                     switch (success) {
                         case "FAC Elementary":
                             handleNavigation("/facelem", { ticket: code });
@@ -54,23 +53,18 @@ export default function Home() {
                         default:
                             setIsCodeValid(false);
                             alert("Something went wrong. Please try again later.");
-                            console.log("res", res?.data);
                             break;
                     }
                     setIsCodeValid(true);
                 } else if (failure) {
                     setIsCodeValid(false);
-                    console.log("res", res?.data);
                 }
             } else if (res?.validationErrors) {
                 setIsCodeValid(false);
-                console.log("res", res?.validationErrors);
             } else if (res?.serverError) {
                 setIsCodeValid(false);
-                console.log("res", res?.serverError);
             }
         } catch (e) {
-            console.log(e);
             setIsCodeValid(false);
         } finally {
             setIsLoading(false);

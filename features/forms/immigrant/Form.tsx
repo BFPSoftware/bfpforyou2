@@ -1,6 +1,6 @@
 "use client";
 import { FC, useEffect } from "react";
-import { defaultData, ImmigrantSchema, ImmigrantType } from "./schema/immigrantSchema";
+import { ImmigrantSchema, ImmigrantType } from "./schema/immigrantSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 import { useState } from "react";
@@ -9,64 +9,48 @@ import FirstPage from "./views/FirstPage";
 import SecondPage from "./views/SecondPage";
 import ThirdPage from "./views/ThirdPage";
 
-import { useTranslation } from "react-i18next";
-
 import { customErrorMap } from "./schema/immigrantSchema";
 import { z } from "zod";
 import { handleSubmit_newImmigrant } from "./hooks/handleSubmit_immigrant";
 import { useDictionary } from "@/common/locales/Dictionary-provider";
+import logError from "@/common/logError";
 
 type NewImmigrantFormProps = { ticket: string };
 
 const NewImmigrantForm: FC<NewImmigrantFormProps> = ({ ticket }) => {
-    // confirm before leaving page
-    const onBeforeUnload = (ev: Event) => {
-        if (isSubmitting) {
-            window.removeEventListener("beforeunload", onBeforeUnload);
-            return true;
-        }
-        if (isDirty) {
-            ev.preventDefault();
-        }
-        ev.returnValue = isDirty;
-        return isDirty;
-    };
-    useEffect(() => {
-        window.addEventListener("beforeunload", onBeforeUnload);
-        return () => {
-            window.removeEventListener("beforeunload", onBeforeUnload);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const [isLoading, setIsLoading] = useState(false);
     const t = useDictionary();
     // zod error with custom language
     z.setErrorMap(customErrorMap(t));
 
     const handleOnSubmit: SubmitHandler<ImmigrantType> = async (data) => {
-        // remove
-        window.removeEventListener("beforeunload", onBeforeUnload);
-        if (!window.confirm("Do you want to submit?")) return;
-        // validation on third page
-        const fields: (keyof ImmigrantType)[] = ["aliyahDate", "whereHeardOfUs"];
-        const validate = async () => {
-            const isValids = await trigger(fields);
-            console.log("isValid All: " + isValids);
+        if (!window.confirm(t.common.wantToSubmit)) return;
+        setIsLoading(true);
+        try {
+            // validation on third page
+            const fields: (keyof ImmigrantType)[] = ["aliyahDate", "whereHeardOfUs"];
+            const validate = async () => {
+                const isValids = await trigger(fields);
 
-            if (isValids) return true;
-            else {
-                const firstErrorField = Object.keys(formatError)[0];
-                const errorElement = document.querySelector(`[name="${firstErrorField}"]`);
-                console.log("errorElement", firstErrorField);
-                if (errorElement) {
-                    errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+                if (isValids) return true;
+                else {
+                    const firstErrorField = Object.keys(formatError)[0];
+                    const errorElement = document.querySelector(`[name="${firstErrorField}"]`);
+                    if (errorElement) {
+                        errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
+                    return false;
                 }
-                return false;
-            }
-        };
-        if (!(await validate())) return;
-        const res = await handleSubmit_newImmigrant(data, t);
-        if (res) location.href = "/immigrant/thank-you";
-        else console.log("error");
+            };
+            if (!(await validate())) return;
+            const res = await handleSubmit_newImmigrant(data, t);
+            if (res) location.href = "/immigrant/thank-you";
+            else alert("Something went wrong. Please try again later.");
+        } catch (e) {
+            logError(e, { data }, "handleSubmit_fachigh");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const {
@@ -99,15 +83,7 @@ const NewImmigrantForm: FC<NewImmigrantFormProps> = ({ ticket }) => {
         },
     });
 
-    // useFieldArray for Children table
-
-    console.log("erros: " + Object.keys(formatError));
-    console.log("validAll: " + isValid);
-    console.log(getValues());
-    //console.log(`watch: ${Object.keys(Object.values(getValues('childRows')))}`)
     const [page, setPage] = useState(0);
-
-    console.log(page);
     setValue("formLang", t.lang || "en");
     return (
         <div className="w-full max-w-[1095px] h-full bg-white rounded-md ">
