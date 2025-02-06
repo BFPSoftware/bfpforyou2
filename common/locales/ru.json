@@ -56,7 +56,6 @@
     "_comment": "##### Personal Information #####",
     "firstName": "Имя",
     "lastName": "Фамилия",
-    "fullNameEnglish": "Full Name in English",
     "idType": {
         "title": "Вид удостоверения личности",
         "options": {

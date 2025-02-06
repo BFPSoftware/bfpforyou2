@@ -19,13 +19,6 @@ const template_immigrant = (formResponse: ImmigrantType, t: Dictionary) => {
                 <div>
                     ${t.lastName}: ${formResponse.lastName}
                 </div>
-                ${
-                    formResponse.formLang != "en"
-                        ? `<div>
-                            ${t.fullNameEnglish}: ${formResponse.fullNameEnglish}
-                        </div>`
-                        : ""
-                }
                 <div>
                     ${t.idType.title}: ${t.idType.options[formResponse.idType as keyof typeof t.idType.options]} 
                 </div>

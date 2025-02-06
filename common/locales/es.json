@@ -56,7 +56,6 @@
     "_comment": "##### Personal Information #####",
     "firstName": "Nombre",
     "lastName": "Apellido",
-    "fullNameEnglish": "Nombre completo en inglés",
     "idType": {
         "title": "Tipo de identificación",
         "options": {

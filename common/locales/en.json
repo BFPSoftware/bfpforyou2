@@ -56,7 +56,6 @@
     "_comment": "##### Personal Information #####",
     "firstName": "First Name",
     "lastName": "Last Name",
-    "fullNameEnglish": "Full Name in English",
     "idType": {
         "title": "ID Type",
         "options": {

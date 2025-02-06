@@ -56,7 +56,6 @@
     "_comment": "##### Personal Information #####",
     "firstName": "Prénom",
     "lastName": "Nom de famille",
-    "fullNameEnglish": "Nom complet en anglais",
     "idType": {
         "title": "Type d'identification",
         "options": {
