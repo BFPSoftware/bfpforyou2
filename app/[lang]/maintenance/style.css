@@ -1,0 +1,28 @@
+.holder {
+    width: 480px;
+    text-align: center;
+    margin: 0 auto;
+    padding-top: 60px;
+}
+
+.holder h3 span {
+    font-family: Dosis, Tahoma, sans-serif;
+    font-size: 1em;
+    color: #fff;
+    /*line-height:1em;
+font-weight: bold;
+letter-spacing: -1px;
+line-height: 1;
+text-shadow: -1px 1px 1px rgba(0, 0, 0, 0.3);*/
+}
+
+body {
+    background-color: #012c66;
+}
+
+p {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    font-family: "Neuton", serif;
+}
