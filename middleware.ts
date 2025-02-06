@@ -7,6 +7,12 @@ function getLocale(request: NextRequest) {
 }
 
 export function middleware(request: NextRequest) {
+    // maintenance mode
+    if (process.env.MAINTENANCE_MODE === "true" && request.nextUrl.pathname !== "/en/maintenance") {
+        request.nextUrl.pathname = "/en/maintenance";
+        return NextResponse.redirect(request.nextUrl);
+    }
+
     // Check if there is any supported locale in the pathname
     const { pathname } = request.nextUrl;
     const pathnameHasLocale = locales.some((locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`);

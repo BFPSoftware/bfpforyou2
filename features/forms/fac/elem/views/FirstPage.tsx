@@ -115,14 +115,14 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
             <Row>
                 <label className="hover:opacity-80 text-xl m-2 cursor-pointer">
                     <input id="check1" type="checkbox" {...register("check1")} />
-                    <label className="cursor-pointer" htmlFor="check1">
+                    <label className="m-2 cursor-pointer" htmlFor="check1">
                         {t.elementary.check1}
                     </label>
                     {errors.check1 && <div className="text-sm text-red-500">{errors.check1.message}</div>}
                 </label>
                 <label className="hover:opacity-80 text-xl m-2 cursor-pointer">
                     <input id="check2" type="checkbox" {...register("check2")} />
-                    <label className="cursor-pointer" htmlFor="check2">
+                    <label className="m-2 cursor-pointer" htmlFor="check2">
                         {t.elementary.check2}
                     </label>
                     {errors.check2 && <div className="text-sm text-red-500">{errors.check2.message}</div>}
