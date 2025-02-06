@@ -57,3 +57,18 @@ export const Highschools = (t: Dictionary) => ({
     Shachar: t.highschool.schools.Shachar,
     "Branco Weiss": t.highschool.schools["Branco Weiss"],
 });
+
+export const Grades = (t: Dictionary) => ({
+    1: "1",
+    2: "2",
+    3: "3",
+    4: "4",
+    5: "5",
+    6: "6",
+    7: "7",
+    8: "8",
+    9: "9",
+    10: "10",
+    11: "11",
+    12: "12",
+});

@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useWatch, Control, useFieldArray, UseFormRegisterReturn, UseFormWatch, UseFormRegister, FieldErrors } from "react-hook-form";
 
 // import { Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, IconButton } from '@chakra-ui/react';
@@ -13,7 +13,7 @@ import { ImmigrantType } from "../schema/immigrantSchema";
 import { Dictionary } from "@/common/locales/Dictionary-provider";
 import Delete from "@/components/icons/Delete";
 type ChildrenProps = {
-    errors: FieldErrors<ImmigrantType>;
+    errors: any; // TODO: fix type
     register: UseFormRegister<ImmigrantType>;
     control: Control<ImmigrantType>;
     useWatch: any; // TODO: fix type
@@ -27,6 +27,14 @@ const Children: FC<ChildrenProps> = ({ errors, register, control, useWatch, t })
         control,
     });
 
+    useEffect(() => {
+        const errorItem = errors?.findIndex((error: any) => error && Object.keys(error).length > 0);
+        if (errorItem > -1) {
+            // TODO: review this. if there's any error on child table, open the first item
+            setOpenItem(`item-${errorItem}`);
+        }
+    }, [errors]);
+
     const childNameLabel = (index: number): string => {
         const child = useChildren.childTable[index];
         const bday = `${child?.childBirthday.day == "default" ? "" : child?.childBirthday.day} ${child?.childBirthday.month == "default" ? "" : child?.childBirthday.month} ${child?.childBirthday.year == "default" ? "" : child?.childBirthday.year}`;
@@ -37,9 +45,9 @@ const Children: FC<ChildrenProps> = ({ errors, register, control, useWatch, t })
         append({
             childFirstName: "",
             childLastName: "",
-            childGender: "d",
+            childGender: "",
             childBirthday: { month: "default", day: "default", year: "default" },
-            childAccompanied: "d",
+            childAccompanied: "",
         });
         setOpenItem(`item-${fields.length}`); // Open the newly added item
     };
@@ -61,7 +69,7 @@ const Children: FC<ChildrenProps> = ({ errors, register, control, useWatch, t })
                                     <AccordionTrigger>
                                         <label className="text-xl m-2 min-w-40">{childNameLabel(index)}</label>
                                     </AccordionTrigger>
-                                    <div className="px-4 hover:text-red-500 cursor-pointer" onClick={() => remove(index)}>
+                                    <div className="px-4 hover:text-red-500 hover:scale-110 cursor-pointer" onClick={() => remove(index)}>
                                         <Delete />
                                     </div>
                                 </>
@@ -70,13 +78,13 @@ const Children: FC<ChildrenProps> = ({ errors, register, control, useWatch, t })
                                 <div key={field.id}>
                                     <section className={"ml-1"} key={field.id}>
                                         <div className="flex flex-wrap mb-6">
-                                            <Input label={t.children.childFirstName} register={register(`children.childTable.${index}.childFirstName`)} error={(errors.children?.childTable?.[index]?.childFirstName as any) || undefined} />
-                                            <Input label={t.children.childLastName} register={register(`children.childTable.${index}.childLastName`)} error={errors.children?.childTable?.[index]?.childLastName || undefined} />
+                                            <Input label={t.children.childFirstName} register={register(`children.childTable.${index}.childFirstName`)} error={(errors?.[index]?.childFirstName as any) || undefined} />
+                                            <Input label={t.children.childLastName} register={register(`children.childTable.${index}.childLastName`)} error={errors?.[index]?.childLastName || undefined} />
                                         </div>
                                         <div className="flex flex-wrap mb-6">
-                                            <Radio label={t.children.childGender} register={register(`children.childTable.${index}.childGender`)} options={Gender(t)} error={errors.children?.childTable?.[index]?.childGender || undefined} />
-                                            <Birthday label={t.children.childBirthday} register_day={register(`children.childTable.${index}.childBirthday.day`)} register_month={register(`children.childTable.${index}.childBirthday.month`)} register_year={register(`children.childTable.${index}.childBirthday.year`)} error={errors.children?.childTable?.[index]?.childBirthday || undefined} />
-                                            <Radio label={t.children.childAccompanied} register={register(`children.childTable.${index}.childAccompanied`)} options={YesNo(t)} error={errors.children?.childTable?.[index]?.childAccompanied || undefined} />
+                                            <Radio label={t.children.childGender} register={register(`children.childTable.${index}.childGender`)} options={Gender(t)} error={errors?.[index]?.childGender || undefined} />
+                                            <Birthday label={t.children.childBirthday} register_day={register(`children.childTable.${index}.childBirthday.day`)} register_month={register(`children.childTable.${index}.childBirthday.month`)} register_year={register(`children.childTable.${index}.childBirthday.year`)} error={errors?.[index]?.childBirthday || undefined} />
+                                            <Radio label={t.children.childAccompanied} register={register(`children.childTable.${index}.childAccompanied`)} options={YesNo(t)} error={errors?.[index]?.childAccompanied || undefined} />
                                         </div>
                                     </section>
                                 </div>

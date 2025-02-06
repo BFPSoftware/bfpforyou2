@@ -1,15 +1,19 @@
 "use client";
-import React from "react";
+import React, { FC, use } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import NewImmigrantForm from "@/features/forms/immigrant/Form";
 import { useDictionary } from "@/common/locales/Dictionary-provider";
 import HeaderNoSelectLang from "@/components/general/header menu/HeaderNoSelectLang";
 
-const Immigrant: React.FC = () => {
+type Props = {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+const Immigrant: FC<Props> = ({ searchParams }) => {
     // validate ticket
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const ticket = searchParams.get("ticket");
+    const this_searchParams = use(searchParams);
+    if (typeof window !== "undefined" && !this_searchParams.ticket) router.push("/");
+    const ticket = this_searchParams.ticket;
     if (typeof window !== "undefined" && !ticket) router.push("/");
     return (
         <>

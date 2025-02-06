@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
             app: BeneficiaryApplicationFormAppID!,
             record: reqs,
         });
+        console.log("resp", resp);
         if (!resp) {
             return NextResponse.json({ res: "Failed to add record" }, { status: 501 });
         } else {

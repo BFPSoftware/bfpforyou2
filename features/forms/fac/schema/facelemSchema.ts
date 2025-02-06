@@ -34,6 +34,16 @@ const string300: z.ZodString = z.string().min(1).max(300, error_maxLength);
 const string2000: z.ZodString = z.string().min(1).max(2000, error_maxLength);
 const string4000: z.ZodString = z.string().min(1).max(4000, error_maxLength);
 const string_optional: z.ZodOptional<z.ZodString> = z.string().optional();
+const file = z
+    .object({
+        file: z.any(),
+        fileKey: z.string().min(1).max(50, "File could not be uploaded"),
+    })
+    .nullable()
+    .refine((data) => {
+        if (data == null) return false;
+        return true;
+    }, "This field is required");
 
 // system
 const ticket = string50;
@@ -50,7 +60,7 @@ const birthday = z.object({
     year: z.string().max(5, { message: "Required" }),
 });
 const age = string50;
-const photo = string300;
+const photo = file;
 const grade = z.enum(grades);
 const originCountry = string50;
 const elemSchool = z.enum(elemSchools);
@@ -172,7 +182,7 @@ export const defaultData: z.infer<typeof facelemSchema> = {
         year: "2000",
     },
     age: "10",
-    photo: '["photo1.jpg"]',
+    photo: { file: "photo.jpg", fileKey: "123456789" },
     grade: "5",
     originCountry: "Country",
     elemSchool: "HaDekel",

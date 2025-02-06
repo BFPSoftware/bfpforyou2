@@ -3,7 +3,7 @@
 import { Input, Select, Radio } from "../../components/FormComponents";
 import { Birthday } from "../../components/Birthday";
 import { Dispatch, FC, SetStateAction } from "react";
-import { FieldErrors, UseFormRegister, UseFormTrigger } from "react-hook-form";
+import { FieldErrors, UseFormRegister, UseFormTrigger, UseFormWatch } from "react-hook-form";
 import { ImmigrantType } from "../schema/immigrantSchema";
 import FileUpload from "../../components/FileUpload";
 import { Gender, IDType, Language } from "@/common/enums";
@@ -16,16 +16,26 @@ type FirstPageProps = {
     setValue: any;
     trigger: UseFormTrigger<ImmigrantType>;
     t: Dictionary;
+    watch: UseFormWatch<ImmigrantType>;
 };
-const FirstPage: FC<FirstPageProps> = ({ setPage, errors, register, setValue, trigger, t }) => {
+const FirstPage: FC<FirstPageProps> = ({ setPage, errors, register, setValue, trigger, t, watch }) => {
     const fields: (keyof ImmigrantType)[] = ["firstName", "lastName", "idType", "idNumber", "birthday", "attachment1", "attachment2", "attachment3", "gender", "originCity", "originCountry", "nativeLanguage", "phone", "email", "address1", "address2", "city", "zip"];
     const validate = async () => {
         const isValids = await trigger(fields);
         if (isValids) return true;
         else {
+            const firstErrorField = Object.keys(errors).filter((key: any) => fields.includes(key))[0];
+            const errorElement = document.querySelector(`[name="${firstErrorField}"]`);
+            if (errorElement) {
+                errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
             return false;
         }
     };
+
+    const attachment1 = watch("attachment1");
+    const attachment2 = watch("attachment2");
+    const attachment3 = watch("attachment3");
 
     return (
         <>
@@ -46,9 +56,9 @@ const FirstPage: FC<FirstPageProps> = ({ setPage, errors, register, setValue, tr
                 <span className="text-red-500">*</span>
             </div>
             <div className="flex flex-wrap mb-6">
-                <FileUpload label={t.attachment1} setValue={setValue} field="attachment1" error={errors.attachment1 || undefined} />
-                <FileUpload label={t.attachment2} setValue={setValue} field="attachment2" error={errors.attachment2 || undefined} />
-                <FileUpload label={t.attachment3} setValue={setValue} field="attachment3" error={errors.attachment3 || undefined} />
+                <FileUpload label={t.attachment1} setValue={setValue} field="attachment1" watch={attachment1} error={errors.attachment1 || undefined} />
+                <FileUpload label={t.attachment2} setValue={setValue} field="attachment2" watch={attachment2} error={errors.attachment2 || undefined} />
+                <FileUpload label={t.attachment3} setValue={setValue} field="attachment3" watch={attachment3} error={errors.attachment3 || undefined} />
             </div>
             <label className="flex space-y-1 mb-6">
                 <Birthday label={t.birthday} register_day={register("birthday.day")} register_month={register("birthday.month")} register_year={register("birthday.year")} error={errors.birthday || undefined} />

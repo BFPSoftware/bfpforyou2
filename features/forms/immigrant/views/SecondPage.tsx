@@ -1,7 +1,7 @@
 "use client";
 
 import { Input, Select, Radio } from "../../components/FormComponents";
-import Children from "../components/ChildrenTable";
+import ChildrenTable from "../components/ChildrenTable";
 import { Birthday } from "../../components/Birthday";
 import { Dispatch, SetStateAction, FC } from "react";
 import { FieldErrors, UseFormRegister, UseFormTrigger } from "react-hook-form";
@@ -47,12 +47,12 @@ const SecondPage: FC<SecondPageProps> = ({ setPage, errors, register, control, u
                 <Birthday label={t.spouse.spouseBirthday} register_day={register("spouse.spouseBirthday.day")} register_month={register("spouse.spouseBirthday.month")} register_year={register("spouse.spouseBirthday.year")} error={errors.spouse?.spouseBirthday || undefined} />
             </div>
             <div className="flex flex-wrap mb-6">
-                <Radio label={t.children.title} options={YesNo(t)} register={register("children.childStatus")} required error={errors.children?.childStatus || undefined} />
+                <Select label={t.children.title} options={YesNo(t)} register={register("children.childStatus")} required error={errors.children?.childStatus || undefined} />
             </div>
             <div>
                 {hasChild == "Yes" && (
                     <>
-                        <Children register={register} useWatch={useWatch} control={control} errors={errors} t={t} />
+                        <ChildrenTable register={register} useWatch={useWatch} control={control} errors={errors.children?.childTable} t={t} />
                     </>
                 )}
             </div>

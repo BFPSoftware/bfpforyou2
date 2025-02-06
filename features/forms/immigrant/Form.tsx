@@ -31,7 +31,6 @@ const NewImmigrantForm: FC<NewImmigrantFormProps> = ({ ticket }) => {
             const fields: (keyof ImmigrantType)[] = ["aliyahDate", "whereHeardOfUs"];
             const validate = async () => {
                 const isValids = await trigger(fields);
-
                 if (isValids) return true;
                 else {
                     const firstErrorField = Object.keys(formatError)[0];
@@ -60,6 +59,7 @@ const NewImmigrantForm: FC<NewImmigrantFormProps> = ({ ticket }) => {
         getValues,
         setValue,
         control,
+        watch,
         register,
     } = useForm<ImmigrantType>({
         mode: "onChange",
@@ -69,7 +69,7 @@ const NewImmigrantForm: FC<NewImmigrantFormProps> = ({ ticket }) => {
             formLang: "en",
             ticket: ticket as string,
             children: {
-                childStatus: undefined,
+                childStatus: "",
                 childTable: [
                     {
                         childFirstName: "",
@@ -95,7 +95,7 @@ const NewImmigrantForm: FC<NewImmigrantFormProps> = ({ ticket }) => {
                 className={`flex flex-col p-[10%] pt-[5%] ${t.lang == "he" ? "flex-row-reverse rtl" : "ltr"}`}
             >
                 <div className="font-bold text-3xl font-serif my-5 text-center">{t.immigrant.title}</div>
-                {page === 0 && <FirstPage setPage={setPage} errors={formatError} register={register} setValue={setValue} trigger={trigger} t={t} />}
+                {page === 0 && <FirstPage setPage={setPage} errors={formatError} register={register} setValue={setValue} trigger={trigger} t={t} watch={watch} />}
                 {page === 1 && <SecondPage setPage={setPage} errors={formatError} register={register} trigger={trigger} useWatch={useWatch} control={control} t={t} />}
                 {page === 2 && <ThirdPage setPage={setPage} errors={formatError} register={register} t={t} />}
             </form>

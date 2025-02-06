@@ -8,12 +8,13 @@ export const metadata: Metadata = {
     description: "BFP for You is a project of Bridges for Peace",
 };
 
+type Params = Promise<{ lang: Locale }>;
 export default async function RootLayout({
     children,
     params,
 }: Readonly<{
     children: React.ReactNode;
-    params: Promise<{ lang: Locale }>;
+    params: Params;
 }>) {
     const lang = (await params).lang;
     const dictionary = await getDictionary(lang);

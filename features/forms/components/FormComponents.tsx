@@ -150,7 +150,7 @@ export const Radio = (props: RadioProps) => {
                     return (
                         <div key={key}>
                             <label>
-                                <input type="radio" value={key} {...props.register} />
+                                <input className="mr-2" type="radio" value={key} {...props.register} />
                                 {value}
                             </label>
                         </div>

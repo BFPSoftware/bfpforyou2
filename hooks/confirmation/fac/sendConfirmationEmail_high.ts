@@ -20,7 +20,7 @@ const sendConfirmationEmail_high = async (formResponse: FachighType, t: any) => 
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ body, to: [{ email: "onaga.ray@gmail.com" }] }),
+        body: JSON.stringify({ body, to: emailTo() }),
     });
     if (await res.ok) {
         return true;
