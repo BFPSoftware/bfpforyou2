@@ -35,7 +35,7 @@ const template_facelem = (formResponse: FacelemType, t: Dictionary) => {
                     ${t.originCountry}: ${formResponse.originCountry}
                 </div>
                 <div>
-                    ${t.elementary.school}: ${t.elementary.schools[formResponse.elemSchool]}
+                    ${t.elementary.school}: ${t.elementary.schools[formResponse.elemSchool as keyof typeof t.elementary.schools]}
                 </div>
                 <div>
                     ${t.elementary.isFirstTime}: ${formResponse.returning}

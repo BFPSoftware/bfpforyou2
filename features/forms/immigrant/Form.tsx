@@ -92,7 +92,7 @@ const NewImmigrantForm: FC<NewImmigrantFormProps> = ({ ticket }) => {
                 onSubmit={(event) => {
                     void handleSubmit(handleOnSubmit)(event);
                 }}
-                className={`flex flex-col p-[10%] pt-[5%] ${t.lang == "he" ? "flex-row-reverse rtl" : "ltr"}`}
+                className={`flex flex-col p-[5%] md:p-[10%] pt-[5%] ${t.lang == "he" ? "flex-row-reverse rtl" : "ltr"}`}
             >
                 <div className="font-bold text-3xl font-serif my-5 text-center">{t.immigrant.title}</div>
                 {page === 0 && <FirstPage setPage={setPage} errors={formatError} register={register} setValue={setValue} trigger={trigger} t={t} watch={watch} />}

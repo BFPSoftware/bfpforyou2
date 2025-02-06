@@ -5,7 +5,7 @@ import { z } from "zod";
 export const applicationType_facelem = "Elementary";
 export const submitLangs = ["English", "Hebrew", "Russian", "Spanish", "French"] as const;
 export const submitLangsShort = ["en", "he", "ru", "es", "fr"] as const;
-export const grades = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
+export const grades = ["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
 export const elemSchools = ["Jabutinsky", "Levi Eshkol", "Uziel", "HaDekel", "Zalman Aran", "Ben Zvi", "Orot - Boys", "Orot - Girls"] as const;
 
 const validateRadio = (value: string | null) => value !== null;
@@ -61,9 +61,9 @@ const birthday = z.object({
 });
 const age = string50;
 const photo = file;
-const grade = z.enum(grades);
+const grade = string50;
 const originCountry = string50;
-const elemSchool = z.enum(elemSchools);
+const elemSchool = string50;
 const returning = string50;
 
 // Section 2

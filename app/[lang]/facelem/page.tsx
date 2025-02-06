@@ -13,7 +13,7 @@ const Facelem: React.FC = () => {
     return (
         <>
             <HeaderNoSelectLang />
-            <div className="flex bg-slate-300 h-auto flex-col items-center justify-evenly p-[10%] md:p-24">
+            <div className="flex bg-slate-300 h-auto flex-col items-center justify-evenly p-[5%] md:p-[10%] md:p-24">
                 <FacelemForm ticket={ticket as string} />
             </div>
         </>
