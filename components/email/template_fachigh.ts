@@ -35,7 +35,7 @@ const template_fachigh = (formResponse: FachighType, t: Dictionary) => {
                     ${t.originCountry}: ${formResponse.originCountry}
                 </div>
                 <div>
-                    ${t.highschool.school}: ${t.highschool.schools[formResponse.school]}
+                    ${t.highschool.school}: ${t.highschool.schools[formResponse.school as keyof typeof t.highschool.schools]}
                 </div>
                 <div>
                     ${t.elementary.isFirstTime}: ${formResponse.returning}

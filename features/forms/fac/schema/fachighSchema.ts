@@ -61,9 +61,9 @@ const birthday = z.object({
 });
 const age = string50;
 const photo = file;
-const grade = z.enum(grades);
+const grade = string50;
 const originCountry = string50;
-const school = z.enum(schools);
+const school = string50;
 const returning = string50;
 
 // Section 2

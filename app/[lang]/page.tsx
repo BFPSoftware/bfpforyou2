@@ -81,7 +81,7 @@ export default function Home() {
         <>
             {isLoading && <Spinner isLoading={isLoading} />}
             <Header />
-            <main className="flex bg-slate-300 h-auto flex-col items-center text-center justify-evenly p-[10%] md:p-24">
+            <main className="flex bg-slate-300 h-auto flex-col items-center text-center justify-evenly p-[5%] md:p-[10%] md:p-24">
                 <h1 className="text-3xl md:text-4xl font-semibold text-slate-800 font-serif mb-5">{t.home.startHere}</h1>
                 <div className="w-[95svw] flex justify-center">
                     <div className="relative w-full h-[400px]">

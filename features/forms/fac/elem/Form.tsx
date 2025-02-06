@@ -74,7 +74,7 @@ const FacelemForm: FC<FacelemFormProps> = ({ ticket }) => {
                 onSubmit={(event) => {
                     void handleSubmit(handleOnSubmit, onError)(event);
                 }}
-                className={`flex flex-col p-[10%] pt-[5%] ${t.lang == "he" ? "flex-row-reverse rtl" : "ltr"}`}
+                className={`flex flex-col p-[5%] md:p-[10%] pt-[5%] ${t.lang == "he" ? "flex-row-reverse rtl" : "ltr"}`}
             >
                 <div className="font-bold text-3xl font-serif my-5 text-center">{t.fac.title}</div>
                 <FirstPage errors={formatError} register={register} setValue={setValue} t={t} watch={watch} />
