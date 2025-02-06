@@ -85,7 +85,7 @@ export default function Home() {
                 <h1 className="text-3xl md:text-4xl font-semibold text-slate-800 font-serif mb-5">{t.home.startHere}</h1>
                 <div className="w-[95svw] flex justify-center">
                     <div className="relative w-full h-[400px]">
-                        <Image src={flag} alt="flag" className="absolute inset-0 w-full h-full object-cover" quality={100} />
+                        <Image src={flag} alt="flag" priority className="absolute inset-0 w-full h-full object-cover" quality={100} />
                     </div>
                 </div>
                 <h2 className="my-4 text-lg text-gray-500 italic font-serif">{t.home.missionStatement}</h2>

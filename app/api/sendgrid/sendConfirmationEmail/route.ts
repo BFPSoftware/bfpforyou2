@@ -17,12 +17,12 @@ export async function POST(req: NextRequest) {
         await sgMail
             .send(msg)
             .then((e) => {
-                return NextResponse.json({ res: e }, { status: 200 });
+                return;
             })
             .catch((error) => {
-                return NextResponse.json({ res: "Failed to add record" }, { status: 501 });
+                throw error;
             });
-        return NextResponse.json({ res: "Failed to add record" }, { status: 501 });
+        return NextResponse.json({ res: "Email sent successfully" }, { status: 200 });
     } catch (e: any) {
         console.log(e);
         logError(e, { req: req.body }, "sendConfirmationEmail");

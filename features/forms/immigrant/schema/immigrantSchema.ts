@@ -9,6 +9,16 @@ const error_required = {
 
 // common
 const yesNo: z.ZodEffects<z.ZodNullable<z.ZodString>> = z.string().nullable().refine(validateRadio, error_required);
+const file = z
+    .object({
+        file: z.any(),
+        fileKey: z.string().min(1).max(50, "File could not be uploaded"),
+    })
+    .nullable()
+    .refine((data) => {
+        if (data == null) return false;
+        return true;
+    }, "This field is required");
 
 const ticket: z.ZodString = z.string().min(1).max(9);
 const formLang: z.ZodString = z.string().min(1).max(20);
@@ -37,9 +47,9 @@ const birthday = z.object({
     year: z.string().max(5, { message: "Required" }),
 });
 // attachment 1-3 contains file key
-const attachment1: z.ZodString = z.string().min(1).max(200);
-const attachment2: z.ZodString = z.string().min(1).max(200);
-const attachment3: z.ZodString = z.string().min(1).max(200);
+const attachment1 = file;
+const attachment2 = file;
+const attachment3 = file;
 const originCity: z.ZodString = z.string().min(1).max(50);
 const originCountry: z.ZodString = z.string().min(1).max(50);
 const nativeLanguage: z.ZodString = z.string().min(1).max(50);
@@ -98,19 +108,7 @@ const children = z
                 z.object({
                     childFirstName: z.string().min(1).max(50),
                     childLastName: z.string().min(1).max(50),
-                    childGender: z
-                        .string()
-                        .nullable()
-                        .transform((value, ctx): string => {
-                            if (value == null) {
-                                ctx.addIssue({
-                                    code: "custom",
-                                    message: "This field is required",
-                                });
-                                return "";
-                            }
-                            return value;
-                        }),
+                    childGender: z.string().min(1).max(50).nullable().refine(validateRadio, error_required),
                     childAccompanied: z.string().min(2).max(30),
                     childBirthday: z.object({
                         day: z.string().max(5, { message: "Required" }),
@@ -219,9 +217,9 @@ export const defaultData: ImmigrantType = {
     fullNameEnglish: "John Doe",
     idType: "1",
     idNumber: "123456789",
-    attachment1: "file1",
-    attachment2: "file2",
-    attachment3: "file3",
+    attachment1: { file: "file1", fileKey: "fileKey1" },
+    attachment2: { file: "file1", fileKey: "fileKey1" },
+    attachment3: { file: "file1", fileKey: "fileKey1" },
     birthday: {
         day: "1",
         month: "Jan",

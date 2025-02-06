@@ -1,7 +1,7 @@
 "use client";
 
 import { Input, Select, Radio } from "../../components/FormComponents";
-import Children from "../components/ChildrenTable";
+import ChildrenTable from "../components/ChildrenTable";
 import { Birthday } from "../../components/Birthday";
 import { Dispatch, SetStateAction, FC } from "react";
 import { FieldErrors, UseFormRegister, UseFormTrigger } from "react-hook-form";
@@ -52,7 +52,7 @@ const SecondPage: FC<SecondPageProps> = ({ setPage, errors, register, control, u
             <div>
                 {hasChild == "Yes" && (
                     <>
-                        <Children register={register} useWatch={useWatch} control={control} errors={errors} t={t} />
+                        <ChildrenTable register={register} useWatch={useWatch} control={control} errors={errors.children?.childTable} t={t} />
                     </>
                 )}
             </div>

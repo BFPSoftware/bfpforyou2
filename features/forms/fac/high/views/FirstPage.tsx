@@ -4,7 +4,7 @@ import { Input, Select, Textarea } from "../../../components/FormComponents";
 import { Birthday } from "../../../components/Birthday";
 import { FC } from "react";
 import { FieldErrors, UseFormRegister, UseFormWatch } from "react-hook-form";
-import { ElemSchools, Highschools, YesNo } from "@/common/enums";
+import { ElemSchools, Grades, Highschools, YesNo } from "@/common/enums";
 import { Dictionary } from "@/common/locales/Dictionary-provider";
 import { FachighType } from "../../schema/fachighSchema";
 
@@ -19,6 +19,7 @@ type FirstPageProps = {
     watch: UseFormWatch<FachighType>;
 };
 const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch }) => {
+    const photo = watch("photo");
     return (
         <>
             <div className="italic text-xl font-serif my-5 text-center">{t.fac.subtitle}</div>
@@ -34,11 +35,11 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
             <Row>
                 <Input label={t.elementary.age} register={register("age")} required error={errors.age || undefined} />
                 <div className="flex flex-wrap mb-6">
-                    <Select label={t.elementary.grade} options={["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]} register={register("grade")} required error={errors.grade || undefined} />
+                    <Select label={t.elementary.grade} options={Grades(t)} register={register("grade")} required error={errors.grade || undefined} />
                 </div>
             </Row>
             <div className="flex flex-wrap mb-6">
-                <FileUpload label={t.elementary.photo} setValue={setValue} field="photo" error={errors.photo || undefined} />
+                <FileUpload label={t.elementary.photo} setValue={setValue} watch={photo} field="photo" error={errors.photo || undefined} />
             </div>
             <div className="flex flex-wrap mb-6">
                 <Input label={t.elementary.birthCountry} register={register("originCountry")} required error={errors.originCountry || undefined} />

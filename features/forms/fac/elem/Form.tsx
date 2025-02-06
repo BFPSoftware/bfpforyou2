@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -28,11 +28,6 @@ const FacelemForm: FC<FacelemFormProps> = ({ ticket }) => {
                 const isValids = await trigger();
                 if (isValids) return true;
                 else {
-                    const firstErrorField = Object.keys(formatError)[0];
-                    const errorElement = document.querySelector(`[name="${firstErrorField}"]`);
-                    if (errorElement) {
-                        errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
-                    }
                     return false;
                 }
             };
@@ -46,11 +41,15 @@ const FacelemForm: FC<FacelemFormProps> = ({ ticket }) => {
             setIsLoading(false);
         }
     };
+    const onError = () => {
+        window.scrollTo(0, 0); // scroll to top
+    };
 
     const {
         handleSubmit,
         formState: { errors: formatError, isValid, isDirty, isSubmitting },
         trigger,
+        watch,
         getValues,
         setValue,
         control,
@@ -73,12 +72,12 @@ const FacelemForm: FC<FacelemFormProps> = ({ ticket }) => {
             <form
                 method="post"
                 onSubmit={(event) => {
-                    void handleSubmit(handleOnSubmit)(event);
+                    void handleSubmit(handleOnSubmit, onError)(event);
                 }}
                 className={`flex flex-col p-[10%] pt-[5%] ${t.lang == "he" ? "flex-row-reverse rtl" : "ltr"}`}
             >
                 <div className="font-bold text-3xl font-serif my-5 text-center">{t.fac.title}</div>
-                <FirstPage errors={formatError} register={register} setValue={setValue} t={t} />
+                <FirstPage errors={formatError} register={register} setValue={setValue} t={t} watch={watch} />
                 <button className="btn-theme" type="submit">
                     {t.button.submit}
                 </button>

@@ -1,17 +1,32 @@
 import { uploadFile } from "@/app/[lang]/actions/kintone/uploadFile";
-import { ChangeEvent, FC, useRef, useState } from "react";
-import { FieldError } from "react-hook-form";
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
+import { FieldError, FieldErrorsImpl, Merge, UseFormWatch } from "react-hook-form";
+import { Upload } from "lucide-react";
+import Delete from "@/components/icons/Delete";
 
 type FileUploadProps = {
     label: string;
     setValue: any;
+    watch: { file?: any; fileKey: string } | null;
     field: string;
-    error: FieldError | undefined;
+    error: Merge<FieldError, FieldErrorsImpl<{ fileKey: string; file: any }>> | undefined;
 };
-const FileUpload: FC<FileUploadProps> = ({ label, setValue, field, error }) => {
+const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error }) => {
     const [isError, setIsError] = useState<{ message: string }>({ message: error?.message || "" });
     const [filePreview, setFilePreview] = useState<any>();
     const inputRef = useRef<HTMLInputElement>(null);
+    useEffect(() => {
+        if (error?.message) setIsError({ message: error.message });
+    }, [error?.message]);
+    useEffect(() => {
+        if (watch?.file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFilePreview(reader.result);
+            };
+            reader.readAsDataURL(watch.file);
+        }
+    }, [watch?.file]);
     // store the file key after uploading unto Kintone
     const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
         if (isError.message) setIsError({ message: "" });
@@ -40,7 +55,7 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, field, error }) => {
                 else if (res?.data?.failure) handleFailureUpload();
                 else if (res?.data?.success) {
                     setIsError({ message: "" });
-                    setValue(field, res?.data?.success);
+                    setValue(field, { file: file, fileKey: res?.data?.success });
                     const reader = new FileReader();
                     reader.onloadend = () => {
                         setFilePreview(reader.result);
@@ -51,19 +66,43 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, field, error }) => {
         }
     };
     return (
-        <>
-            <label className="flex flex-col w-full space-y-1 me-5 grow md:max-w-sm">
-                <div className="font-semibold mb-1">{label}</div>
-                <input name={field} ref={inputRef} onInputCapture={handleUpload} type="file" className="" />
-                {filePreview && (
-                    <div className="flex items-center space-x-2">
+        <div className="flex flex-col w-full space-y-1 py-3 grow md:max-w-sm">
+            <div className="font-semibold mb-1">{label}</div>
+            <input accept="image/*, .pdf, .doc, .docx" ref={inputRef} capture={"environment"} onInputCapture={handleUpload} type="file" className="hidden" />
+            {/* custom upload button and preview and file name to display */}
+            <div className="">
+                <button
+                    name={field} // for form validation scrollIntoView
+                    type="button"
+                    className="bg-primary text-white px-4 py-2 hover:opacity-80 rounded-full w-40 flex justify-center font-bold"
+                    onClick={() => {
+                        inputRef.current?.click();
+                    }}
+                >
+                    <Upload className="mx-2" />
+                    Upload
+                </button>
+            </div>
+            {filePreview && (
+                <div className="flex items-center space-x-2">
+                    <div>
                         <img src={filePreview} alt="file preview" className="max-w-40 max-h-40" />
+                        <div className="text-xs max-w-40 text-ellipsis overflow-hidden whitespace-nowrap">{watch?.file?.name}</div>
                     </div>
-                )}
-                {isError.message && <div className="text-red-500 pl-1 pt-1 text-xs">{isError?.message}</div>}
-                {error && <div className="text-red-500 pl-1 pt-1 text-xs">{error.message}</div>}
-            </label>
-        </>
+                    {/* delete image button */}
+                    <span
+                        onClick={() => {
+                            setFilePreview(null);
+                            setValue(field, null);
+                        }}
+                        className="cursor-pointer hover:scale-110 text-red-500"
+                    >
+                        <Delete />
+                    </span>
+                </div>
+            )}
+            {isError.message && <div className="text-red-500 pl-1 pt-1 text-xs">{isError?.message}</div>}
+        </div>
     );
 };
 export default FileUpload;

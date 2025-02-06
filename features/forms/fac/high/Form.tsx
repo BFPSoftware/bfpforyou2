@@ -29,6 +29,7 @@ const FachighForm: FC<FachighFormProps> = ({ ticket }) => {
                 const isValids = await trigger();
                 if (isValids) return true;
                 else {
+                    console.log("formatError", formatError);
                     const firstErrorField = Object.keys(formatError)[0];
                     const errorElement = document.querySelector(`[name="${firstErrorField}"]`);
                     if (errorElement) {

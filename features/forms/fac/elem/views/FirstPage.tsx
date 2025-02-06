@@ -3,8 +3,8 @@
 import { Input, Select } from "../../../components/FormComponents";
 import { Birthday } from "../../../components/Birthday";
 import { FC } from "react";
-import { FieldErrors, UseFormRegister, UseFormTrigger } from "react-hook-form";
-import { ElemSchools, YesNo } from "@/common/enums";
+import { FieldErrors, UseFormRegister, UseFormTrigger, UseFormWatch } from "react-hook-form";
+import { ElemSchools, Grades, YesNo } from "@/common/enums";
 import { Dictionary } from "@/common/locales/Dictionary-provider";
 import { FacelemType } from "../../schema/facelemSchema";
 
@@ -16,8 +16,10 @@ type FirstPageProps = {
     register: UseFormRegister<FacelemType>;
     setValue: any;
     t: Dictionary;
+    watch: UseFormWatch<FacelemType>;
 };
-const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t }) => {
+const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch }) => {
+    const photo = watch("photo");
     return (
         <>
             <div className="italic text-xl font-serif my-5 text-center">{t.fac.subtitle}</div>
@@ -38,10 +40,10 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t }) => {
                 <Input label={t.elementary.age} register={register("age")} required error={errors.age || undefined} />
             </div>
             <div className="flex flex-wrap mb-6">
-                <FileUpload label={t.elementary.photo} setValue={setValue} field="photo" error={errors.photo || undefined} />
+                <FileUpload label={t.elementary.photo} setValue={setValue} watch={photo} field="photo" error={errors.photo || undefined} />
             </div>
             <div className="flex flex-wrap mb-6">
-                <Select label={t.elementary.grade} options={["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]} register={register("grade")} required error={errors.grade || undefined} />
+                <Select label={t.elementary.grade} options={Grades(t)} register={register("grade")} required error={errors.grade || undefined} />
             </div>
             <div className="flex flex-wrap mb-6">
                 <Input label={t.elementary.birthCountry} register={register("originCountry")} required error={errors.originCountry || undefined} />

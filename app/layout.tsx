@@ -34,7 +34,7 @@ export default async function RootLayout({
     children: React.ReactNode;
     params: Promise<{ lang: Locale }>;
 }>) {
-    const lang = await params;
+    const { lang } = await params;
     return (
         <html lang="en">
             <Head>
@@ -43,7 +43,7 @@ export default async function RootLayout({
             </Head>
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
                 {children}
-                <Footer lang={"en"} />
+                <Footer lang={lang} />
             </body>
         </html>
     );

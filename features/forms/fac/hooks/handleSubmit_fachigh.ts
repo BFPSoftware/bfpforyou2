@@ -58,7 +58,7 @@ const createAddRecord = (formResponse: FachighType) => {
         tz: { value: formResponse.tz },
         birthday: { value: `${convertMonthShortToMonthLong(formResponse.birthday.month)} ${formResponse.birthday.day}, ${formResponse.birthday.year}` },
         age: { value: formResponse.age },
-        photo: { value: [{ fileKey: formResponse.photo }] },
+        photo: { value: [{ fileKey: formResponse.photo?.fileKey }] },
         grade: { value: formResponse.grade },
         originCountry: { value: formResponse.originCountry },
         school: { value: formResponse.school },
