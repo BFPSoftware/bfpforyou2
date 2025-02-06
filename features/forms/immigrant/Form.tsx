@@ -74,7 +74,7 @@ const NewImmigrantForm: FC<NewImmigrantFormProps> = ({ ticket }) => {
                     {
                         childFirstName: "",
                         childLastName: "",
-                        childGender: "d",
+                        childGender: "",
                         childBirthday: {},
                         childAccompanied: "d",
                     },
