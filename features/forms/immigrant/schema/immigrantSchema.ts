@@ -25,7 +25,6 @@ const formLang: z.ZodString = z.string().min(1).max(20);
 // Page 1
 const firstName: z.ZodString = z.string().min(1).max(50);
 const lastName: z.ZodString = z.string().min(1).max(50);
-const fullNameEnglish: z.ZodOptional<z.ZodString> = z.string().min(1).max(50).optional();
 const idType: z.ZodString = z.string().min(1).max(30);
 const idNumber: z.ZodString = z.string().min(1).max(30);
 const gender = z
@@ -181,7 +180,6 @@ export const ImmigrantSchema = z.object({
     // Page 1
     firstName: firstName,
     lastName: lastName,
-    fullNameEnglish: fullNameEnglish,
     idType: idType,
     idNumber: idNumber,
     attachment1: attachment1,
@@ -214,7 +212,6 @@ export const defaultData: ImmigrantType = {
     formLang: "en",
     firstName: "John",
     lastName: "Doe",
-    fullNameEnglish: "John Doe",
     idType: "1",
     idNumber: "123456789",
     attachment1: { file: "file1", fileKey: "fileKey1" },

@@ -20,7 +20,7 @@ export default async function RootLayout({
     const lang = (await params).lang;
     const dictionary = await getDictionary(lang); // en
     return (
-        <section>
+        <section dir={lang === "he" ? "rtl" : "ltr"}>
             <DictionaryProvider dictionary={dictionary}>{children}</DictionaryProvider>
         </section>
     );

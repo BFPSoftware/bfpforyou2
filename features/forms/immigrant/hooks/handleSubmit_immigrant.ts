@@ -53,7 +53,6 @@ const createAddRecord = (formResponse: ImmigrantType) => {
         ticket: { value: formResponse.ticket },
         firstName: { value: formResponse.firstName },
         lastName: { value: formResponse.lastName },
-        fullName: { value: formResponse.fullNameEnglish },
         IDType: { value: formResponse.idType },
         IDNumber: { value: formResponse.idNumber },
         Attachment1: { value: [{ fileKey: formResponse.attachment1?.fileKey }] },

@@ -56,7 +56,6 @@
     "_comment": "##### Personal Information #####",
     "firstName": "שם פרטי",
     "lastName": "שם משפחה",
-    "fullNameEnglish": "שם מלא באנגלית",
     "idType": {
         "title": "תעודה מזהה",
         "options": {
