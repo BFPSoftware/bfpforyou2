@@ -76,7 +76,7 @@ const NewImmigrantForm: FC<NewImmigrantFormProps> = ({ ticket }) => {
                         childLastName: "",
                         childGender: "",
                         childBirthday: {},
-                        childAccompanied: "d",
+                        childAccompanied: "",
                     },
                 ],
             },
@@ -85,6 +85,8 @@ const NewImmigrantForm: FC<NewImmigrantFormProps> = ({ ticket }) => {
 
     const [page, setPage] = useState(0);
     setValue("formLang", t.lang || "en");
+
+    console.log("getValues()", getValues());
     return (
         <div className="w-full max-w-[1095px] h-full bg-white rounded-md ">
             <form
