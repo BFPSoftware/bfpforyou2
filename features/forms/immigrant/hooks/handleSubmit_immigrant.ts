@@ -1,6 +1,7 @@
 import sendConfirmationEmail from "@/hooks/confirmation/immigrant/sendConfirmationEmail";
 import { ImmigrantType } from "../schema/immigrantSchema";
 import logError from "@/common/logError";
+import { DateTime } from "luxon";
 
 const convertMonthShortToNumber = (month: string) => {
     switch (month) {
@@ -32,6 +33,9 @@ const convertMonthShortToNumber = (month: string) => {
             return "01";
     }
 };
+const zeroPad = (num: string) => {
+    return num.padStart(2, "0");
+};
 const convertLanguage = (language: string) => {
     switch (language) {
         case "en":
@@ -58,7 +62,7 @@ const createAddRecord = (formResponse: ImmigrantType) => {
         Attachment1: { value: [{ fileKey: formResponse.attachment1?.fileKey }] },
         Attachment2: { value: [{ fileKey: formResponse.attachment2?.fileKey }] },
         Attachment3: { value: [{ fileKey: formResponse.attachment3?.fileKey }] },
-        birthday: { value: `${formResponse.birthday.year}-${convertMonthShortToNumber(formResponse.birthday.month)}-${formResponse.birthday.day}` },
+        birthday: { value: `${zeroPad(formResponse.birthday.day)}/${convertMonthShortToNumber(formResponse.birthday.month)}/${formResponse.birthday.year}` },
         gender: { value: formResponse.gender },
         originCity: { value: formResponse.originCity },
         originCountry: { value: formResponse.originCountry },
@@ -73,7 +77,7 @@ const createAddRecord = (formResponse: ImmigrantType) => {
         spouseFirstName: { value: formResponse.spouse.spouseFirstName },
         spouseLastName: { value: formResponse.spouse.spouseFamilyName },
         Spouse_Birthday: {
-            value: `${convertMonthShortToNumber(formResponse.spouse.spouseBirthday?.month || "")}/${formResponse.spouse.spouseBirthday?.day}/${formResponse.spouse.spouseBirthday?.year}`,
+            value: formResponse.spouse.maritalStatus == "0" ? (formResponse.spouse.spouseBirthday ? `${formResponse.spouse.spouseBirthday.day}/${convertMonthShortToNumber(formResponse.spouse.spouseBirthday.month || "")}/${formResponse.spouse.spouseBirthday.year}` : "") : "",
         },
         spouseIDType: { value: formResponse.spouse.spouseIDType },
         spouseID: { value: formResponse.spouse.spouseIDNumber },
@@ -83,8 +87,8 @@ const createAddRecord = (formResponse: ImmigrantType) => {
                     ? []
                     : formResponse.children.childTable &&
                       formResponse.children.childTable.map((child) => {
-                          if (!child) return;
-                          const childBirthday = `${child.childBirthday?.year}-${convertMonthShortToNumber(child.childBirthday?.month || "")}-${child.childBirthday?.day}`;
+                          if (!child || !child.childBirthday || !child.childBirthday.month || !child.childBirthday.day) return;
+                          const childBirthday = `${zeroPad(child.childBirthday.day)}/${convertMonthShortToNumber(child.childBirthday.month)}/${child.childBirthday.year}`;
                           return {
                               value: {
                                   childFirstName: { value: child.childFirstName },
@@ -97,7 +101,7 @@ const createAddRecord = (formResponse: ImmigrantType) => {
                       }),
         },
         aliyahDate: { value: formResponse.aliyahDate },
-        whereHeardOfUs: { value: formResponse.whereHeardOfUs },
+        whereHeardOfUs: { value: DateTime.fromISO(formResponse.whereHeardOfUs).toFormat("dd/MM/yyyy") },
     };
 };
 
