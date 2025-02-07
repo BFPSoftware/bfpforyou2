@@ -100,14 +100,16 @@ const createAddRecord = (formResponse: ImmigrantType) => {
                           };
                       }),
         },
-        aliyahDate: { value: formResponse.aliyahDate },
-        whereHeardOfUs: { value: DateTime.fromISO(formResponse.whereHeardOfUs).toFormat("dd/MM/yyyy") },
+        aliyahDate: { value: DateTime.fromISO(formResponse.aliyahDate).toFormat("dd/MM/yyyy") },
+        whereHeardOfUs: { value: formResponse.whereHeardOfUs },
     };
 };
 
 export const handleSubmit_newImmigrant = async (formResponse: ImmigrantType, t: any) => {
     try {
         const addRecord = createAddRecord(formResponse);
+        console.log("addRecord", addRecord);
+        return;
         const res = await fetch("/api/kintone/postKintone", {
             method: "POST",
             headers: {
