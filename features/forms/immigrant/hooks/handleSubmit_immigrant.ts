@@ -77,7 +77,7 @@ const createAddRecord = (formResponse: ImmigrantType) => {
         spouseFirstName: { value: formResponse.spouse.spouseFirstName },
         spouseLastName: { value: formResponse.spouse.spouseFamilyName },
         Spouse_Birthday: {
-            value: formResponse.spouse.maritalStatus == "0" ? (formResponse.spouse.spouseBirthday ? `${formResponse.spouse.spouseBirthday.day}/${convertMonthShortToNumber(formResponse.spouse.spouseBirthday.month || "")}/${formResponse.spouse.spouseBirthday.year}` : "") : "",
+            value: formResponse.spouse.maritalStatus == "0" ? (formResponse.spouse.spouseBirthday ? `${zeroPad(formResponse.spouse.spouseBirthday.day)}/${convertMonthShortToNumber(formResponse.spouse.spouseBirthday.month)}/${formResponse.spouse.spouseBirthday.year}` : "") : "",
         },
         spouseIDType: { value: formResponse.spouse.spouseIDType },
         spouseID: { value: formResponse.spouse.spouseIDNumber },
