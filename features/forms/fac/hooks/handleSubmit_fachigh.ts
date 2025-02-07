@@ -32,6 +32,9 @@ const convertMonthShortToMonthLong = (month: string) => {
             return "unknown";
     }
 };
+const zeroPad = (num: string) => {
+    return num.padStart(2, "0");
+};
 const convertLanguage = (language: string) => {
     switch (language) {
         case "en":
@@ -56,7 +59,7 @@ const createAddRecord = (formResponse: FachighType) => {
         firstName: { value: formResponse.firstName },
         lastName: { value: formResponse.lastName },
         tz: { value: formResponse.tz },
-        birthday: { value: `${convertMonthShortToMonthLong(formResponse.birthday.month)} ${formResponse.birthday.day}, ${formResponse.birthday.year}` },
+        birthday: { value: `${convertMonthShortToMonthLong(formResponse.birthday.month)} ${zeroPad(formResponse.birthday.day)}, ${formResponse.birthday.year}` },
         age: { value: formResponse.age },
         photo: { value: [{ fileKey: formResponse.photo?.fileKey }] },
         grade: { value: formResponse.grade },
