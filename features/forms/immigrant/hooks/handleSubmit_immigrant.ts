@@ -108,8 +108,6 @@ const createAddRecord = (formResponse: ImmigrantType) => {
 export const handleSubmit_newImmigrant = async (formResponse: ImmigrantType, t: any) => {
     try {
         const addRecord = createAddRecord(formResponse);
-        console.log("addRecord", addRecord);
-        return;
         const res = await fetch("/api/kintone/postKintone", {
             method: "POST",
             headers: {
