@@ -57,9 +57,9 @@ export default function Home() {
                             alert("Something went wrong. Please try again later.");
                             break;
                     }
-                    setIsCodeValid(true);setIsCodeClosed(true)
+                    setIsCodeValid(true);setIsCodeClosed(false)
                 } else if (failure) {
-                    setIsCodeValid(false);
+                    setIsCodeValid(false);setIsCodeClosed(false)
                 } else if (closed){
                     setIsCodeValid(false);setIsCodeClosed(true)
                 }
@@ -99,7 +99,7 @@ export default function Home() {
                         {t.button.check}
                     </Button>
                 </form>
-                :{isCodeValid == false && isCodeClosed? <p className="text-red-500">{t.home.closedCode}</p>:<p className="text-red-500">{t.home.invalidCode}</p>}
+                {isCodeValid == false && isCodeClosed? <p className="text-red-500">{t.home.closedCode}</p>:<p className="text-red-500">{t.home.invalidCode}</p>}
 
                 <div className="mt-8">
                     <AlertHaveNoCode t={t} />
