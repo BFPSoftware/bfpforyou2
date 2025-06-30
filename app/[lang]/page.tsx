@@ -14,8 +14,9 @@ import { useRouter, usePathname } from "next/navigation";
 export default function Home() {
     const t = useDictionary();
     const [code, setCode] = useState("");
-    const [isCodeValid, setIsCodeValid] = useState<true | false | null>(null);
-    const [isCodeClosed, setIsCodeClosed] = useState<true|false|null>(null);
+    const [isCodeValid, setIsCodeValid] = useState<true | false>(true);
+    console.log("isCodeValid", isCodeValid);
+    const [isCodeClosed, setIsCodeClosed] = useState<true | false | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     // 10 digits number
     const isInputValid = /^\d{1,9}$/.test(code);
@@ -31,7 +32,7 @@ export default function Home() {
         e.preventDefault();
         if (!isInputValid) {
             setIsCodeValid(false);
-            setIsCodeClosed(false)
+            setIsCodeClosed(false);
             return;
         } else if (isLoading) return;
         setIsLoading(true);
@@ -40,7 +41,7 @@ export default function Home() {
 
             // Result keys.
             if (res?.data) {
-                const { success, failure,closed } = res?.data;
+                const { success, failure, closed } = res?.data;
                 if (success) {
                     switch (success) {
                         case "FAC Elementary":
@@ -53,33 +54,43 @@ export default function Home() {
                             handleNavigation("/immigrant", { ticket: code });
                             break;
                         default:
-                            setIsCodeValid(false);setIsCodeClosed(false)
+                            setIsCodeValid(false);
+                            setIsCodeClosed(false);
                             alert("Something went wrong. Please try again later.");
                             break;
                     }
-                    setIsCodeValid(true);setIsCodeClosed(false)
+                    setIsCodeValid(true);
+                    setIsCodeClosed(false);
                 } else if (failure) {
-                    setIsCodeValid(false);setIsCodeClosed(false)
-                } else if (closed){
-                    setIsCodeValid(false);setIsCodeClosed(true)
+                    setIsCodeValid(false);
+                    setIsCodeClosed(false);
+                } else if (closed) {
+                    setIsCodeValid(false);
+                    setIsCodeClosed(true);
                 }
             } else if (res?.validationErrors) {
-                setIsCodeValid(false);setIsCodeClosed(false)
+                setIsCodeValid(false);
+                setIsCodeClosed(false);
             } else if (res?.serverError) {
-                setIsCodeValid(false);setIsCodeClosed(false)
+                setIsCodeValid(false);
+                setIsCodeClosed(false);
             }
         } catch (e) {
-            setIsCodeValid(false);setIsCodeClosed(false)
+            setIsCodeValid(false);
+            setIsCodeClosed(false);
         } finally {
             setIsLoading(false);
         }
         return;
     };
     const handleOnChange = (e: any) => {
-        if (isInputValid) {
-            setIsCodeValid(null);setIsCodeClosed(null)
+        const value = e.currentTarget.value;
+        setCode(value);
+        // Reset error state only if there was an error and user starts typing again
+        if (!isCodeValid || isCodeClosed !== null) {
+            setIsCodeValid(true);
+            setIsCodeClosed(null);
         }
-        setCode(e.currentTarget.value);
     };
     return (
         <>
@@ -99,7 +110,7 @@ export default function Home() {
                         {t.button.check}
                     </Button>
                 </form>
-                {isCodeValid == false && isCodeClosed? <p className="text-red-500">{t.home.closedCode}</p>:<p className="text-red-500">{t.home.invalidCode}</p>}
+                {isCodeValid == false && (isCodeClosed ? <p className="text-red-500">{t.home.closedCode}</p> : <p className="text-red-500">{t.home.invalidCode}</p>)}
 
                 <div className="mt-8">
                     <AlertHaveNoCode t={t} />
