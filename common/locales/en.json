@@ -8,6 +8,7 @@
         "noCode": "I don't have a code",
         "noCodeDialog": "If you are a new immigrant looking for a welcome gift we are currently experiencing an overwhelming volume of requests. Unfortunately, we cannot offer new immigrants welcome gifts at this time. Please do not leave a message as we cannot reply to your message. In the future, we hope to distribute these gifts again through absorption centers and other community organizations.",
         "invalidCode": "Invalid code",
+        "closedCode": "The registration window has closed",
         "gotoSupport": "Having Trouble? Contact us here."
     },
 

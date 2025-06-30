@@ -6,6 +6,7 @@ import { BeneficiaryApplicationFormAppID, BfpforyouMasterAPPID } from "@/common/
 import logError from "@/common/logError";
 import { isProgramIncluded, programs } from "@/types/program";
 import client from "@/hooks/useKintone";
+import { DateTime } from "luxon";
 
 // This schema is used to validate input from client.
 const schema = z.object({
@@ -24,27 +25,27 @@ export const checkCode = actionClient.schema(schema).action(async ({ parsedInput
             app: BeneficiaryApplicationFormAppID as string,
             condition: query2,
         });
-        const countUsedCode = (code: string) => {
-            return records.filter((record) => record["ticket"].value === code).length;
-        };
+        const countUsedCode = records.length;
         const setting = settings.find((setting) => {
-            if (setting["expiry"].value && new Date(setting["expiry"].value as string) < new Date()) {
-                return false;
-            }
+            
+            // check if code is between code and maxValue
             if (setting["maxValue"].value) {
-                if (countUsedCode(code) > 0) return false;
                 if (parseInt(setting["maxValue"].value as string) < parseInt(code)) return false;
                 if (parseInt(setting["code"].value as string) > parseInt(code)) return false;
             }
-            // else if here, when maxValue is not set
+            // check ticket
             else if (setting["code"].value != code) return false;
-            if (setting["limit"].value && countUsedCode(code) > parseInt(setting["limit"].value as string)) return false;
-            return true;
+            return true
         });
-
-        if (!setting) {
-            return { failure: "No setting found for this code" };
-        } else if (!setting["program"].value || typeof setting["program"].value !== "string") {
+        if (!setting) return { failure: "No setting found for this code" };
+        // check if code is expired
+        if (setting["expiry"].value && DateTime.fromISO(setting["expiry"].value as string) <= DateTime.now()) {
+            return { closed: "closed" };
+        }
+        // check if code has reached limit
+        if (setting["limit"].value && countUsedCode >= parseInt(setting["limit"].value as string)) return { closed: "closed" };
+        // check program
+        if (!setting["program"].value || typeof setting["program"].value !== "string") {
             return { failure: "No program found for this code" };
         } else {
             if (isProgramIncluded(setting["program"].value)) {

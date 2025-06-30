@@ -1,7 +1,9 @@
 import { Dictionary } from "@/common/locales/Dictionary-provider";
 import { ImmigrantType } from "@/features/forms/immigrant/schema/immigrantSchema";
+import { DateTime } from "luxon";
 
 const template_immigrant = (formResponse: ImmigrantType, t: Dictionary) => {
+    const aliyahDateLuxon = DateTime.fromISO(formResponse.aliyahDate).toFormat("dd-LLL-yyyy");
     return `<div className="font-sans">
             <h2>Thank you for contacting Bridges for Peace.</h2>
             <h2>Below is a copy of the form you submitted.</h2>
@@ -118,7 +120,7 @@ const template_immigrant = (formResponse: ImmigrantType, t: Dictionary) => {
                 }
 
                 <div>
-                    ${t.aliyahDate}: ${formResponse.aliyahDate}
+                    ${t.aliyahDate}: ${aliyahDateLuxon}
                 </div>
                 <div>
                     ${t.whereHeardOfUs.title}: ${t.whereHeardOfUs.options[formResponse.whereHeardOfUs as keyof typeof t.whereHeardOfUs.options]}
