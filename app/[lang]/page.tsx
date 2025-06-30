@@ -14,7 +14,7 @@ import { useRouter, usePathname } from "next/navigation";
 export default function Home() {
     const t = useDictionary();
     const [code, setCode] = useState("");
-    const [isCodeValid, setIsCodeValid] = useState<true | false | null>(null);
+    const [isCodeValid, setIsCodeValid] = useState<true | false>(true);
     const [isLoading, setIsLoading] = useState(false);
     // 10 digits number
     const isInputValid = /^\d{1,9}$/.test(code);
@@ -73,7 +73,7 @@ export default function Home() {
     };
     const handleOnChange = (e: any) => {
         if (isInputValid) {
-            setIsCodeValid(null);
+            setIsCodeValid(true);
         }
         setCode(e.currentTarget.value);
     };
