@@ -84,7 +84,7 @@ export default function Home() {
     };
     const handleOnChange = (e: any) => {
         if (isInputValid) {
-            setIsCodeValid(null);
+            setIsCodeValid(false);
             setIsCodeClosed(null);
         }
         setCode(e.currentTarget.value);
