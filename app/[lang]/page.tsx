@@ -15,6 +15,7 @@ export default function Home() {
     const t = useDictionary();
     const [code, setCode] = useState("");
     const [isCodeValid, setIsCodeValid] = useState<true | false>(true);
+    console.log("isCodeValid", isCodeValid);
     const [isCodeClosed, setIsCodeClosed] = useState<true | false | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     // 10 digits number
@@ -83,11 +84,13 @@ export default function Home() {
         return;
     };
     const handleOnChange = (e: any) => {
-        if (isInputValid) {
-            setIsCodeValid(false);
+        const value = e.currentTarget.value;
+        setCode(value);
+        // Reset error state only if there was an error and user starts typing again
+        if (!isCodeValid || isCodeClosed !== null) {
+            setIsCodeValid(true);
             setIsCodeClosed(null);
         }
-        setCode(e.currentTarget.value);
     };
     return (
         <>
@@ -107,7 +110,7 @@ export default function Home() {
                         {t.button.check}
                     </Button>
                 </form>
-                {isCodeValid == false && isCodeClosed ? <p className="text-red-500">{t.home.closedCode}</p> : <p className="text-red-500">{t.home.invalidCode}</p>}
+                {isCodeValid == false && (isCodeClosed ? <p className="text-red-500">{t.home.closedCode}</p> : <p className="text-red-500">{t.home.invalidCode}</p>)}
 
                 <div className="mt-8">
                     <AlertHaveNoCode t={t} />
