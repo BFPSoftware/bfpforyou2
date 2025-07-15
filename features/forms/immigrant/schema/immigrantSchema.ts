@@ -11,14 +11,23 @@ const error_required = {
 const yesNo: z.ZodEffects<z.ZodNullable<z.ZodString>> = z.string().nullable().refine(validateRadio, error_required);
 const file = z
     .object({
-        file: z.any(),
+        file: z.instanceof(File).optional(),
         fileKey: z.string().min(1).max(50, "File could not be uploaded"),
+        uploadedAt: z.date().optional(),
     })
     .nullable()
     .refine((data) => {
         if (data == null) return false;
+        // If we have a fileKey but no file, check if it's expired (3 days)
+        if (data.fileKey && !data.file && data.uploadedAt) {
+            const expirationDate = new Date(data.uploadedAt);
+            expirationDate.setDate(expirationDate.getDate() + 3);
+            if (new Date() > expirationDate) {
+                return false;
+            }
+        }
         return true;
-    }, "This field is required");
+    }, "This field is required or the uploaded file has expired");
 
 const ticket: z.ZodString = z.string().min(1).max(9);
 const formLang: z.ZodString = z.string().min(1).max(20);
@@ -207,35 +216,44 @@ export type ImmigrantType = z.infer<typeof ImmigrantSchema>;
 export type ImmigrantFormType = keyof ImmigrantType;
 
 // export test default data for form
-export const defaultData: ImmigrantType = {
+export const defaultData: z.infer<typeof ImmigrantSchema> = {
     ticket: "123456789",
     formLang: "en",
     firstName: "John",
     lastName: "Doe",
-    idType: "1",
+    idType: "Passport",
     idNumber: "123456789",
-    attachment1: { file: "file1", fileKey: "fileKey1" },
-    attachment2: { file: "file1", fileKey: "fileKey1" },
-    attachment3: { file: "file1", fileKey: "fileKey1" },
+    attachment1: null,
+    attachment2: null,
+    attachment3: null,
     birthday: {
-        day: "1",
-        month: "Jan",
+        day: "01",
+        month: "01",
         year: "2000",
     },
-    gender: "1",
-    originCity: "originCity",
-    originCountry: "originCountry",
-    nativeLanguage: "nativeLanguage",
-    phone: "phoneno",
-    email: "email@a.aa",
-    address1: "address1",
-    address2: "address2",
-    city: "city",
-    zip: "zip",
-    // Page 2
-    spouse: { maritalStatus: "1" },
+    gender: "Male",
+    originCity: "City",
+    originCountry: "Country",
+    nativeLanguage: "English",
+    phone: "123456789",
+    email: "john@example.com",
+    address1: "123 Main St",
+    address2: "Apt 4B",
+    city: "City",
+    zip: "12345",
+    spouse: {
+        maritalStatus: "0",
+        spouseFirstName: "Jane",
+        spouseFamilyName: "Doe",
+        spouseBirthday: {
+            day: "01",
+            month: "01",
+            year: "2000",
+        },
+        spouseIDType: "Passport",
+        spouseIDNumber: "987654321",
+    },
     children: { childStatus: "No", childTable: [] },
-    // Page 3
-    aliyahDate: "aliyahDate",
-    whereHeardOfUs: "whereHeardOfUs",
+    aliyahDate: "01/01/2024",
+    whereHeardOfUs: "Internet",
 };

@@ -1,6 +1,7 @@
-import sendConfirmationEmail from "@/hooks/confirmation/immigrant/sendConfirmationEmail";
-import { ImmigrantType } from "../schema/immigrantSchema";
 import logError from "@/common/logError";
+import { ImmigrantType } from "../schema/immigrantSchema";
+import sendConfirmationEmail from "@/hooks/confirmation/immigrant/sendConfirmationEmail";
+import { checkAndReuploadFile } from "@/lib/utils";
 import { DateTime } from "luxon";
 
 const convertMonthShortToNumber = (month: string) => {
@@ -33,9 +34,11 @@ const convertMonthShortToNumber = (month: string) => {
             return "01";
     }
 };
+
 const zeroPad = (num: string) => {
     return num.padStart(2, "0");
 };
+
 const convertLanguage = (language: string) => {
     switch (language) {
         case "en":
@@ -59,9 +62,9 @@ const createAddRecord = (formResponse: ImmigrantType) => {
         lastName: { value: formResponse.lastName },
         IDType: { value: formResponse.idType },
         IDNumber: { value: formResponse.idNumber },
-        Attachment1: { value: [{ fileKey: formResponse.attachment1?.fileKey }] },
-        Attachment2: { value: [{ fileKey: formResponse.attachment2?.fileKey }] },
-        Attachment3: { value: [{ fileKey: formResponse.attachment3?.fileKey }] },
+        Attachment1: { value: formResponse.attachment1?.fileKey ? [{ fileKey: formResponse.attachment1.fileKey }] : [] },
+        Attachment2: { value: formResponse.attachment2?.fileKey ? [{ fileKey: formResponse.attachment2.fileKey }] : [] },
+        Attachment3: { value: formResponse.attachment3?.fileKey ? [{ fileKey: formResponse.attachment3.fileKey }] : [] },
         birthday: { value: `${zeroPad(formResponse.birthday.day)}/${convertMonthShortToNumber(formResponse.birthday.month)}/${formResponse.birthday.year}` },
         gender: { value: formResponse.gender },
         originCity: { value: formResponse.originCity },
@@ -107,6 +110,17 @@ const createAddRecord = (formResponse: ImmigrantType) => {
 
 export const handleSubmit_newImmigrant = async (formResponse: ImmigrantType, t: any) => {
     try {
+        // Check for expired files and re-upload if needed
+        if (formResponse.attachment1?.file) {
+            formResponse.attachment1 = await checkAndReuploadFile(formResponse.attachment1);
+        }
+        if (formResponse.attachment2?.file) {
+            formResponse.attachment2 = await checkAndReuploadFile(formResponse.attachment2);
+        }
+        if (formResponse.attachment3?.file) {
+            formResponse.attachment3 = await checkAndReuploadFile(formResponse.attachment3);
+        }
+
         const addRecord = createAddRecord(formResponse);
         const res = await fetch("/api/kintone/postKintone", {
             method: "POST",

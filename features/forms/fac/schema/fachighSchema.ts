@@ -36,14 +36,23 @@ const string4000: z.ZodString = z.string().min(1).max(4000, error_maxLength);
 const string_optional: z.ZodOptional<z.ZodString> = z.string().optional();
 const file = z
     .object({
-        file: z.any(),
+        file: z.instanceof(File).optional(),
         fileKey: z.string().min(1).max(50, "File could not be uploaded"),
+        uploadedAt: z.date().optional(),
     })
     .nullable()
     .refine((data) => {
         if (data == null) return false;
+        // If we have a fileKey but no file, check if it's expired (3 days)
+        if (data.fileKey && !data.file && data.uploadedAt) {
+            const expirationDate = new Date(data.uploadedAt);
+            expirationDate.setDate(expirationDate.getDate() + 3);
+            if (new Date() > expirationDate) {
+                return false;
+            }
+        }
         return true;
-    }, "This field is required");
+    }, "This field is required or the uploaded file has expired");
 
 // system
 const ticket = string50;
@@ -147,18 +156,18 @@ export const defaultData: z.infer<typeof fachighSchema> = {
         year: "2000",
     },
     age: "10",
-    photo: { file: "photo.jpg", fileKey: "123456789" },
+    photo: null,
     grade: "5",
     originCountry: "Country",
-    school: "Devir",
+    school: "HaDekel",
     returning: "No",
-    introduction: "Introduction",
-    aboutSchool: "About School",
-    personalLife: "Personal Life",
-    future: "Future",
-    scholarship: "Scholarship",
+    introduction: "I am a student.",
+    aboutSchool: "My school is great.",
+    personalLife: "I like to read.",
+    future: "I want to be a doctor.",
+    scholarship: "I need financial aid.",
+    submittedBy: "Parent",
+    relationship: "Father",
     check1: false,
     check2: false,
-    submittedBy: "John Doe",
-    relationship: "Father",
 };
