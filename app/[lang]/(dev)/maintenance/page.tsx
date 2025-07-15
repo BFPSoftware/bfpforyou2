@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import "./style.css";
-import TestButton from "./TestButton";
 
 const Page = () => {
     return (
@@ -32,7 +31,6 @@ const Page = () => {
                 </p>
                 <br />
                 <br />
-                <TestButton />
             </div>
         </>
     );

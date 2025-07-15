@@ -43,22 +43,28 @@ export const Input = (props: InputProps) => {
 };
 type TextareaProps = {
     label: string;
-    register: UseFormRegisterReturn<FachighFormType> | UseFormRegisterReturn<FacelemFormType>;
+    register: UseFormRegisterReturn<any>;
     placeholder?: string;
     error: FieldError | undefined;
     required?: boolean;
+    minLength?: number;
     watch: any; // using any to avoid type error
 };
 export const Textarea = (props: TextareaProps) => {
     const textValue = props.watch(props.register.name); // using any to avoid type error
+    const minLength = props.minLength || 100;
     return (
         <label className="flex flex-col space-y-1 w-auto me-5 grow md:max-w-xl">
             <div className="font-semibold mb-1">
                 {props.label}
                 {props.required && <span className="text-red-500">*</span>}
             </div>
-            <textarea rows={5} {...props.register} minLength={100} className={"text-gray-800 mt-4 rounded-md border py-2 px-3 focus:outline focus:outline-sky-500 focus:ring-4 focus:ring-sky-500/30" + (props.error ? " border-red-500" : " border-inherit")} placeholder={props.placeholder || props.label} />
-            {typeof textValue == "string" && textValue.length > 0 && textValue.length < 100 && <div className="text-red-500 pl-1 pt-1 text-xs">{textValue.length}/100</div>}
+            <textarea rows={5} {...props.register} minLength={minLength} className={"text-gray-800 mt-4 rounded-md border py-2 px-3 focus:outline focus:outline-sky-500 focus:ring-4 focus:ring-sky-500/30" + (props.error ? " border-red-500" : " border-inherit")} placeholder={props.placeholder || props.label} />
+            {typeof textValue == "string" && textValue.length > 0 && textValue.length < minLength && (
+                <div className="text-red-500 pl-1 pt-1 text-xs">
+                    {textValue.length}/{minLength}
+                </div>
+            )}
             {props.error && <div className="text-red-500 pl-1 pt-1 text-xs">{props.error.message}</div>}
         </label>
     );

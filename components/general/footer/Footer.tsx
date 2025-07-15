@@ -1,14 +1,15 @@
-import { getDictionary } from "@/app/[lang]/dictionaries";
-import { Locale } from "@/types/locales";
+"use client";
+
+import { useDictionary } from "@/common/locales/Dictionary-provider";
 import Link from "next/link";
 import React from "react";
 
-const Footer = async ({ lang }: { lang: Locale }) => {
-    //const dictionary = await getDictionary(lang, "common"); // en
+const Footer = () => {
+    const t = useDictionary();
     return (
         <footer className="flex justify-around content-center bg-theme underline">
             <Link href="/contact-us" className="p-4 hover:text-blue-500">
-                {}
+                {t.home.gotoSupport}
             </Link>
         </footer>
     );

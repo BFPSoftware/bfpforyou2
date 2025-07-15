@@ -1,46 +1,31 @@
-import logError from "@/common/logError";
-import template_facelem from "@/components/email/template_facelem";
+import { Dictionary } from "@/common/locales/Dictionary-provider";
 import { FacelemType } from "@/features/forms/fac/schema/facelemSchema";
+import template_facelem from "@/components/email/template_facelem";
+import logError from "@/common/logError";
+import { getSchoolCoordinatorEmail } from "@/lib/email-config";
 
-export const coordinatorEmail = {
-    highschool: "sharona@kerenbshemesh.org.il",
-    bshemesh: "sharona@kerenbshemesh.org.il",
-    leviEshkol: [{ email: "sharona@kerenbshemesh.org.il" }, { email: "Galitalex@gmail.com" }],
-    zalmanAran: "Osnatsteyer@yahoo.com",
-    benZvi: "Veredfree3@gmail.com",
-    hadekel: "mlakmilhem@gmail.com",
-};
-const sendConfirmationEmail_elem = async (formResponse: FacelemType, t: any) => {
-    const emailTo = () => {
-        switch (formResponse.elemSchool) {
-            case "Ben Zvi":
-                return coordinatorEmail.benZvi;
-            case "HaDekel":
-                return coordinatorEmail.hadekel;
-            case "Levi Eshkol":
-                return coordinatorEmail.leviEshkol;
-            case "Zalman Aran":
-                return coordinatorEmail.zalmanAran;
-            case "Jabutinsky":
-            case "Uziel":
-            case "Orot - Boys":
-            case "Orot - Girls":
-                return coordinatorEmail.bshemesh;
+const sendConfirmationEmail_elem = async (formResponse: FacelemType, t: Dictionary) => {
+    try {
+        const html = template_facelem(formResponse, t);
+        const coordinatorEmail = getSchoolCoordinatorEmail(formResponse.elemSchool);
+
+        const res = await fetch("/api/email/confirmation", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                to: coordinatorEmail,
+                subject: "[bfpforyou]New Elementary School Application",
+                html: html,
+            }),
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to send confirmation email");
         }
-    };
-    const body = template_facelem(formResponse, t);
-    const res = await fetch("/api/sendgrid/sendConfirmationEmail", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ body, to: emailTo() }),
-    });
-    if (await res.ok) {
-        return true;
-    } else {
-        logError(res, { formResponse }, "sendConfirmationEmail");
-        return false;
+    } catch (e) {
+        logError(e, formResponse, "sendConfirmationEmail_elem");
     }
 };
 export default sendConfirmationEmail_elem;

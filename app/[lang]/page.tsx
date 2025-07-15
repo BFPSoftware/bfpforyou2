@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Dictionary, useDictionary } from "@/common/locales/Dictionary-provider";
 import { AlertDialogHeader, AlertDialogFooter } from "@/components/ui/alert-dialog";
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
-import { checkCode } from "./actions/kintone/checkCode";
+import { checkCode } from "@/app/[lang]/actions/kintone/checkCode";
 import { useRouter, usePathname } from "next/navigation";
+import Footer from "@/components/general/footer/Footer";
 
 export default function Home() {
     const t = useDictionary();
@@ -116,6 +117,7 @@ export default function Home() {
                     <AlertHaveNoCode t={t} />
                 </div>
             </main>
+            <Footer />
         </>
     );
 }

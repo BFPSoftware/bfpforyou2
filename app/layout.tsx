@@ -34,17 +34,13 @@ export default async function RootLayout({
     children: React.ReactNode;
     params: Promise<{ lang: Locale }>;
 }>) {
-    const { lang } = await params;
     return (
         <html lang="en">
             <Head>
                 <title>BFP Gifts</title>
                 <meta property="og:title" content="BFP Gifts" key="title" />
             </Head>
-            <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                {children}
-                <Footer lang={lang} />
-            </body>
+            <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
         </html>
     );
 }

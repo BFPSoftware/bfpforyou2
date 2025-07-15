@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import logError from "@/common/logError";
 import { google } from "googleapis";
+import nodemailer from "nodemailer";
 
 const oauth2Client = new google.auth.OAuth2(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, "https://developers.google.com/oauthplayground");
 
@@ -8,10 +8,16 @@ oauth2Client.setCredentials({
     refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
 });
 
-export async function POST(req: Request) {
+export type EmailOptions = {
+    to: string | { email: string }[] | undefined;
+    subject: string;
+    html: string;
+    bcc?: string;
+};
+
+export async function sendEmail(options: EmailOptions) {
     try {
-        const body = await req.json();
-        const { to, subject, html } = body;
+        const { to, subject, html, bcc } = options;
 
         // Get access token
         const accessToken = await oauth2Client.getAccessToken();
@@ -29,17 +35,22 @@ export async function POST(req: Request) {
             },
         });
 
+        // Handle array of email objects
+        const toEmails = Array.isArray(to) ? to.map((t) => t.email).join(", ") : to;
+
         // Send email
         await transporter.sendMail({
             from: process.env.GOOGLE_EMAIL,
-            to,
+            to: toEmails,
+            bcc,
             subject,
             html,
         });
 
-        return NextResponse.json({ success: true });
+        return { success: true };
     } catch (error) {
         console.error("Failed to send email:", error);
-        return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
+        logError(error, options, "sendEmail");
+        throw error;
     }
 }

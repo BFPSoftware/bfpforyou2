@@ -186,12 +186,16 @@ export const defaultData: z.infer<typeof facelemSchema> = {
     lastName: "Doe",
     tz: "123456789",
     birthday: {
-        day: "01",
-        month: "01",
+        day: "1",
+        month: "Jan",
         year: "2000",
     },
     age: "10",
-    photo: null,
+    photo: {
+        file: undefined, // File object can't be serialized in the default data
+        fileKey: "expired_photo_123",
+        uploadedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000), // 4 days ago
+    },
     grade: "5",
     originCountry: "Country",
     elemSchool: "HaDekel",

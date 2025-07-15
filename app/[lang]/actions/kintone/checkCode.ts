@@ -15,6 +15,7 @@ const schema = z.object({
 
 export const checkCode = actionClient.schema(schema).action(async ({ parsedInput: { code } }) => {
     try {
+        debugger;
         const query1 = `status in ("Active")`;
         const settings = await client.record.getAllRecords({
             app: BfpforyouMasterAPPID as string,
@@ -27,7 +28,6 @@ export const checkCode = actionClient.schema(schema).action(async ({ parsedInput
         });
         const countUsedCode = records.length;
         const setting = settings.find((setting) => {
-            
             // check if code is between code and maxValue
             if (setting["maxValue"].value) {
                 if (parseInt(setting["maxValue"].value as string) < parseInt(code)) return false;
@@ -35,7 +35,7 @@ export const checkCode = actionClient.schema(schema).action(async ({ parsedInput
             }
             // check ticket
             else if (setting["code"].value != code) return false;
-            return true
+            return true;
         });
         if (!setting) return { failure: "No setting found for this code" };
         // check if code is expired

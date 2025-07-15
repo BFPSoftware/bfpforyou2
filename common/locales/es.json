@@ -237,5 +237,17 @@
         "personalLife": "What do you like to do in your free time? What are some of your favorite things? ",
         "yourFuture": "What do you want to do for a career? What dreams do you have? How do you see yourself in 10 years?",
         "scholarship": "¿Por qué quiere esta beca?"
+    },
+    "contactUs": {
+        "title": "Contáctenos",
+        "subtitle": "Si tienes alguna pregunta o necesitas ayuda, por favor completa el formulario a continuación y te responderemos dentro de los 3-5 días hábiles.",
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "message": "Mensaje",
+        "sending": "Enviando...",
+        "sendMessage": "Enviar Mensaje",
+        "thankYou": "Gracias por contactarnos!",
+        "responseTime": "Te responderemos dentro de los 3-5 días hábiles.",
+        "backToHome": "Volver a la página principal"
     }
 }

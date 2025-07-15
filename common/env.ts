@@ -1,5 +1,3 @@
-export const sendgridApiKey = process.env.SENDGRID_APIKEY;
-// kintone
 export const KintoneUserName = process.env.KINTONE_USERNAME;
 export const KintonePassword = process.env.KINTONE_PASSWORD;
 // kintone app

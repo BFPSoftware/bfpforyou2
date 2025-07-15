@@ -32,16 +32,13 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error 
     }, [watch?.file]);
 
     useEffect(() => {
-        // Check for file expiration
-        if (watch?.fileKey && watch?.uploadedAt && !watch?.file) {
-            const expirationDate = new Date(watch.uploadedAt);
-            expirationDate.setDate(expirationDate.getDate() + 3);
-            if (new Date() > expirationDate) {
-                setIsError({ message: "File has expired. Please upload again." });
-                setValue(field, null);
-            }
+        // Only check if file is missing
+        if (watch?.fileKey && !watch?.file) {
+            console.log("File is missing:", { fileKey: watch.fileKey, uploadedAt: watch.uploadedAt });
+            setIsError({ message: "File is missing. Please upload." });
+            setValue(field, null);
         }
-    }, [watch?.fileKey, watch?.uploadedAt, watch?.file]);
+    }, [watch?.fileKey, watch?.file]);
 
     // store the file key after uploading unto Kintone
     const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
