@@ -7,17 +7,20 @@ import Delete from "@/components/icons/Delete";
 type FileUploadProps = {
     label: string;
     setValue: any;
-    watch: { file?: any; fileKey: string } | null;
+    watch: { file?: File; fileKey: string; uploadedAt?: Date } | null;
     field: string;
-    error: Merge<FieldError, FieldErrorsImpl<{ fileKey: string; file: any }>> | undefined;
+    error: Merge<FieldError, FieldErrorsImpl<{ fileKey: string; file: File; uploadedAt: Date }>> | undefined;
 };
+
 const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error }) => {
     const [isError, setIsError] = useState<{ message: string }>({ message: error?.message || "" });
     const [filePreview, setFilePreview] = useState<any>();
     const inputRef = useRef<HTMLInputElement>(null);
+
     useEffect(() => {
         if (error?.message) setIsError({ message: error.message });
     }, [error?.message]);
+
     useEffect(() => {
         if (watch?.file) {
             const reader = new FileReader();
@@ -27,6 +30,16 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error 
             reader.readAsDataURL(watch.file);
         }
     }, [watch?.file]);
+
+    useEffect(() => {
+        // Only check if file is missing
+        if (watch?.fileKey && !watch?.file) {
+            console.log("File is missing:", { fileKey: watch.fileKey, uploadedAt: watch.uploadedAt });
+            setIsError({ message: "File is missing. Please upload." });
+            setValue(field, null);
+        }
+    }, [watch?.fileKey, watch?.file]);
+
     // store the file key after uploading unto Kintone
     const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
         if (isError.message) setIsError({ message: "" });
@@ -55,7 +68,11 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error 
                 else if (res?.data?.failure) handleFailureUpload();
                 else if (res?.data?.success) {
                     setIsError({ message: "" });
-                    setValue(field, { file: file, fileKey: res?.data?.success });
+                    setValue(field, {
+                        file: file,
+                        fileKey: res?.data?.success,
+                        uploadedAt: new Date(),
+                    });
                     const reader = new FileReader();
                     reader.onloadend = () => {
                         setFilePreview(reader.result);
@@ -65,6 +82,7 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error 
             }
         }
     };
+
     return (
         <div className="flex flex-col w-full space-y-1 py-3 grow md:max-w-sm">
             <div className="font-semibold mb-1">{label}</div>
@@ -105,4 +123,5 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error 
         </div>
     );
 };
+
 export default FileUpload;

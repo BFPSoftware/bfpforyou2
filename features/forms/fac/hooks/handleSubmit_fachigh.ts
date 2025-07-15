@@ -1,6 +1,7 @@
 import logError from "@/common/logError";
 import { FachighType } from "../schema/fachighSchema";
 import sendConfirmationEmail_high from "@/hooks/confirmation/fac/sendConfirmationEmail_high";
+import { checkAndReuploadFile } from "@/lib/utils";
 
 const convertMonthShortToMonthLong = (month: string) => {
     switch (month) {
@@ -32,9 +33,11 @@ const convertMonthShortToMonthLong = (month: string) => {
             return "unknown";
     }
 };
+
 const zeroPad = (num: string) => {
     return num.padStart(2, "0");
 };
+
 const convertLanguage = (language: string) => {
     switch (language) {
         case "en":
@@ -61,7 +64,7 @@ const createAddRecord = (formResponse: FachighType) => {
         tz: { value: formResponse.tz },
         birthday: { value: `${convertMonthShortToMonthLong(formResponse.birthday.month)} ${zeroPad(formResponse.birthday.day)}, ${formResponse.birthday.year}` },
         age: { value: formResponse.age },
-        photo: { value: [{ fileKey: formResponse.photo?.fileKey }] },
+        photo: { value: formResponse.photo?.fileKey ? [{ fileKey: formResponse.photo.fileKey }] : [] },
         grade: { value: formResponse.grade },
         originCountry: { value: formResponse.originCountry },
         school: { value: formResponse.school },
@@ -82,6 +85,11 @@ const createAddRecord = (formResponse: FachighType) => {
 
 export const handleSubmit_fachigh = async (formResponse: FachighType, t: any) => {
     try {
+        // Check for expired files and re-upload if needed
+        if (formResponse.photo?.file) {
+            formResponse.photo = await checkAndReuploadFile(formResponse.photo);
+        }
+
         const addRecord = createAddRecord(formResponse);
         const res = await fetch("/api/kintone/postKintone_fac", {
             method: "POST",

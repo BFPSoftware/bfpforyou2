@@ -36,14 +36,23 @@ const string4000: z.ZodString = z.string().min(1).max(4000, error_maxLength);
 const string_optional: z.ZodOptional<z.ZodString> = z.string().optional();
 const file = z
     .object({
-        file: z.any(),
+        file: z.instanceof(File).optional(),
         fileKey: z.string().min(1).max(50, "File could not be uploaded"),
+        uploadedAt: z.date().optional(),
     })
     .nullable()
     .refine((data) => {
         if (data == null) return false;
+        // If we have a fileKey but no file, check if it's expired (3 days)
+        if (data.fileKey && !data.file && data.uploadedAt) {
+            const expirationDate = new Date(data.uploadedAt);
+            expirationDate.setDate(expirationDate.getDate() + 3);
+            if (new Date() > expirationDate) {
+                return false;
+            }
+        }
         return true;
-    }, "This field is required");
+    }, "This field is required or the uploaded file has expired");
 
 // system
 const ticket = string50;
@@ -177,12 +186,16 @@ export const defaultData: z.infer<typeof facelemSchema> = {
     lastName: "Doe",
     tz: "123456789",
     birthday: {
-        day: "01",
-        month: "01",
+        day: "1",
+        month: "Jan",
         year: "2000",
     },
     age: "10",
-    photo: { file: "photo.jpg", fileKey: "123456789" },
+    photo: {
+        file: undefined, // File object can't be serialized in the default data
+        fileKey: "expired_photo_123",
+        uploadedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000), // 4 days ago
+    },
     grade: "5",
     originCountry: "Country",
     elemSchool: "HaDekel",

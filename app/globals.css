@@ -36,6 +36,88 @@
     transform: translateX(100%);
 }
 
+/* RTL Support */
+.rtl {
+    direction: rtl;
+    text-align: right;
+}
+
+.rtl .flex-row {
+    flex-direction: row-reverse;
+}
+
+.rtl .space-x-1 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+}
+
+.rtl .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+}
+
+.rtl .space-x-3 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+}
+
+.rtl .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+}
+
+/* Reverse margins for RTL */
+.rtl .ml-auto {
+    margin-left: unset;
+    margin-right: auto;
+}
+
+.rtl .mr-auto {
+    margin-right: unset;
+    margin-left: auto;
+}
+
+/* Reverse padding for RTL */
+.rtl .pl-1 {
+    padding-left: unset;
+    padding-right: 0.25rem;
+}
+.rtl .pl-2 {
+    padding-left: unset;
+    padding-right: 0.5rem;
+}
+.rtl .pl-3 {
+    padding-left: unset;
+    padding-right: 0.75rem;
+}
+.rtl .pl-4 {
+    padding-left: unset;
+    padding-right: 1rem;
+}
+
+.rtl .pr-1 {
+    padding-right: unset;
+    padding-left: 0.25rem;
+}
+.rtl .pr-2 {
+    padding-right: unset;
+    padding-left: 0.5rem;
+}
+.rtl .pr-3 {
+    padding-right: unset;
+    padding-left: 0.75rem;
+}
+.rtl .pr-4 {
+    padding-right: unset;
+    padding-left: 1rem;
+}
+
+/* Reverse borders for RTL */
+.rtl .border-l {
+    border-left: unset;
+    border-right-width: 1px;
+}
+.rtl .border-r {
+    border-right: unset;
+    border-left-width: 1px;
+}
+
 /* 
 :root {
   --foreground-rgb: 0, 0, 0;

@@ -12,6 +12,19 @@
         "gotoSupport": "Having Trouble? Contact us here."
     },
 
+    "contactUs": {
+        "title": "Contact Us",
+        "subtitle": "If you have any questions or need assistance, please fill out the form below and we will get back to you within 3-5 working days.",
+        "name": "Name",
+        "email": "Email",
+        "message": "Message",
+        "sending": "Sending...",
+        "sendMessage": "Send Message",
+        "thankYou": "Thank You for Contacting Us!",
+        "responseTime": "We will get back to you within 3-5 working days.",
+        "backToHome": "Back to Home"
+    },
+
     "confirmation": {
         "type": "Type",
         "code": "Code"

@@ -1,6 +1,7 @@
-import sendConfirmationEmail_elem from "@/hooks/confirmation/fac/sendConfirmationEmail_elem";
-import { FacelemType } from "../schema/facelemSchema";
 import logError from "@/common/logError";
+import { FacelemType } from "../schema/facelemSchema";
+import sendConfirmationEmail_elem from "@/hooks/confirmation/fac/sendConfirmationEmail_elem";
+import { checkAndReuploadFile } from "@/lib/utils";
 
 const convertMonthShortToMonthLong = (month: string) => {
     switch (month) {
@@ -32,9 +33,11 @@ const convertMonthShortToMonthLong = (month: string) => {
             return "unknown";
     }
 };
+
 const zeroPad = (num: string) => {
     return num.padStart(2, "0");
 };
+
 const convertLanguage = (language: string) => {
     switch (language) {
         case "en":
@@ -61,7 +64,7 @@ const createAddRecord = (formResponse: FacelemType) => {
         tz: { value: formResponse.tz },
         birthday: { value: `${convertMonthShortToMonthLong(formResponse.birthday.month)} ${zeroPad(formResponse.birthday.day)}, ${formResponse.birthday.year}` },
         age: { value: formResponse.age },
-        photo: { value: [{ fileKey: formResponse.photo?.fileKey }] },
+        photo: { value: formResponse.photo?.fileKey ? [{ fileKey: formResponse.photo.fileKey }] : [] },
         grade: { value: formResponse.grade },
         originCountry: { value: formResponse.originCountry },
         elemSchool: { value: formResponse.elemSchool },
@@ -100,6 +103,11 @@ const createAddRecord = (formResponse: FacelemType) => {
 
 export const handleSubmit_facelem = async (formResponse: FacelemType, t: any) => {
     try {
+        // Check for expired files and re-upload if needed
+        if (formResponse.photo?.file) {
+            formResponse.photo = await checkAndReuploadFile(formResponse.photo);
+        }
+
         const addRecord = createAddRecord(formResponse);
         const res = await fetch("/api/kintone/postKintone_fac", {
             method: "POST",

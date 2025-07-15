@@ -237,5 +237,17 @@
         "personalLife": "What do you like to do in your free time? What are some of your favorite things? ",
         "yourFuture": "What do you want to do for a career? What dreams do you have? How do you see yourself in 10 years?",
         "scholarship": "Pourquoi voulez-vous cette bourse ?"
+    },
+    "contactUs": {
+        "title": "Contactez-nous",
+        "subtitle": "Si vous avez des questions ou besoin d'aide, veuillez remplir le formulaire ci-dessous et nous vous répondrons dans les 3-5 jours ouvrables.",
+        "name": "Nom",
+        "email": "E-mail",
+        "message": "Message",
+        "sending": "Envoi en cours...",
+        "sendMessage": "Envoyer le Message",
+        "thankYou": "Merci pour votre message !",
+        "responseTime": "Nous vous répondrons dans les 3-5 jours ouvrables.",
+        "backToHome": "Retour à la page d'accueil"
     }
 }
