@@ -51,7 +51,36 @@
 
     "common": {
         "enterHere": "Enter Here",
-        "wantToSubmit": "Do you want to submit the form?"
+        "wantToSubmit": "Do you want to submit the form?",
+        "loading": "Loading..."
+    },
+
+    "admin": {
+        "loginTitle": "Teacher Admin Login",
+        "accessCode": "Access Code",
+        "enterAccessCode": "Enter your access code",
+        "login": "Login",
+        "invalidCode": "Invalid access code. Please try again.",
+        "dashboard": {
+            "title": "Teacher Dashboard",
+            "logout": "Logout",
+            "studentList": "Student List",
+            "noStudents": "No students found",
+            "search": "Search students...",
+            "sort": {
+                "asc": "Sort ascending",
+                "desc": "Sort descending",
+                "reset": "Reset sorting"
+            },
+            "details": {
+                "title": "Student Details",
+                "close": "Close",
+                "name": "Name",
+                "school": "School",
+                "grade": "Grade",
+                "submissionDate": "Submission Date"
+            }
+        }
     },
 
     "#comment": "########## New Immigrant ##########",

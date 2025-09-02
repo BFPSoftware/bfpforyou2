@@ -7,14 +7,25 @@ function getLocale(request: NextRequest) {
 }
 
 export function middleware(request: NextRequest) {
+    const { pathname } = request.nextUrl;
+
     // maintenance mode
-    if (process.env.MAINTENANCE_MODE === "true" && request.nextUrl.pathname !== "/en/maintenance") {
+    if (process.env.MAINTENANCE_MODE === "true" && pathname !== "/en/maintenance") {
         request.nextUrl.pathname = "/en/maintenance";
         return NextResponse.redirect(request.nextUrl);
     }
 
+    // Check if accessing admin routes (except login)
+    if (pathname.includes("/admin") && !pathname.endsWith("/admin")) {
+        const teacherId = request.cookies.get("teacherId");
+        if (!teacherId) {
+            const locale = getLocale(request);
+            request.nextUrl.pathname = `/${locale}/admin`;
+            return NextResponse.redirect(request.nextUrl);
+        }
+    }
+
     // Check if there is any supported locale in the pathname
-    const { pathname } = request.nextUrl;
     const pathnameHasLocale = locales.some((locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`);
 
     if (pathnameHasLocale) return;
@@ -22,8 +33,6 @@ export function middleware(request: NextRequest) {
     // Redirect if there is no locale
     const locale = getLocale(request);
     request.nextUrl.pathname = `/${locale}${pathname}`;
-    // e.g. incoming request is /products
-    // The new URL is now /en-US/products
     return NextResponse.redirect(request.nextUrl);
 }
 

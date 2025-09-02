@@ -41,6 +41,34 @@
         "wantToSubmit": "¿Desea enviar el formulario?"
     },
 
+    "admin": {
+        "loginTitle": "Iniciar sesión como administrador",
+        "accessCode": "Código de acceso",
+        "enterAccessCode": "Introduzca su código de acceso",
+        "login": "Iniciar sesión",
+        "invalidCode": "Código de acceso inválido. Por favor, inténtelo de nuevo.",
+        "dashboard": {
+            "title": "Panel de administrador",
+            "logout": "Cerrar sesión",
+            "studentList": "Lista de estudiantes",
+            "noStudents": "No hay estudiantes",
+            "search": "Buscar estudiantes...",
+            "sort": {
+                "asc": "Ordenar ascendente",
+                "desc": "Ordenar descendente",
+                "reset": "Reiniciar ordenación"
+            },
+            "details": {
+                "title": "Detalles del estudiante",
+                "close": "Cerrar",
+                "name": "Nombre",
+                "school": "Escuela",
+                "grade": "Grado",
+                "submissionDate": "Fecha de envío"
+            }
+        }
+    },
+
     "#comment": "########## New Immigrant ##########",
     "immigrant": {
         "title": "Solicitud de regalo para nuevo inmigrante",

@@ -41,6 +41,34 @@
         "wantToSubmit": "Souhaitez-vous soumettre le formulaire ?"
     },
 
+    "admin": {
+        "loginTitle": "Connexion en tant qu'administrateur",
+        "accessCode": "Code d'accès",
+        "enterAccessCode": "Entrez votre code d'accès",
+        "login": "Connexion",
+        "invalidCode": "Code d'accès invalide. Veuillez réessayer.",
+        "dashboard": {
+            "title": "Tableau de bord",
+            "logout": "Déconnexion",
+            "studentList": "Liste des étudiants",
+            "noStudents": "Aucun étudiant trouvé",
+            "search": "Rechercher des étudiants...",
+            "sort": {
+                "asc": "Trier par ordre croissant",
+                "desc": "Trier par ordre décroissant",
+                "reset": "Réinitialiser le tri"
+            },
+            "details": {
+                "title": "Détails de l'étudiant",
+                "close": "Fermer",
+                "name": "Nom",
+                "school": "École",
+                "grade": "Grade",
+                "submissionDate": "Date de soumission"
+            }
+        }
+    },
+
     "#comment": "########## New Immigrant ##########",
     "immigrant": {
         "title": "Demande de cadeau pour nouvel",

@@ -41,6 +41,34 @@
         "wantToSubmit": "האם ברצונך לשלוח את הטופס?"
     },
 
+    "admin": {
+        "loginTitle": "כניסה למערכת כמנהל",
+        "accessCode": "קוד גישה",
+        "enterAccessCode": "הזן קוד גישה",
+        "login": "כניסה",
+        "invalidCode": "קוד גישה שגוי. אנא נסה שנית.",
+        "dashboard": {
+            "title": "לוח בקשות",
+            "logout": "יציאה",
+            "studentList": "רשימת תלמידים",
+            "noStudents": "אין תלמידים",
+            "search": "חפשת תלמידים...",
+            "sort": {
+                "asc": "מיון בסדר עולה",
+                "desc": "מיון בסדר יורד",
+                "reset": "איפוס מיון"
+            },
+            "details": {
+                "title": "פרטי תלמיד",
+                "close": "סגירה",
+                "name": "שם",
+                "school": "בית ספר",
+                "grade": "כיתה",
+                "submissionDate": "תאריך שליחה"
+            }
+        }
+    },
+
     "#comment": "########## New Immigrant ##########",
     "immigrant": {
         "title": "בקשה למתנה לעולה חדשה",
