@@ -4,7 +4,8 @@ import { Locale } from "@/types/locales";
 import Footer from "@/components/general/footer/Footer";
 import Header from "@/components/general/header menu/Header";
 
-export default async function AdminLayout({ children, params }: { children: React.ReactNode; params: { lang: Locale } }) {
+type Params = Promise<{ lang: Locale }>;
+export default async function AdminLayout({ children, params }: { children: React.ReactNode; params: Params }) {
     const lang = (await params).lang;
     const dict = await getDictionary(lang);
 
