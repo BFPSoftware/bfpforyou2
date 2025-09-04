@@ -4,7 +4,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { AdminLoginForm } from "@/features/admin/components/AdminLoginForm";
 
-export default async function AdminPage({ params: { lang } }: { params: { lang: Locale } }) {
+export default async function AdminPage({ params }: { params: Promise<{ lang: Locale }> }) {
+    const lang = (await params).lang;
     const dict = await getDictionary(lang);
     const cookieStore = await cookies();
     const teacherId = cookieStore.get("teacherId");

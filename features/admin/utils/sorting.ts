@@ -1,6 +1,6 @@
 import { Student } from "@/types/student";
 
-export type SortField = "name" | "school" | "grade" | "status" | "submissionDate";
+export type SortField = "name" | "school" | "grade" | "submissionDate";
 export type SortDirection = "asc" | "desc" | null;
 
 export interface SortConfig {
@@ -26,9 +26,6 @@ export function sortStudents(students: Student[], sortConfig: SortConfig | null)
             case "name":
             case "school":
             case "grade":
-            case "status":
-                comparison = a[field].localeCompare(b[field]);
-                break;
             default:
                 comparison = 0;
         }

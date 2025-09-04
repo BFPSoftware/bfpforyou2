@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import HeaderNoSelectLang from "@/components/general/header menu/HeaderNoSelectLang";
 import FacelemForm from "@/features/forms/fac/elem/Form";
 
-const Facelem: React.FC = () => {
+const Facelem = () => {
     // validate ticket
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -13,7 +13,7 @@ const Facelem: React.FC = () => {
     return (
         <>
             <HeaderNoSelectLang />
-            <div className="flex bg-slate-300 h-auto flex-col items-center justify-evenly p-[5%] md:p-[10%] md:p-24">
+            <div className="flex bg-slate-300 h-auto flex-col items-center justify-evenly p-[5%] md:p-24">
                 <FacelemForm ticket={ticket as string} />
             </div>
         </>
