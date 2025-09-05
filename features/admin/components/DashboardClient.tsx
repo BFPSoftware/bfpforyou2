@@ -3,11 +3,12 @@ import { Student } from "@/types/student";
 import { Locale } from "@/types/locales";
 import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { StudentDetailModal } from "./StudentDetailModal";
+import { OriginalResponseDetailModal } from "./OriginalResponsesModal";
 import { parseCookies } from "nookies";
 import { SortableHeader } from "./SortableHeader";
-import { SortConfig, SortField, sortStudents } from "../utils/sorting";
+import { SortConfig, SortField, sortOriginalResponses } from "../utils/sorting";
 import { DateTime } from "luxon";
+import { REST_SavedFACApplication } from "@/types/FACApplication";
 
 interface DashboardClientProps {
     lang: Locale;
@@ -17,34 +18,35 @@ interface DashboardClientProps {
 
 export function DashboardClient({ lang, dict, dummyStudents }: DashboardClientProps) {
     const [isLoading, setIsLoading] = useState(false);
-    const [students, setStudents] = useState<Student[]>([]);
-    const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+    const [originalResponses, setOriginalResponses] = useState<REST_SavedFACApplication[]>([]);
+    console.log(originalResponses);
+    const [selectedResponse, setSelectedResponse] = useState<REST_SavedFACApplication | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [teacherName, setTeacherName] = useState("");
     const [sortConfig, setSortConfig] = useState<SortConfig | null>({
-        field: "submissionDate",
+        field: "createdDateTime",
         direction: "desc",
     });
     const router = useRouter();
 
     useEffect(() => {
-        const getStudents = async () => {
+        const getOriginalResponses = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch("/api/admin/get-students");
+                const response = await fetch("/api/admin/get-original-responses");
                 if (!response.ok) {
-                    throw new Error("Failed to fetch students");
+                    throw new Error("Failed to fetch original responses");
                 }
                 const data = await response.json();
-                setStudents(data);
+                setOriginalResponses(data);
             } catch (error) {
-                console.error("Error fetching students:", error);
+                console.error("Error fetching original responses:", error);
                 // You might want to show an error message to the user here
             } finally {
                 setIsLoading(false);
             }
         };
-        getStudents();
+        getOriginalResponses();
     }, []);
 
     useEffect(() => {
@@ -58,6 +60,8 @@ export function DashboardClient({ lang, dict, dummyStudents }: DashboardClientPr
     }, []);
 
     const handleSort = (field: SortField) => {
+        console.log("field", field);
+        console.log("sortConfig", sortConfig);
         setSortConfig((prevSort) => {
             if (!prevSort || prevSort.field !== field) {
                 return { field, direction: "asc" };
@@ -66,16 +70,19 @@ export function DashboardClient({ lang, dict, dummyStudents }: DashboardClientPr
                 return { field, direction: "desc" };
             }
             if (prevSort.direction === "desc") {
-                return { field: "submissionDate", direction: "desc" };
+                return { field, direction: "asc" };
             }
             return null;
         });
     };
 
-    const filteredStudents = useMemo(() => {
-        const filtered = students.filter((student) => student.name.toLowerCase().includes(searchTerm.toLowerCase()));
-        return sortStudents(filtered, sortConfig);
-    }, [students, searchTerm, sortConfig]);
+    const filteredOriginalResponses = useMemo(() => {
+        if (searchTerm === "") {
+            return sortOriginalResponses(originalResponses, sortConfig);
+        }
+        const filtered = originalResponses.filter((response) => response.firstName.value.toLowerCase().includes(searchTerm.toLowerCase()));
+        return sortOriginalResponses(filtered, sortConfig);
+    }, [originalResponses, searchTerm, sortConfig]);
 
     const handleLogout = async () => {
         // Delete the teacherId cookie
@@ -109,27 +116,28 @@ export function DashboardClient({ lang, dict, dummyStudents }: DashboardClientPr
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
-                        Total {filteredStudents.length}
+                        Total {filteredOriginalResponses.length}
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                                 <tr>
                                     <SortableHeader field="name" label={dict.admin.dashboard.details.name} currentSort={sortConfig} onSort={handleSort} />
                                     <SortableHeader field="school" label={dict.admin.dashboard.details.school} currentSort={sortConfig} onSort={handleSort} />
                                     <SortableHeader field="grade" label={dict.admin.dashboard.details.grade} currentSort={sortConfig} onSort={handleSort} />
-                                    {/* <SortableHeader field="status" label={dict.admin.dashboard.details.status} currentSort={sortConfig} onSort={handleSort} /> */}
-                                    <SortableHeader field="submissionDate" label={dict.admin.dashboard.details.submissionDate} currentSort={sortConfig} onSort={handleSort} />
+                                    <SortableHeader field="createdDateTime" label={dict.admin.dashboard.details.submissionDate} currentSort={sortConfig} onSort={handleSort} />
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {filteredStudents.map((student) => (
-                                    <tr key={student.id} onClick={() => setSelectedStudent(student)} className="hover:bg-gray-50 cursor-pointer">
-                                        <td className="px-6 py-4 whitespace-nowrap">{student.name}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{student.school}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{student.grade}</td>
+                                {filteredOriginalResponses.map((response) => (
+                                    <tr key={response.$id.value} onClick={() => setSelectedResponse(response)} className="hover:bg-gray-50 cursor-pointer">
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            {response.firstName.value} {response.lastName.value}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{response.school.value}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{response.grade.value}</td>
                                         {/* <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${student.status === "Approved" ? "bg-green-100 text-green-800" : student.status === "Rejected" ? "bg-red-100 text-red-800" : "bg-yellow-100 text-yellow-800"}`}>{student.status}</span>
                                     </td> */}
-                                        <td className="px-6 py-4 whitespace-nowrap">{DateTime.fromISO(student.submissionDate).toFormat("dd LLL, yyyy")}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{DateTime.fromISO(response.Created_datetime.value).toFormat("dd LLL, yyyy")}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -138,7 +146,7 @@ export function DashboardClient({ lang, dict, dummyStudents }: DashboardClientPr
                 )}
             </div>
 
-            <StudentDetailModal student={selectedStudent} isOpen={!!selectedStudent} onClose={() => setSelectedStudent(null)} dict={dict} />
+            <OriginalResponseDetailModal response={selectedResponse} isOpen={!!selectedResponse} onClose={() => setSelectedResponse(null)} dict={dict} />
         </div>
     );
 }

@@ -49,20 +49,10 @@ export async function GET() {
         const records = await client.record.getAllRecords({
             app: FacOriginalResponsesAppID || "",
             condition: queryCondition,
-            fields: ["$id", "firstName", "lastName", "school", "elemSchool", "grade", "Created_datetime"],
+            //fields: ["$id", "firstName", "lastName", "school", "elemSchool", "grade", "Created_datetime"],
         });
 
-        // Transform Kintone records to our Student type
-        const students = records.map((record: any) => ({
-            id: record.$id.value,
-            name: record["firstName"].value + " " + record["lastName"].value,
-            school: record.school.value,
-            elemSchool: record.elemSchool.value,
-            grade: record.grade.value,
-            submissionDate: record.Created_datetime.value,
-        }));
-
-        return NextResponse.json(students);
+        return NextResponse.json(records);
     } catch (error) {
         return handleCatch(error);
     }
