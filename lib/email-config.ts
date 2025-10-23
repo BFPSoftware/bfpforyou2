@@ -1,7 +1,7 @@
 export const coordinatorEmails = {
     highschool: "sharona@kerenbshemesh.org.il",
     bshemesh: "sharona@kerenbshemesh.org.il",
-    leviEshkol: ["sharona@kerenbshemesh.org.il", "Galitalex@gmail.com"],
+    leviEshkol: "Galitalex@gmail.com",
     zalmanAran: "Osnatsteyer@yahoo.com",
     benZvi: "Veredfree3@gmail.com",
     hadekel: "mlakmilhem@gmail.com",
