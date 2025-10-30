@@ -19,7 +19,7 @@ type ContactFormType = z.infer<typeof contactFormSchema>;
 const ContactUs = () => {
     const t = useDictionary();
     const [isLoading, setIsLoading] = useState(false);
-    const [isTemporarilyUnavailable] = useState(true); // Easy to toggle by changing this to false
+    const [isTemporarilyUnavailable] = useState(false); // Easy to toggle by changing this to false
     const {
         register,
         handleSubmit,
