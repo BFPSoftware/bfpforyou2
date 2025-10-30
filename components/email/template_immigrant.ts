@@ -6,7 +6,6 @@ const template_immigrant = (formResponse: ImmigrantType, t: Dictionary) => {
     const aliyahDateLuxon = DateTime.fromISO(formResponse.aliyahDate).toFormat("dd-LLL-yyyy");
     return `<div className="font-sans">
             <h2>Thank you for contacting Bridges for Peace.</h2>
-            <h2>We’ve successfully received your registration. Please be aware that our team is currently out of the office and will be back on October 6th. We will review your application and get back to you as soon as possible after our return.</h2>
             <br />
             <h2>Below is a copy of the form you submitted.</h2>
             <br />
