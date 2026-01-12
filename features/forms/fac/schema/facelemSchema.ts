@@ -43,16 +43,20 @@ const file = z
     .nullable()
     .refine((data) => {
         if (data == null) return false;
-        // If we have a fileKey but no file, check if it's expired (3 days)
+        
+        // If we have a fileKey but no file object, check if it's expired
+        // If file object exists, expiration will be handled by re-upload on submit
         if (data.fileKey && !data.file && data.uploadedAt) {
             const expirationDate = new Date(data.uploadedAt);
             expirationDate.setDate(expirationDate.getDate() + 3);
             if (new Date() > expirationDate) {
+                // File is lost and expired - user must re-upload
                 return false;
             }
         }
+        
         return true;
-    }, "This field is required or the uploaded file has expired");
+    }, "This field is required or the uploaded file has expired. Please re-upload the file.");
 
 // system
 const ticket = string50;

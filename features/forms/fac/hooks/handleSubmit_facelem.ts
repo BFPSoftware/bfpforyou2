@@ -1,7 +1,7 @@
 import logError from "@/common/logError";
 import { FacelemType } from "../schema/facelemSchema";
 import sendConfirmationEmail_elem from "@/hooks/confirmation/fac/sendConfirmationEmail_elem";
-import { checkAndReuploadFile } from "@/lib/utils";
+import { checkAndReuploadFile, needsReupload, isFileLost } from "@/lib/utils";
 
 const convertMonthShortToMonthLong = (month: string) => {
     switch (month) {
@@ -103,9 +103,28 @@ const createAddRecord = (formResponse: FacelemType) => {
 
 export const handleSubmit_facelem = async (formResponse: FacelemType, t: any) => {
     try {
-        // Check for expired files and re-upload if needed
-        if (formResponse.photo?.file) {
-            formResponse.photo = await checkAndReuploadFile(formResponse.photo);
+        // Check photo for expiration or loss, even if file object is missing
+        if (formResponse.photo && needsReupload(formResponse.photo)) {
+            if (isFileLost(formResponse.photo)) {
+                // File is lost - user must re-upload
+                alert("The photo has expired or is missing. Please re-upload the photo before submitting the form.");
+                return false;
+            } else if (formResponse.photo.file) {
+                // File exists but is expired - try to re-upload
+                const reuploaded = await checkAndReuploadFile(formResponse.photo);
+                if (reuploaded === null) {
+                    // Re-upload failed - user must re-upload
+                    alert("The photo has expired and could not be automatically re-uploaded. Please re-upload the photo before submitting the form.");
+                    return false;
+                } else {
+                    // Update with new fileKey
+                    formResponse.photo = reuploaded;
+                }
+            } else {
+                // File is expired and missing - user must re-upload
+                alert("The photo has expired or is missing. Please re-upload the photo before submitting the form.");
+                return false;
+            }
         }
 
         const addRecord = createAddRecord(formResponse);
@@ -120,10 +139,21 @@ export const handleSubmit_facelem = async (formResponse: FacelemType, t: any) =>
             sendConfirmationEmail_elem(formResponse, t);
             return true;
         } else {
-            alert("Something went wrong, please try again. If the problem persists, please contact us.");
+            // Check for specific error messages
+            try {
+                const errorData = await res.json();
+                if (errorData.error?.includes("expired")) {
+                    alert("One or more files have expired. Please re-upload the files and try again.");
+                } else {
+                    alert("Something went wrong, please try again. If the problem persists, please contact us.");
+                }
+            } catch {
+                alert("Something went wrong, please try again. If the problem persists, please contact us.");
+            }
             return false;
         }
     } catch (e) {
         logError(e, formResponse, "handleSubmit_facelem");
+        return false;
     }
 };
