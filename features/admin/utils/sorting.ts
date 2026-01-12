@@ -2,6 +2,18 @@ import { REST_SavedFACApplication } from "@/types/FACApplication";
 import { Student } from "@/types/student";
 
 export type SortField = "name" | "school" | "grade" | "createdDateTime";
+
+/**
+ * Get the school value based on application type
+ * Highschool uses "school" field, Elementary uses "elemSchool" field
+ */
+function getSchoolValue(response: REST_SavedFACApplication): string {
+    if (response.applicationType.value === "Highschool") {
+        return response.school?.value || "";
+    } else {
+        return response.elemSchool?.value || "";
+    }
+}
 export type SortDirection = "asc" | "desc" | null;
 
 export interface SortConfig {
@@ -28,7 +40,7 @@ export function sortOriginalResponses(students: REST_SavedFACApplication[], sort
                 comparison = a.firstName.value.localeCompare(b.firstName.value);
                 break;
             case "school":
-                comparison = a.school.value.localeCompare(b.school.value);
+                comparison = getSchoolValue(a).localeCompare(getSchoolValue(b));
                 break;
             case "grade":
                 comparison = a.grade.value.localeCompare(b.grade.value);

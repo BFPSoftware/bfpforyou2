@@ -3,6 +3,7 @@ import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import { FieldError, FieldErrorsImpl, Merge, UseFormWatch } from "react-hook-form";
 import { Upload } from "lucide-react";
 import Delete from "@/components/icons/Delete";
+import { isFileExpired, isFileLost } from "@/lib/utils";
 
 type FileUploadProps = {
     label: string;
@@ -32,13 +33,22 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error 
     }, [watch?.file]);
 
     useEffect(() => {
-        // Only check if file is missing
-        if (watch?.fileKey && !watch?.file) {
-            console.log("File is missing:", { fileKey: watch.fileKey, uploadedAt: watch.uploadedAt });
-            setIsError({ message: "File is missing. Please upload." });
-            setValue(field, null);
+        // Check if file is missing or expired
+        if (watch?.fileKey) {
+            if (isFileLost(watch)) {
+                // File is lost (fileKey exists but file object is missing)
+                if (watch.uploadedAt && isFileExpired(watch.uploadedAt)) {
+                    setIsError({ message: "File has expired. Please re-upload the file." });
+                    setValue(field, null);
+                } else {
+                    setIsError({ message: "File is missing. Please upload." });
+                    setValue(field, null);
+                }
+            }
+            // Note: If file exists but is expired, we don't show an error here
+            // because it will be automatically re-uploaded on submit
         }
-    }, [watch?.fileKey, watch?.file]);
+    }, [watch?.fileKey, watch?.file, watch?.uploadedAt, field, setValue]);
 
     // store the file key after uploading unto Kintone
     const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +96,7 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error 
     return (
         <div className="flex flex-col w-full space-y-1 py-3 grow md:max-w-sm">
             <div className="font-semibold mb-1">{label}</div>
-            <input accept="image/*, .pdf, .doc, .docx" ref={inputRef} capture={"environment"} onInputCapture={handleUpload} type="file" className="hidden" />
+            <input accept="image/*,.pdf,.doc,.docx" ref={inputRef} onChange={handleUpload} type="file" className="hidden" />
             {/* custom upload button and preview and file name to display */}
             <div className="">
                 <button

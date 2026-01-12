@@ -10,6 +10,18 @@ import { SortConfig, SortField, sortOriginalResponses } from "../utils/sorting";
 import { DateTime } from "luxon";
 import { REST_SavedFACApplication } from "@/types/FACApplication";
 
+/**
+ * Get the school value based on application type
+ * Highschool uses "school" field, Elementary uses "elemSchool" field
+ */
+const getSchoolValue = (response: REST_SavedFACApplication): string => {
+    if (response.applicationType.value === "Highschool") {
+        return response.school?.value || "";
+    } else {
+        return response.elemSchool?.value || "";
+    }
+};
+
 interface DashboardClientProps {
     lang: Locale;
     dict: any;
@@ -132,7 +144,7 @@ export function DashboardClient({ lang, dict, dummyStudents }: DashboardClientPr
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             {response.firstName.value} {response.lastName.value}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{response.school.value}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{getSchoolValue(response)}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{response.grade.value}</td>
                                         {/* <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${student.status === "Approved" ? "bg-green-100 text-green-800" : student.status === "Rejected" ? "bg-red-100 text-red-800" : "bg-yellow-100 text-yellow-800"}`}>{student.status}</span>
