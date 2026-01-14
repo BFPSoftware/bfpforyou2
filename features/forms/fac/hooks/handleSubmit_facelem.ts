@@ -136,7 +136,12 @@ export const handleSubmit_facelem = async (formResponse: FacelemType, t: any) =>
             body: JSON.stringify(addRecord),
         });
         if (await res.ok) {
-            sendConfirmationEmail_elem(formResponse, t);
+            // Send email asynchronously (non-blocking) to avoid Vercel 10s timeout
+            // Don't await - let it run in background
+            sendConfirmationEmail_elem(formResponse, t).catch((error) => {
+                console.error("[handleSubmit_facelem] Email sending failed (non-blocking):", error);
+                // Email failure is logged but doesn't affect form submission success
+            });
             return true;
         } else {
             // Check for specific error messages

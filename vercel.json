@@ -1,0 +1,10 @@
+{
+    "functions": {
+        "app/api/**/*.ts": {
+            "maxDuration": 20
+        },
+        "app/[lang]/actions/**/*.ts": {
+            "maxDuration": 20
+        }
+    }
+}

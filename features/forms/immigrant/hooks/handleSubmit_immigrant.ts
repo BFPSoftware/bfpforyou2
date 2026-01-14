@@ -175,7 +175,12 @@ export const handleSubmit_newImmigrant = async (formResponse: ImmigrantType, t: 
             body: JSON.stringify(addRecord),
         });
         if (await res.ok) {
-            sendConfirmationEmail(formResponse, t);
+            // Send email asynchronously (non-blocking) to avoid Vercel 10s timeout
+            // Don't await - let it run in background
+            sendConfirmationEmail(formResponse, t).catch((error) => {
+                console.error("[handleSubmit_newImmigrant] Email sending failed (non-blocking):", error);
+                // Email failure is logged but doesn't affect form submission success
+            });
             return true;
         } else {
             // Check for specific error messages

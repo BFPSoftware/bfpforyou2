@@ -118,7 +118,12 @@ export const handleSubmit_fachigh = async (formResponse: FachighType, t: any) =>
             body: JSON.stringify(addRecord),
         });
         if (await res.ok) {
-            sendConfirmationEmail_high(formResponse, t);
+            // Send email asynchronously (non-blocking) to avoid Vercel 10s timeout
+            // Don't await - let it run in background
+            sendConfirmationEmail_high(formResponse, t).catch((error) => {
+                console.error("[handleSubmit_fachigh] Email sending failed (non-blocking):", error);
+                // Email failure is logged but doesn't affect form submission success
+            });
             return true;
         } else {
             // Check for specific error messages
