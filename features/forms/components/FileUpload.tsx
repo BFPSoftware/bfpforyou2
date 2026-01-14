@@ -57,13 +57,25 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error 
     const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
         if (isError.message) setIsError({ message: "" });
         const files = e.target.files;
-        if (!files?.length) return "could not read files";
+        if (!files?.length) {
+            console.log("[FileUpload] No files selected");
+            return "could not read files";
+        }
         if (files.length > 0) {
             const file = files[0];
             if (file) {
+                console.log("[FileUpload] File selected:", {
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    sizeMB: (file.size / (1024 * 1024)).toFixed(2),
+                    field: field,
+                });
+
                 // Validate file size first
                 if (file.size > 10 * 1024 * 1024) {
                     // 10MB max
+                    console.warn("[FileUpload] File too large:", file.size, "bytes");
                     setIsError({ message: "File size should be 10MB or less." });
                     inputRef.current && (inputRef.current.value = "");
                     return;
@@ -82,22 +94,35 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error 
 
                 // Start upload process
                 setIsUploading(true);
+                console.log("[FileUpload] Starting upload for field:", field);
                 try {
                     const res = await uploadFile({ file });
-                    
+                    console.log("[FileUpload] Upload response received:", {
+                        hasServerError: !!res?.serverError,
+                        hasValidationErrors: !!res?.validationErrors,
+                        hasData: !!res?.data,
+                        dataSuccess: res?.data?.success,
+                        dataFailure: res?.data?.failure,
+                        fullResponse: res,
+                    });
+
                     if (res?.serverError) {
+                        console.error("[FileUpload] Server error:", res.serverError);
                         setIsError({ message: "Could not upload file. Try again" });
                         setIsUploading(false);
                         // Keep preview so user can see what they selected and retry
                     } else if (res?.validationErrors) {
+                        console.error("[FileUpload] Validation errors:", res.validationErrors);
                         setIsError({ message: "File validation failed. Please try again." });
                         setIsUploading(false);
                     } else if (res?.data?.failure) {
+                        console.error("[FileUpload] Upload failure:", res.data.failure);
                         setIsError({ message: "Could not upload file. Try again" });
                         setIsUploading(false);
                         // Keep preview so user can see what they selected and retry
                     } else if (res?.data?.success) {
                         // Upload successful - update form value with fileKey
+                        console.log("[FileUpload] Upload successful. FileKey:", res.data.success);
                         setIsError({ message: "" });
                         setValue(field, {
                             file: file,
@@ -107,11 +132,23 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error 
                         setIsUploading(false);
                     } else {
                         // Unexpected response
+                        console.error("[FileUpload] Unexpected response structure:", {
+                            response: res,
+                            responseType: typeof res,
+                            responseKeys: res ? Object.keys(res) : "null/undefined",
+                        });
                         setIsError({ message: "Upload failed. Please try again." });
                         setIsUploading(false);
                     }
                 } catch (error) {
                     // Handle unexpected errors
+                    console.error("[FileUpload] Exception during upload:", {
+                        error: error,
+                        errorMessage: error instanceof Error ? error.message : String(error),
+                        errorStack: error instanceof Error ? error.stack : undefined,
+                        errorName: error instanceof Error ? error.name : undefined,
+                        fullError: JSON.stringify(error, Object.getOwnPropertyNames(error)),
+                    });
                     setIsError({ message: "An error occurred during upload. Please try again." });
                     setIsUploading(false);
                 } finally {
@@ -119,6 +156,7 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error 
                     if (inputRef.current) {
                         inputRef.current.value = "";
                     }
+                    console.log("[FileUpload] Upload process completed for field:", field);
                 }
             }
         }
