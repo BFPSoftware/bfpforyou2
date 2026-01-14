@@ -96,7 +96,8 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error 
     return (
         <div className="flex flex-col w-full space-y-1 py-3 grow md:max-w-sm">
             <div className="font-semibold mb-1">{label}</div>
-            <input accept="image/*,.pdf,.doc,.docx" ref={inputRef} onChange={handleUpload} type="file" className="hidden" />
+            {/* TODO: review accept file types */}
+            <input ref={inputRef} onChange={handleUpload} type="file" className="hidden" />
             {/* custom upload button and preview and file name to display */}
             <div className="">
                 <button
