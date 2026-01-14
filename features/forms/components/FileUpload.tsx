@@ -1,7 +1,7 @@
 import { uploadFile } from "@/app/[lang]/actions/kintone/uploadFile";
 import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import { FieldError, FieldErrorsImpl, Merge, UseFormWatch } from "react-hook-form";
-import { Upload } from "lucide-react";
+import { Upload, Loader2 } from "lucide-react";
 import Delete from "@/components/icons/Delete";
 import { isFileExpired, isFileLost } from "@/lib/utils";
 
@@ -16,6 +16,8 @@ type FileUploadProps = {
 const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error }) => {
     const [isError, setIsError] = useState<{ message: string }>({ message: error?.message || "" });
     const [filePreview, setFilePreview] = useState<any>();
+    const [isUploading, setIsUploading] = useState(false);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -23,14 +25,15 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error 
     }, [error?.message]);
 
     useEffect(() => {
-        if (watch?.file) {
+        // Show preview from form state if file exists and we're not in the middle of uploading
+        if (watch?.file && !isUploading) {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setFilePreview(reader.result);
             };
             reader.readAsDataURL(watch.file);
         }
-    }, [watch?.file]);
+    }, [watch?.file, isUploading]);
 
     useEffect(() => {
         // Check if file is missing or expired
@@ -58,36 +61,64 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error 
         if (files.length > 0) {
             const file = files[0];
             if (file) {
+                // Validate file size first
                 if (file.size > 10 * 1024 * 1024) {
                     // 10MB max
                     setIsError({ message: "File size should be 10MB or less." });
+                    inputRef.current && (inputRef.current.value = "");
                     return;
-                } else {
-                    setIsError({ message: "" });
                 }
-                const res = await uploadFile({ file });
-                // TODO: error handling
-                // if no res clear input value
-                const handleFailureUpload = () => {
-                    setIsError({ message: "Could not upload file. Try again" });
-                    setValue(field, null);
-                    inputRef.current?.value && (inputRef.current.value = "");
+
+                // Clear any previous errors
+                setIsError({ message: "" });
+                setSelectedFile(file);
+
+                // Show preview immediately after file selection (before upload)
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setFilePreview(reader.result);
                 };
-                if (res?.serverError) handleFailureUpload();
-                else if (res?.validationErrors) setValue(field, null);
-                else if (res?.data?.failure) handleFailureUpload();
-                else if (res?.data?.success) {
-                    setIsError({ message: "" });
-                    setValue(field, {
-                        file: file,
-                        fileKey: res?.data?.success,
-                        uploadedAt: new Date(),
-                    });
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                        setFilePreview(reader.result);
-                    };
-                    reader.readAsDataURL(file);
+                reader.readAsDataURL(file);
+
+                // Start upload process
+                setIsUploading(true);
+                try {
+                    const res = await uploadFile({ file });
+                    
+                    if (res?.serverError) {
+                        setIsError({ message: "Could not upload file. Try again" });
+                        setIsUploading(false);
+                        // Keep preview so user can see what they selected and retry
+                    } else if (res?.validationErrors) {
+                        setIsError({ message: "File validation failed. Please try again." });
+                        setIsUploading(false);
+                    } else if (res?.data?.failure) {
+                        setIsError({ message: "Could not upload file. Try again" });
+                        setIsUploading(false);
+                        // Keep preview so user can see what they selected and retry
+                    } else if (res?.data?.success) {
+                        // Upload successful - update form value with fileKey
+                        setIsError({ message: "" });
+                        setValue(field, {
+                            file: file,
+                            fileKey: res.data.success,
+                            uploadedAt: new Date(),
+                        });
+                        setIsUploading(false);
+                    } else {
+                        // Unexpected response
+                        setIsError({ message: "Upload failed. Please try again." });
+                        setIsUploading(false);
+                    }
+                } catch (error) {
+                    // Handle unexpected errors
+                    setIsError({ message: "An error occurred during upload. Please try again." });
+                    setIsUploading(false);
+                } finally {
+                    // Clear input value to allow re-selecting the same file if needed
+                    if (inputRef.current) {
+                        inputRef.current.value = "";
+                    }
                 }
             }
         }
@@ -103,28 +134,57 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error 
                 <button
                     name={field} // for form validation scrollIntoView
                     type="button"
-                    className="bg-primary text-white px-4 py-2 hover:opacity-80 rounded-full w-40 flex justify-center font-bold"
+                    disabled={isUploading}
+                    className={`bg-primary text-white px-4 py-2 rounded-full w-40 flex justify-center font-bold ${
+                        isUploading ? "opacity-50 cursor-not-allowed" : "hover:opacity-80"
+                    }`}
                     onClick={() => {
-                        inputRef.current?.click();
+                        if (!isUploading) {
+                            inputRef.current?.click();
+                        }
                     }}
                 >
-                    <Upload className="mx-2" />
-                    Upload
+                    {isUploading ? (
+                        <>
+                            <Loader2 className="mx-2 animate-spin" />
+                            Uploading...
+                        </>
+                    ) : (
+                        <>
+                            <Upload className="mx-2" />
+                            Upload
+                        </>
+                    )}
                 </button>
             </div>
             {filePreview && (
                 <div className="flex items-center space-x-2">
-                    <div>
+                    <div className="relative">
                         <img src={filePreview} alt="file preview" className="max-w-40 max-h-40" />
-                        <div className="text-xs max-w-40 text-ellipsis overflow-hidden whitespace-nowrap">{watch?.file?.name}</div>
+                        {isUploading && (
+                            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center rounded">
+                                <Loader2 className="animate-spin text-white" size={24} />
+                            </div>
+                        )}
+                        <div className="text-xs max-w-40 text-ellipsis overflow-hidden whitespace-nowrap">
+                            {selectedFile?.name || watch?.file?.name}
+                        </div>
                     </div>
-                    {/* delete image button */}
+                    {/* delete image button - disabled during upload */}
                     <span
                         onClick={() => {
-                            setFilePreview(null);
-                            setValue(field, null);
+                            if (!isUploading) {
+                                setFilePreview(null);
+                                setSelectedFile(null);
+                                setValue(field, null);
+                                if (inputRef.current) {
+                                    inputRef.current.value = "";
+                                }
+                            }
                         }}
-                        className="cursor-pointer hover:scale-110 text-red-500"
+                        className={`cursor-pointer hover:scale-110 text-red-500 ${
+                            isUploading ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
                     >
                         <Delete />
                     </span>
