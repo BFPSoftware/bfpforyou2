@@ -9,7 +9,7 @@ import { Dictionary } from "@/common/locales/Dictionary-provider";
 import { FachighType } from "../../schema/fachighSchema";
 
 import Row from "@/features/forms/components/Row";
-import FileUpload from "../../../components/FileUpload";
+// import FileUpload from "../../../components/FileUpload"; // COMMENTED OUT: Photo upload field - can be restored if needed
 
 type FirstPageProps = {
     errors: FieldErrors<FachighType>;
@@ -19,7 +19,7 @@ type FirstPageProps = {
     watch: UseFormWatch<FachighType>;
 };
 const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch }) => {
-    const photo = watch("photo");
+    // const photo = watch("photo"); // COMMENTED OUT: Photo upload field - can be restored if needed
     return (
         <>
             <div className="italic text-xl font-serif my-5 text-center">{t.fac.subtitle}</div>
@@ -38,9 +38,11 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
                     <Select label={t.elementary.grade} options={Grades(t)} register={register("grade")} required error={errors.grade || undefined} />
                 </div>
             </Row>
+            {/* COMMENTED OUT: Photo upload field - can be restored if needed
             <div className="flex flex-wrap mb-6">
                 <FileUpload label={t.elementary.photo} setValue={setValue} watch={photo} field="photo" error={errors.photo || undefined} />
             </div>
+            */}
             <div className="flex flex-wrap mb-6">
                 <Input label={t.elementary.birthCountry} register={register("originCountry")} required error={errors.originCountry || undefined} />
             </div>

@@ -73,7 +73,7 @@ const birthday = z.object({
     year: z.string().max(5, { message: "Required" }),
 });
 const age = string50;
-const photo = file;
+// const photo = file; // COMMENTED OUT: Photo upload field - can be restored if needed
 const grade = string50;
 const originCountry = string50;
 const school = string50;
@@ -128,7 +128,7 @@ export const fachighSchema = z.object({
     tz: tz,
     birthday: birthday,
     age: age,
-    photo,
+    // photo, // COMMENTED OUT: Photo upload field - can be restored if needed
     grade: grade,
     originCountry: originCountry,
     school,
@@ -160,7 +160,7 @@ export const defaultData: z.infer<typeof fachighSchema> = {
         year: "2000",
     },
     age: "10",
-    photo: null,
+    // photo: null, // COMMENTED OUT: Photo upload field - can be restored if needed
     grade: "5",
     originCountry: "Country",
     school: "HaDekel",

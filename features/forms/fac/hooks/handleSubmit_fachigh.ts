@@ -64,7 +64,7 @@ const createAddRecord = (formResponse: FachighType) => {
         tz: { value: formResponse.tz },
         birthday: { value: `${convertMonthShortToMonthLong(formResponse.birthday.month)} ${zeroPad(formResponse.birthday.day)}, ${formResponse.birthday.year}` },
         age: { value: formResponse.age },
-        photo: { value: formResponse.photo?.fileKey ? [{ fileKey: formResponse.photo.fileKey }] : [] },
+        // photo: { value: formResponse.photo?.fileKey ? [{ fileKey: formResponse.photo.fileKey }] : [] }, // COMMENTED OUT: Photo upload field - can be restored if needed
         grade: { value: formResponse.grade },
         originCountry: { value: formResponse.originCountry },
         school: { value: formResponse.school },
@@ -85,29 +85,30 @@ const createAddRecord = (formResponse: FachighType) => {
 
 export const handleSubmit_fachigh = async (formResponse: FachighType, t: any) => {
     try {
+        // COMMENTED OUT: Photo upload validation - can be restored if needed
         // Check photo for expiration or loss, even if file object is missing
-        if (formResponse.photo && needsReupload(formResponse.photo)) {
-            if (isFileLost(formResponse.photo)) {
-                // File is lost - user must re-upload
-                alert("The photo has expired or is missing. Please re-upload the photo before submitting the form.");
-                return false;
-            } else if (formResponse.photo.file) {
-                // File exists but is expired - try to re-upload
-                const reuploaded = await checkAndReuploadFile(formResponse.photo);
-                if (reuploaded === null) {
-                    // Re-upload failed - user must re-upload
-                    alert("The photo has expired and could not be automatically re-uploaded. Please re-upload the photo before submitting the form.");
-                    return false;
-                } else {
-                    // Update with new fileKey
-                    formResponse.photo = reuploaded;
-                }
-            } else {
-                // File is expired and missing - user must re-upload
-                alert("The photo has expired or is missing. Please re-upload the photo before submitting the form.");
-                return false;
-            }
-        }
+        // if (formResponse.photo && needsReupload(formResponse.photo)) {
+        //     if (isFileLost(formResponse.photo)) {
+        //         // File is lost - user must re-upload
+        //         alert("The photo has expired or is missing. Please re-upload the photo before submitting the form.");
+        //         return false;
+        //     } else if (formResponse.photo.file) {
+        //         // File exists but is expired - try to re-upload
+        //         const reuploaded = await checkAndReuploadFile(formResponse.photo);
+        //         if (reuploaded === null) {
+        //             // Re-upload failed - user must re-upload
+        //             alert("The photo has expired and could not be automatically re-uploaded. Please re-upload the photo before submitting the form.");
+        //             return false;
+        //         } else {
+        //             // Update with new fileKey
+        //             formResponse.photo = reuploaded;
+        //         }
+        //     } else {
+        //         // File is expired and missing - user must re-upload
+        //         alert("The photo has expired or is missing. Please re-upload the photo before submitting the form.");
+        //         return false;
+        //     }
+        // }
 
         const addRecord = createAddRecord(formResponse);
         const res = await fetch("/api/kintone/postKintone_fac", {

@@ -73,7 +73,7 @@ const birthday = z.object({
     year: z.string().max(5, { message: "Required" }),
 });
 const age = string50;
-const photo = file;
+// const photo = file; // COMMENTED OUT: Photo upload field - can be restored if needed
 const grade = string50;
 const originCountry = string50;
 const elemSchool = string50;
@@ -148,7 +148,7 @@ export const facelemSchema = z.object({
     tz: tz,
     birthday: birthday,
     age: age,
-    photo,
+    // photo, // COMMENTED OUT: Photo upload field - can be restored if needed
     grade: grade,
     originCountry: originCountry,
     elemSchool: elemSchool,
@@ -195,11 +195,11 @@ export const defaultData: z.infer<typeof facelemSchema> = {
         year: "2000",
     },
     age: "10",
-    photo: {
-        file: undefined, // File object can't be serialized in the default data
-        fileKey: "expired_photo_123",
-        uploadedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000), // 4 days ago
-    },
+    // photo: { // COMMENTED OUT: Photo upload field - can be restored if needed
+    //     file: undefined, // File object can't be serialized in the default data
+    //     fileKey: "expired_photo_123",
+    //     uploadedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000), // 4 days ago
+    // },
     grade: "5",
     originCountry: "Country",
     elemSchool: "HaDekel",
