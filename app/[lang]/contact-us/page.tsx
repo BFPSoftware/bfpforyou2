@@ -1,8 +1,10 @@
 import { redirect } from "next/navigation";
 import type { Locale } from "@/types/locales";
 
+type Params = Promise<{ lang: Locale }>;
+
 type Props = {
-    params: { lang: Locale };
+    params: Params;
 };
 
 /**
@@ -12,6 +14,7 @@ type Props = {
  *   `return <ContactUsClient />;`
  * and importing `ContactUsClient` from `./ContactUsClient`.
  */
-export default async function ContactUsPage({ params: { lang } }: Props) {
+export default async function ContactUsPage({ params }: Props) {
+    const { lang } = await params;
     redirect(`/${lang}`);
 }
