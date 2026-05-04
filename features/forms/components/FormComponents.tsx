@@ -12,7 +12,7 @@ type InputProps = {
 type SelectProps = {
     label: string;
     register: UseFormRegisterReturn;
-    options: { [key: number]: string };
+    options: Record<string, string>;
     error: FieldError | undefined;
     required?: boolean;
 };
@@ -49,13 +49,15 @@ type TextareaProps = {
     required?: boolean;
     minLength?: number;
     watch: any; // using any to avoid type error
+    /** When true, newline characters in `label` render as line breaks. */
+    labelPreLine?: boolean;
 };
 export const Textarea = (props: TextareaProps) => {
     const textValue = props.watch(props.register.name); // using any to avoid type error
     const minLength = props.minLength || 100;
     return (
         <label className="flex flex-col space-y-1 w-auto me-5 grow md:max-w-xl">
-            <div className="font-semibold mb-1">
+            <div className={"font-semibold mb-1" + (props.labelPreLine ? " whitespace-pre-line" : "")}>
                 {props.label}
                 {props.required && <span className="text-red-500">*</span>}
             </div>

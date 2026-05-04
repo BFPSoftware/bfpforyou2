@@ -5,6 +5,9 @@ import { actionClient } from "@/lib/safe-action";
 import logError from "@/common/logError";
 import client from "@/hooks/useKintone";
 
+// NOTE: Primary upload path.
+// Images are optionally compressed client-side (see `lib/kintone-client-upload.ts`) to stay under Vercel request body limits.
+
 // This schema is used to validate input from client.
 const schema = z.object({
     file: z.instanceof(File),

@@ -38,8 +38,11 @@ export function middleware(request: NextRequest) {
 
 export const config = {
     matcher: [
-        // Skip all internal paths (_next) and API routes (/api)
-        "/((?!_next|api).*)",
+        // Skip Next internals, API routes, and public/static assets
+        // - _next: Next.js internals (static chunks, image optimizer, etc.)
+        // - api: route handlers
+        // - files with extensions: static assets (e.g. /images/foo.png, /favicon.ico)
+        "/((?!_next|api|.*\\..*).*)",
         // Optional: only run on root (/) URL
         // '/'
     ],

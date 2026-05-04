@@ -4,10 +4,14 @@ import template_fachigh from "@/components/email/template_fachigh";
 import logError from "@/common/logError";
 import { coordinatorEmails } from "@/lib/email-config";
 
-const sendConfirmationEmail_high = async (formResponse: FachighType, t: Dictionary) => {
+const sendConfirmationEmail_high = async (
+    formResponse: FachighType,
+    t: Dictionary,
+    combined: { introduction: string; aboutSchool: string; personalLife: string; future: string; scholarship: string }
+) => {
     try {
         console.log("[sendConfirmationEmail_high] Starting email send");
-        const html = template_fachigh(formResponse, t);
+        const html = template_fachigh(formResponse, t, combined);
 
         const emailData = {
             to: coordinatorEmails.highschool,

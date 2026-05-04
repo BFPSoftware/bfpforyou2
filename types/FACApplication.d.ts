@@ -42,6 +42,11 @@ declare namespace kintone.types {
         returning: kintone.fieldTypes.SingleLineText;
         loveMost: kintone.fieldTypes.SingleLineText;
         originCountry: kintone.fieldTypes.SingleLineText;
+        liveWith: kintone.fieldTypes.CheckBox;
+        whoDoYouLiveWith: kintone.fieldTypes.MultiLineText;
+        liveWithOther: kintone.fieldTypes.SingleLineText;
+        enjoySchoolWhy: kintone.fieldTypes.SingleLineText;
+        makesMeHappy: kintone.fieldTypes.SingleLineText;
         aboutMyTeacher: kintone.fieldTypes.SingleLineText;
         aboutFamily: kintone.fieldTypes.SingleLineText;
         family: kintone.fieldTypes.SingleLineText;
@@ -109,6 +114,11 @@ export type REST_FACApplication = {
     returning: KintoneRecordField.SingleLineText;
     loveMost: KintoneRecordField.SingleLineText;
     originCountry: KintoneRecordField.SingleLineText;
+    liveWith: KintoneRecordField.CheckBox;
+    whoDoYouLiveWith: KintoneRecordField.MultiLineText;
+    liveWithOther: KintoneRecordField.SingleLineText;
+    enjoySchoolWhy: KintoneRecordField.SingleLineText;
+    makesMeHappy: KintoneRecordField.SingleLineText;
     aboutMyTeacher: KintoneRecordField.SingleLineText;
     aboutFamily: KintoneRecordField.SingleLineText;
     family: KintoneRecordField.SingleLineText;

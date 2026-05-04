@@ -124,7 +124,7 @@ export default function Home() {
 
 const AlertHaveNoCode = ({ t }: { t: Dictionary }) => (
     <AlertDialog>
-        <AlertDialogTrigger className="btn-theme">{t.home.noCode}</AlertDialogTrigger>
+        <AlertDialogTrigger className="btn-gray">{t.home.noCode}</AlertDialogTrigger>
         <AlertDialogContent>
             <AlertDialogHeader>
                 <AlertDialogTitle hidden>Have No Code?</AlertDialogTitle>

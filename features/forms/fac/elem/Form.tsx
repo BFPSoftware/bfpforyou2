@@ -36,7 +36,7 @@ const FacelemForm: FC<FacelemFormProps> = ({ ticket }) => {
             if (res) location.href = "/facelem/thank-you";
             else alert("Something went wrong. Please try again later.");
         } catch (e) {
-            logError(e, { data }, "handleSubmit_fachigh");
+            logError(e, { data }, "handleSubmit_facelem");
         } finally {
             setIsLoading(false);
         }
@@ -62,6 +62,12 @@ const FacelemForm: FC<FacelemFormProps> = ({ ticket }) => {
             submitLang: "en",
             applicationType: "Elementary",
             ticket: ticket,
+            liveWith: [],
+            brothers: "",
+            sisters: "",
+            liveWithOther: "",
+            aboutMyTeacher: "",
+            photo: null,
         },
     });
 

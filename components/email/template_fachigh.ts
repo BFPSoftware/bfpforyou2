@@ -1,7 +1,11 @@
 import { Dictionary } from "@/common/locales/Dictionary-provider";
 import { FachighType } from "@/features/forms/fac/schema/fachighSchema";
 
-const template_fachigh = (formResponse: FachighType, t: Dictionary) => {
+const template_fachigh = (
+    formResponse: FachighType,
+    t: Dictionary,
+    combined: { introduction: string; aboutSchool: string; personalLife: string; future: string; scholarship: string }
+) => {
     return `<div className="font-sans">
             <h2>Thank you for contacting Bridges for Peace.</h2>
             <h2>Below is a copy of the form you submitted.</h2>
@@ -38,22 +42,22 @@ const template_fachigh = (formResponse: FachighType, t: Dictionary) => {
                     ${t.highschool.school}: ${t.highschool.schools[formResponse.school as keyof typeof t.highschool.schools]}
                 </div>
                 <div>
-                    ${t.elementary.isFirstTime}: ${formResponse.returning}
+                    ${t.elementary.wereInProgramBefore}: ${formResponse.returning}
                 </div>
                 <div>
-                    ${t.highschool.introduction}: ${formResponse.introduction}
+                    ${t.highschool.sectionTitle.introduction} ${combined.introduction}
                 </div>
                 <div>
-                    ${t.highschool.school}: ${formResponse.school}
+                    ${t.highschool.sectionTitle.school} ${combined.aboutSchool}
                 </div>
                 <div>
-                    ${t.highschool.personalLife}: ${formResponse.personalLife}
+                    ${t.highschool.sectionTitle.personalLife} ${combined.personalLife}
                 </div>
                 <div>
-                    ${t.highschool.yourFuture}: ${formResponse.future}
+                    ${t.highschool.sectionTitle.yourFuture} ${combined.future}
                 </div>
                  <div>
-                    ${t.highschool.scholarship}: ${formResponse.scholarship}
+                    ${t.highschool.sectionTitle.scholarship} ${combined.scholarship}
                 </div>
                 <div>
                     ${t.elementary.submittedBy}: ${formResponse.submittedBy}

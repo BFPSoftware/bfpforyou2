@@ -66,6 +66,19 @@ const FachighForm: FC<FachighFormProps> = ({ ticket }) => {
             submitLang: "en",
             applicationType: "Highschool",
             ticket: ticket,
+            introLiveWith: "I live with…",
+            // introHasSiblings: user must pick Yes/No
+            introHowManySiblings: "I have…",
+            schoolLikeFor: "For me, my school is like…",
+            schoolGoodChallenging:
+                "I am good at…\nIt is challenging for me to…\nThe school subjects that I struggle with are…",
+            personalFreeTime: "When I have my free time, I enjoy…",
+            personalHobbies: "My favorite activities are…",
+            // futureHasPlans: user must pick Yes/No
+            futureBecome: "My future dream is to become/start…",
+            futureDesire: "I desire to …",
+            futureTenYears: "In ten years, I see myself…",
+            scholarshipReason: "I really want this scholarship because…",
         },
     });
     setValue("submitLang", (t.lang as (typeof submitLangsShort)[number]) || "en");

@@ -2,6 +2,10 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+## Kintone image uploads
+
+Image attachments (FAC, immigrant) are **compressed client-side** (when needed) to stay under Vercel request body limits, then uploaded via a **Next.js server action** to Kintone. No browser-to-Kintone CORS configuration is required.
+
 First, run the development server:
 
 ```bash

@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { uploadFile } from "@/app/[lang]/actions/kintone/uploadFile";
+import { uploadFileToKintone } from "@/lib/kintone-client-upload";
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -63,17 +63,12 @@ export const checkAndReuploadFile = async (attachment: FileWithMeta): Promise<Fi
     // Check if expired and re-upload if needed
     if (isFileExpired(attachment.uploadedAt)) {
         try {
-            const res = await uploadFile({ file: attachment.file });
-            if (res?.data?.success) {
-                return {
-                    ...attachment,
-                    fileKey: res.data.success,
-                    uploadedAt: new Date(),
-                };
-            } else {
-                // Re-upload failed - return null to indicate error
-                return null;
-            }
+            const { fileKey } = await uploadFileToKintone(attachment.file);
+            return {
+                ...attachment,
+                fileKey,
+                uploadedAt: new Date(),
+            };
         } catch (error) {
             // Re-upload failed - return null to indicate error
             return null;

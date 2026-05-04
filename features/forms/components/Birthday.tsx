@@ -7,8 +7,10 @@ type props = {
     register_day: UseFormRegisterReturn;
     register_month: UseFormRegisterReturn;
     register_year: UseFormRegisterReturn;
+    /** When true, shows a red asterisk after the label (field may still be validated separately). */
+    required?: boolean;
 };
-export const Birthday = ({ label, error, register_day, register_month, register_year }: props): ReactNode => {
+export const Birthday = ({ label, error, register_day, register_month, register_year, required }: props): ReactNode => {
     const days = () => {
         let arr = [];
         for (let i = 1; i <= 31; i++) {
@@ -42,7 +44,10 @@ export const Birthday = ({ label, error, register_day, register_month, register_
 
     return (
         <label className="flex flex-col space-y-1 w-80 me-5 grow md:max-w-sm">
-            <div className="font-semibold mb-1">{label}</div>
+            <div className="font-semibold mb-1">
+                {label}
+                {required && <span className="text-red-500">*</span>}
+            </div>
             <div className="row flex">
                 <div className="flex flex-col">
                     <select {...register_day} className={"text-gray-800 rounded-md border py-2 px-3" + (error?.day ? " border-red-500" : "")} defaultValue="default">

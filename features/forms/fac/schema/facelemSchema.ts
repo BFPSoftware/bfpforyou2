@@ -34,29 +34,25 @@ const string300: z.ZodString = z.string().min(1).max(300, error_maxLength);
 const string2000: z.ZodString = z.string().min(1).max(2000, error_maxLength);
 const string4000: z.ZodString = z.string().min(1).max(4000, error_maxLength);
 const string_optional: z.ZodOptional<z.ZodString> = z.string().optional();
-const file = z
+const uploadedPhoto = z
     .object({
         file: z.instanceof(File).optional(),
         fileKey: z.string().min(1).max(50, "File could not be uploaded"),
         uploadedAt: z.date().optional(),
     })
-    .nullable()
     .refine((data) => {
-        if (data == null) return false;
-        
-        // If we have a fileKey but no file object, check if it's expired
-        // If file object exists, expiration will be handled by re-upload on submit
         if (data.fileKey && !data.file && data.uploadedAt) {
             const expirationDate = new Date(data.uploadedAt);
             expirationDate.setDate(expirationDate.getDate() + 3);
             if (new Date() > expirationDate) {
-                // File is lost and expired - user must re-upload
                 return false;
             }
         }
-        
         return true;
-    }, "This field is required or the uploaded file has expired. Please re-upload the file.");
+    }, "The uploaded file has expired. Please re-upload the file.");
+
+/** Photo is optional in validation; UI still encourages upload with a red asterisk. */
+const photoOptional = z.union([z.null(), uploadedPhoto]).optional();
 
 // system
 const ticket = string50;
@@ -73,16 +69,16 @@ const birthday = z.object({
     year: z.string().max(5, { message: "Required" }),
 });
 const age = string50;
-// const photo = file; // COMMENTED OUT: Photo upload field - can be restored if needed
 const grade = string50;
-const originCountry = string50;
 const elemSchool = string50;
 const returning = string50;
 
 // Section 2
 const familyMembers = string300;
-const brothers = string300;
-const sisters = string300;
+const liveWith = z.array(z.enum(["Father", "Mother", "Brother", "Sister", "Grandparents", "Other"])).min(1, error_required);
+const brothers = z.string().max(300, error_maxLength).optional();
+const sisters = z.string().max(300, error_maxLength).optional();
+const liveWithOther = z.string().max(300, error_maxLength).optional();
 const isfrom = string300;
 const languageAtHome = string300;
 const aboutFamily = string300;
@@ -90,15 +86,15 @@ const aboutFamily = string300;
 // Section 3
 const favoriteSubject = string300;
 const challengingSubject = string300;
-const aboutMyTeacher = string300;
+const aboutMyTeacher = z.string().max(300, error_maxLength).optional();
 const aboutMeFromTeacher = string300;
+const enjoySchoolWhy = string300;
 
 // Section 4
-const nickname = string300;
 const favoriteColor = string300;
 const favoriteFood = string300;
 const hobbies = string300;
-const interests = string300;
+const makesMeHappy = string300;
 const makesMeSad = string300;
 const loveMost = string300;
 const futureDreams = string300;
@@ -148,14 +144,15 @@ export const facelemSchema = z.object({
     tz: tz,
     birthday: birthday,
     age: age,
-    // photo, // COMMENTED OUT: Photo upload field - can be restored if needed
+    photo: photoOptional,
     grade: grade,
-    originCountry: originCountry,
     elemSchool: elemSchool,
     returning: returning,
     familyMembers: familyMembers,
+    liveWith,
     brothers: brothers,
     sisters: sisters,
+    liveWithOther,
     isfrom: isfrom,
     languageAtHome: languageAtHome,
     aboutFamily: aboutFamily,
@@ -163,11 +160,11 @@ export const facelemSchema = z.object({
     challengingSubject: challengingSubject,
     aboutMyTeacher: aboutMyTeacher,
     aboutMeFromTeacher: aboutMeFromTeacher,
-    nickname: nickname,
+    enjoySchoolWhy,
     favoriteColor: favoriteColor,
     favoriteFood: favoriteFood,
     hobbies: hobbies,
-    interests: interests,
+    makesMeHappy,
     makesMeSad: makesMeSad,
     loveMost: loveMost,
     futureDreams: futureDreams,
@@ -177,6 +174,29 @@ export const facelemSchema = z.object({
     relationship: relationship,
     check1,
     check2,
+})
+.superRefine((data, ctx) => {
+    if (data.liveWith.includes("Brother") && !data.brothers?.trim()) {
+        ctx.addIssue({
+            path: ["brothers"],
+            code: z.ZodIssueCode.custom,
+            message: "This field is required",
+        });
+    }
+    if (data.liveWith.includes("Sister") && !data.sisters?.trim()) {
+        ctx.addIssue({
+            path: ["sisters"],
+            code: z.ZodIssueCode.custom,
+            message: "This field is required",
+        });
+    }
+    if (data.liveWith.includes("Other") && !data.liveWithOther?.trim()) {
+        ctx.addIssue({
+            path: ["liveWithOther"],
+            code: z.ZodIssueCode.custom,
+            message: "This field is required",
+        });
+    }
 });
 export type FacelemType = z.infer<typeof facelemSchema>;
 export type FacelemFormType = keyof FacelemType;
@@ -195,30 +215,27 @@ export const defaultData: z.infer<typeof facelemSchema> = {
         year: "2000",
     },
     age: "10",
-    // photo: { // COMMENTED OUT: Photo upload field - can be restored if needed
-    //     file: undefined, // File object can't be serialized in the default data
-    //     fileKey: "expired_photo_123",
-    //     uploadedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000), // 4 days ago
-    // },
+    photo: null,
     grade: "5",
-    originCountry: "Country",
     elemSchool: "HaDekel",
     returning: "No",
     familyMembers: "4",
+    liveWith: ["Mother", "Brother"],
     brothers: "1",
-    sisters: "1",
+    sisters: "",
+    liveWithOther: "",
     isfrom: "City",
     languageAtHome: "English",
     aboutFamily: "We are a happy family.",
     favoriteSubject: "Math",
     challengingSubject: "History",
-    aboutMyTeacher: "My teacher is very supportive.",
+    aboutMyTeacher: "",
     aboutMeFromTeacher: "John is a diligent student.",
-    nickname: "Johnny",
+    enjoySchoolWhy: "Yes, because...",
     favoriteColor: "Blue",
     favoriteFood: "Pizza",
     hobbies: "Reading, Swimming",
-    interests: "Science, Technology",
+    makesMeHappy: "Playing with my friends",
     makesMeSad: "Bullying",
     loveMost: "Family",
     futureDreams: "Scientist",

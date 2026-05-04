@@ -8,8 +8,7 @@ export async function POST(req: NextRequest) {
         const reqs = await req.json();
         // upload id can be used only once, so not using it here
         const reqsNoPhoto = { ...reqs };
-        // COMMENTED OUT: Photo upload field removed from forms - this delete is kept for safety but photo should not be in reqs anymore
-        // delete reqsNoPhoto.photo;
+        delete reqsNoPhoto.photo;
         const resp = await client.record.addRecord({
             app: FacApplicationOriginalResponsesAppID!,
             record: reqsNoPhoto,

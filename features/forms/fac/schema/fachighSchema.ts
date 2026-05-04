@@ -73,7 +73,7 @@ const birthday = z.object({
     year: z.string().max(5, { message: "Required" }),
 });
 const age = string50;
-// const photo = file; // COMMENTED OUT: Photo upload field - can be restored if needed
+const photo = file;
 const grade = string50;
 const originCountry = string50;
 const school = string50;
@@ -81,11 +81,22 @@ const returning = string50;
 
 // Section 2
 // TODO: min characters and show counter
-const introduction = string2000;
-const aboutSchool = string2000;
-const personalLife = string2000;
-const future = string2000;
-const scholarship = string2000;
+const introLiveWith = string2000;
+const introHasSiblings = z.enum(["Yes", "No"]);
+const introHowManySiblings = z.string().max(2000, error_maxLength).optional();
+
+const schoolLikeFor = string2000;
+const schoolGoodChallenging = string2000;
+
+const personalFreeTime = string2000;
+const personalHobbies = string2000;
+
+const futureHasPlans = z.enum(["Yes", "No"]);
+const futureBecome = z.string().max(2000, error_maxLength).optional();
+const futureDesire = z.string().max(2000, error_maxLength).optional();
+const futureTenYears = string2000;
+
+const scholarshipReason = string2000;
 
 // Section 3
 const submittedBy = string300;
@@ -119,30 +130,70 @@ export const customErrorMap =
         return { message: ctx.defaultError };
     };
 
-export const fachighSchema = z.object({
-    ticket: ticket,
-    applicationType: applicationType,
-    submitLang: submitLang,
-    firstName: firstName,
-    lastName: lastName,
-    tz: tz,
-    birthday: birthday,
-    age: age,
-    // photo, // COMMENTED OUT: Photo upload field - can be restored if needed
-    grade: grade,
-    originCountry: originCountry,
-    school,
-    returning: returning,
-    introduction,
-    aboutSchool,
-    personalLife,
-    future,
-    scholarship,
-    submittedBy: submittedBy,
-    relationship: relationship,
-    check1,
-    check2,
-});
+export const fachighSchema = z
+    .object({
+        ticket: ticket,
+        applicationType: applicationType,
+        submitLang: submitLang,
+        firstName: firstName,
+        lastName: lastName,
+        tz: tz,
+        birthday: birthday,
+        age: age,
+        photo,
+        grade: grade,
+        originCountry: originCountry,
+        school,
+        returning: returning,
+
+        // Section 2 (split questions)
+        introLiveWith,
+        introHasSiblings,
+        introHowManySiblings,
+
+        schoolLikeFor,
+        schoolGoodChallenging,
+
+        personalFreeTime,
+        personalHobbies,
+
+        futureHasPlans,
+        futureBecome,
+        futureDesire,
+        futureTenYears,
+
+        scholarshipReason,
+
+        submittedBy: submittedBy,
+        relationship: relationship,
+        check1,
+        check2,
+    })
+    .superRefine((data, ctx) => {
+        if (data.introHasSiblings === "Yes" && !data.introHowManySiblings?.trim()) {
+            ctx.addIssue({
+                path: ["introHowManySiblings"],
+                code: z.ZodIssueCode.custom,
+                message: "This field is required",
+            });
+        }
+
+        if (data.futureHasPlans === "Yes" && !data.futureBecome?.trim()) {
+            ctx.addIssue({
+                path: ["futureBecome"],
+                code: z.ZodIssueCode.custom,
+                message: "This field is required",
+            });
+        }
+
+        if (data.futureHasPlans === "No" && !data.futureDesire?.trim()) {
+            ctx.addIssue({
+                path: ["futureDesire"],
+                code: z.ZodIssueCode.custom,
+                message: "This field is required",
+            });
+        }
+    });
 export type FachighType = z.infer<typeof fachighSchema>;
 export type FachighFormType = keyof FachighType;
 
@@ -160,16 +211,23 @@ export const defaultData: z.infer<typeof fachighSchema> = {
         year: "2000",
     },
     age: "10",
-    // photo: null, // COMMENTED OUT: Photo upload field - can be restored if needed
+    photo: null,
     grade: "5",
     originCountry: "Country",
     school: "HaDekel",
     returning: "No",
-    introduction: "I am a student.",
-    aboutSchool: "My school is great.",
-    personalLife: "I like to read.",
-    future: "I want to be a doctor.",
-    scholarship: "I need financial aid.",
+    introLiveWith: "I live with…",
+    introHasSiblings: "Yes",
+    introHowManySiblings: "I have…",
+    schoolLikeFor: "For me, my school is like…",
+    schoolGoodChallenging: "I am good at… It is challenging for me to… The school subjects that I struggle with are…",
+    personalFreeTime: "When I have my free time, I enjoy…",
+    personalHobbies: "My favorite activities are…",
+    futureHasPlans: "Yes",
+    futureBecome: "My future dream is to become/start…",
+    futureDesire: "I desire to …",
+    futureTenYears: "In ten years, I see myself…",
+    scholarshipReason: "I really want this scholarship because…",
     submittedBy: "Parent",
     relationship: "Father",
     check1: false,

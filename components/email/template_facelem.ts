@@ -1,7 +1,21 @@
 import { Dictionary } from "@/common/locales/Dictionary-provider";
 import { FacelemType } from "@/features/forms/fac/schema/facelemSchema";
 
+const liveWithLabels = (t: Dictionary): Record<FacelemType["liveWith"][number], string> => ({
+    Father: t.elementary.liveWithFather,
+    Mother: t.elementary.liveWithMother,
+    Brother: t.elementary.liveWithBrother,
+    Sister: t.elementary.liveWithSister,
+    Grandparents: t.elementary.liveWithGrandparents,
+    Other: t.elementary.liveWithOtherOption,
+});
+
 const template_facelem = (formResponse: FacelemType, t: Dictionary) => {
+    const lw = liveWithLabels(t);
+    const liveWithText = formResponse.liveWith.map((k) => lw[k]).join(", ");
+    const calendarYear = new Date().getFullYear();
+    const gradeLabel = t.elementary.gradeWithSchoolYear.replace("{year}", `${calendarYear}-${calendarYear + 1}`);
+
     return `<div className="font-sans">
             <h2>Thank you for contacting Bridges for Peace.</h2>
             <h2>Below is a copy of the form you submitted.</h2>
@@ -29,25 +43,28 @@ const template_facelem = (formResponse: FacelemType, t: Dictionary) => {
                     ${t.elementary.age}: ${formResponse.age}
                 </div>
                 <div>
-                    ${t.elementary.grade}: ${formResponse.grade}
-                </div>
-                <div>
-                    ${t.originCountry}: ${formResponse.originCountry}
+                    ${gradeLabel}: ${formResponse.grade}
                 </div>
                 <div>
                     ${t.elementary.school}: ${t.elementary.schools[formResponse.elemSchool as keyof typeof t.elementary.schools]}
                 </div>
                 <div>
-                    ${t.elementary.isFirstTime}: ${formResponse.returning}
+                    ${t.elementary.wereInProgramBefore}: ${formResponse.returning}
                 </div>
                 <div>
                     ${t.elementary.q1}: ${formResponse.familyMembers}
                 </div>
                 <div>
-                    ${t.elementary.q2}: ${formResponse.brothers}
+                    ${t.elementary.liveWith}: ${liveWithText}
                 </div>
                 <div>
-                    ${t.elementary.q3}: ${formResponse.sisters}
+                    ${t.elementary.liveWithBrotherCount}: ${formResponse.brothers ?? ""}
+                </div>
+                <div>
+                    ${t.elementary.liveWithSisterCount}: ${formResponse.sisters ?? ""}
+                </div>
+                <div>
+                    ${t.elementary.liveWithOtherDetail}: ${formResponse.liveWithOther ?? ""}
                 </div>
                 <div>
                     ${t.elementary.q4}: ${formResponse.isfrom}
@@ -65,13 +82,10 @@ const template_facelem = (formResponse: FacelemType, t: Dictionary) => {
                     ${t.elementary.q9}: ${formResponse.challengingSubject}
                 </div>
                 <div>
-                    ${t.elementary.q10}: ${formResponse.aboutMyTeacher}
-                </div>
-                <div>
                     ${t.elementary.q11}: ${formResponse.aboutMeFromTeacher}
                 </div>
                 <div>
-                    ${t.elementary.nickname}: ${formResponse.nickname}
+                    ${t.elementary.enjoySchoolWhy}: ${formResponse.enjoySchoolWhy}
                 </div>
                 <div>
                     ${t.elementary.favoriteColor}: ${formResponse.favoriteColor}
@@ -83,7 +97,7 @@ const template_facelem = (formResponse: FacelemType, t: Dictionary) => {
                     ${t.elementary.hobbies}: ${formResponse.hobbies}
                 </div>
                 <div>
-                    ${t.elementary.interests}: ${formResponse.interests}
+                    ${t.elementary.makesMeHappy}: ${formResponse.makesMeHappy}
                 </div>
                 <div>
                     ${t.elementary.makesMeSad}: ${formResponse.makesMeSad}

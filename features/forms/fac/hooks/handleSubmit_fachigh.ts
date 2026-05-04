@@ -3,6 +3,29 @@ import { FachighType } from "../schema/fachighSchema";
 import sendConfirmationEmail_high from "@/hooks/confirmation/fac/sendConfirmationEmail_high";
 import { checkAndReuploadFile, needsReupload, isFileLost } from "@/lib/utils";
 
+const joinNonEmpty = (...parts: (string | undefined | null | false)[]) =>
+    parts
+        .filter((p): p is string => typeof p === "string" && p.trim().length > 0)
+        .join("\n");
+
+export const combineFachighAnswers = (f: FachighType) => {
+    return {
+        introduction: joinNonEmpty(
+            f.introLiveWith,
+            f.introHasSiblings === "Yes" ? "Yes, I have…" : "No, I do not have any siblings.",
+            f.introHasSiblings === "Yes" ? f.introHowManySiblings : undefined
+        ),
+        aboutSchool: joinNonEmpty(f.schoolLikeFor, f.schoolGoodChallenging),
+        personalLife: joinNonEmpty(f.personalFreeTime, f.personalHobbies),
+        future: joinNonEmpty(
+            f.futureHasPlans === "Yes" ? "Yes, I do." : "No, I don't.",
+            f.futureHasPlans === "Yes" ? f.futureBecome : f.futureDesire,
+            f.futureTenYears
+        ),
+        scholarship: joinNonEmpty(f.scholarshipReason),
+    };
+};
+
 const convertMonthShortToMonthLong = (month: string) => {
     switch (month) {
         case "Jan":
@@ -54,6 +77,7 @@ const convertLanguage = (language: string) => {
 };
 
 const createAddRecord = (formResponse: FachighType) => {
+    const combined = combineFachighAnswers(formResponse);
     return {
         // Section 1
         ticket: { value: formResponse.ticket },
@@ -64,17 +88,17 @@ const createAddRecord = (formResponse: FachighType) => {
         tz: { value: formResponse.tz },
         birthday: { value: `${convertMonthShortToMonthLong(formResponse.birthday.month)} ${zeroPad(formResponse.birthday.day)}, ${formResponse.birthday.year}` },
         age: { value: formResponse.age },
-        // photo: { value: formResponse.photo?.fileKey ? [{ fileKey: formResponse.photo.fileKey }] : [] }, // COMMENTED OUT: Photo upload field - can be restored if needed
+        photo: { value: formResponse.photo?.fileKey ? [{ fileKey: formResponse.photo.fileKey }] : [] },
         grade: { value: formResponse.grade },
         originCountry: { value: formResponse.originCountry },
         school: { value: formResponse.school },
         returning: { value: formResponse.returning },
         // Section 2
-        introduction: { value: formResponse.introduction },
-        aboutSchool: { value: formResponse.aboutSchool },
-        personalLife: { value: formResponse.personalLife },
-        future: { value: formResponse.future },
-        scholarship: { value: formResponse.scholarship },
+        introduction: { value: combined.introduction },
+        aboutSchool: { value: combined.aboutSchool },
+        personalLife: { value: combined.personalLife },
+        future: { value: combined.future },
+        scholarship: { value: combined.scholarship },
         // Section 3
         submittedBy: { value: formResponse.submittedBy },
         relationship: { value: formResponse.relationship },
@@ -85,30 +109,29 @@ const createAddRecord = (formResponse: FachighType) => {
 
 export const handleSubmit_fachigh = async (formResponse: FachighType, t: any) => {
     try {
-        // COMMENTED OUT: Photo upload validation - can be restored if needed
         // Check photo for expiration or loss, even if file object is missing
-        // if (formResponse.photo && needsReupload(formResponse.photo)) {
-        //     if (isFileLost(formResponse.photo)) {
-        //         // File is lost - user must re-upload
-        //         alert("The photo has expired or is missing. Please re-upload the photo before submitting the form.");
-        //         return false;
-        //     } else if (formResponse.photo.file) {
-        //         // File exists but is expired - try to re-upload
-        //         const reuploaded = await checkAndReuploadFile(formResponse.photo);
-        //         if (reuploaded === null) {
-        //             // Re-upload failed - user must re-upload
-        //             alert("The photo has expired and could not be automatically re-uploaded. Please re-upload the photo before submitting the form.");
-        //             return false;
-        //         } else {
-        //             // Update with new fileKey
-        //             formResponse.photo = reuploaded;
-        //         }
-        //     } else {
-        //         // File is expired and missing - user must re-upload
-        //         alert("The photo has expired or is missing. Please re-upload the photo before submitting the form.");
-        //         return false;
-        //     }
-        // }
+        if (formResponse.photo && needsReupload(formResponse.photo)) {
+            if (isFileLost(formResponse.photo)) {
+                // File is lost - user must re-upload
+                alert("The photo has expired or is missing. Please re-upload the photo before submitting the form.");
+                return false;
+            } else if (formResponse.photo.file) {
+                // File exists but is expired - try to re-upload
+                const reuploaded = await checkAndReuploadFile(formResponse.photo);
+                if (reuploaded === null) {
+                    // Re-upload failed - user must re-upload
+                    alert("The photo has expired and could not be automatically re-uploaded. Please re-upload the photo before submitting the form.");
+                    return false;
+                } else {
+                    // Update with new fileKey
+                    formResponse.photo = reuploaded;
+                }
+            } else {
+                // File is expired and missing - user must re-upload
+                alert("The photo has expired or is missing. Please re-upload the photo before submitting the form.");
+                return false;
+            }
+        }
 
         const addRecord = createAddRecord(formResponse);
         const res = await fetch("/api/kintone/postKintone_fac", {
@@ -119,9 +142,10 @@ export const handleSubmit_fachigh = async (formResponse: FachighType, t: any) =>
             body: JSON.stringify(addRecord),
         });
         if (await res.ok) {
+            const combined = combineFachighAnswers(formResponse);
             // Send email asynchronously (non-blocking) to avoid Vercel 10s timeout
             // Don't await - let it run in background
-            sendConfirmationEmail_high(formResponse, t).catch((error) => {
+            sendConfirmationEmail_high(formResponse, t, combined).catch((error) => {
                 console.error("[handleSubmit_fachigh] Email sending failed (non-blocking):", error);
                 // Email failure is logged but doesn't affect form submission success
             });

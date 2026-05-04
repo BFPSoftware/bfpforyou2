@@ -1,0 +1,167 @@
+export class FileTooLargeError extends Error {
+    readonly maxBytes: number;
+    readonly actualBytes: number;
+
+    constructor(maxBytes: number, actualBytes: number) {
+        super(`File too large. Max ${(maxBytes / (1024 * 1024)).toFixed(0)}MB.`);
+        this.name = "FileTooLargeError";
+        this.maxBytes = maxBytes;
+        this.actualBytes = actualBytes;
+    }
+}
+
+export class InvalidFileTypeError extends Error {
+    readonly mimeType: string;
+
+    constructor(mimeType: string) {
+        super("Invalid file type. Please upload an image.");
+        this.name = "InvalidFileTypeError";
+        this.mimeType = mimeType;
+    }
+}
+
+export class HeicConversionError extends Error {
+    constructor() {
+        super("Could not process HEIC/HEIF image. Please convert to JPG/PNG and try again.");
+        this.name = "HeicConversionError";
+    }
+}
+
+export class KintoneUploadError extends Error {
+    readonly status: number;
+    readonly details?: unknown;
+
+    constructor(message: string, status: number, details?: unknown) {
+        super(message);
+        this.name = "KintoneUploadError";
+        this.status = status;
+        this.details = details;
+    }
+}
+
+const MAX_INPUT_BYTES = 50 * 1024 * 1024; // 50MB
+const COMPRESS_THRESHOLD_BYTES = 4 * 1024 * 1024; // 4MB
+const COMPRESS_TARGET_MB = 3; // 3MB
+const VERCEL_UPLOAD_CAP_BYTES = 4 * 1024 * 1024; // keep below 4.5MB hard cap
+const MAX_WIDTH_OR_HEIGHT = 2560;
+/** Always JPEG for storage compatibility; lossy compression keeps size down vs PNG. */
+const OUTPUT_FILE_TYPE = "image/jpeg";
+
+function isJpegMime(file: File): boolean {
+    const t = (file.type || "").toLowerCase();
+    return t === "image/jpeg" || t === "image/jpg";
+}
+
+/** Same stem as input, always `.jpg` and `image/jpeg` for downstream storage. */
+function ensureJpegFile(blob: Blob, nameSource: File): File {
+    const stem = (nameSource.name || "image").replace(/\.[^.]+$/, "");
+    return new File([blob], `${stem}.jpg`, { type: OUTPUT_FILE_TYPE });
+}
+
+function looksLikeHeic(file: File): boolean {
+    const name = (file.name || "").toLowerCase();
+    const mime = (file.type || "").toLowerCase();
+    return mime === "image/heic" || mime === "image/heif" || name.endsWith(".heic") || name.endsWith(".heif");
+}
+
+async function convertHeicIfNeeded(file: File): Promise<File> {
+    if (!looksLikeHeic(file)) return file;
+
+    try {
+        const { default: heic2any } = await import("heic2any");
+        const converted = await heic2any({
+            blob: file,
+            toType: "image/jpeg",
+            quality: 0.9,
+        });
+
+        const blob = Array.isArray(converted) ? converted[0] : converted;
+        const outName = file.name.replace(/\.[^.]+$/, "") + ".jpg";
+        return new File([blob as BlobPart], outName, { type: "image/jpeg" });
+    } catch {
+        throw new HeicConversionError();
+    }
+}
+
+/** Small PNG/WebP/etc. skip `compressIfNeeded`; still normalize to JPEG for storage. */
+async function transcodeToJpegIfNeeded(file: File): Promise<File> {
+    if (isJpegMime(file)) return file;
+
+    const { default: imageCompression } = await import("browser-image-compression");
+    const out = await imageCompression(file, {
+        maxSizeMB: 100,
+        maxWidthOrHeight: MAX_WIDTH_OR_HEIGHT,
+        fileType: OUTPUT_FILE_TYPE,
+        initialQuality: 0.92,
+        useWebWorker: true,
+    });
+
+    return ensureJpegFile(out, file);
+}
+
+async function compressIfNeeded(file: File): Promise<File> {
+    if (file.size < COMPRESS_THRESHOLD_BYTES) return file;
+
+    const { default: imageCompression } = await import("browser-image-compression");
+    const compressed1 = await imageCompression(file, {
+        maxSizeMB: COMPRESS_TARGET_MB,
+        maxWidthOrHeight: MAX_WIDTH_OR_HEIGHT,
+        fileType: OUTPUT_FILE_TYPE,
+        initialQuality: 0.8,
+        useWebWorker: true,
+    });
+
+    const out1 = ensureJpegFile(compressed1, file);
+
+    // Safety valve: if still too large, run a second pass with lower quality.
+    if (out1.size > VERCEL_UPLOAD_CAP_BYTES) {
+        const compressed2 = await imageCompression(out1, {
+            maxSizeMB: COMPRESS_TARGET_MB,
+            maxWidthOrHeight: 1920,
+            fileType: OUTPUT_FILE_TYPE,
+            initialQuality: 0.65,
+            useWebWorker: true,
+        });
+
+        return ensureJpegFile(compressed2, file);
+    }
+
+    return out1;
+}
+
+export async function uploadFileToKintone(file: File): Promise<{ fileKey: string }> {
+    if (!file) throw new Error("No file provided");
+
+    if (file.size > MAX_INPUT_BYTES) {
+        throw new FileTooLargeError(MAX_INPUT_BYTES, file.size);
+    }
+
+    const convertedInput = await convertHeicIfNeeded(file);
+
+    const mimeType = convertedInput.type || "";
+    if (!mimeType.startsWith("image/")) {
+        throw new InvalidFileTypeError(mimeType);
+    }
+
+    const jpegNormalized = await transcodeToJpegIfNeeded(convertedInput);
+    const toUpload = await compressIfNeeded(jpegNormalized);
+
+    if (toUpload.size > VERCEL_UPLOAD_CAP_BYTES) {
+        throw new FileTooLargeError(VERCEL_UPLOAD_CAP_BYTES, toUpload.size);
+    }
+
+    const { uploadFile } = await import("@/app/[lang]/actions/kintone/uploadFile");
+    const res = await uploadFile({ file: toUpload });
+
+    const fileKey = res?.data?.success;
+    if (fileKey && typeof fileKey === "string") {
+        return { fileKey };
+    }
+
+    throw new KintoneUploadError("Upload failed", 0, {
+        serverError: res?.serverError,
+        validationErrors: res?.validationErrors,
+        failure: res?.data?.failure,
+    });
+}
+
