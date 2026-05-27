@@ -209,6 +209,7 @@
         "school": "בית ספר",
         "gradeWithSchoolYear": "כיתה (בשנת הלימודים {year})",
         "wereInProgramBefore": "האם היית בתוכנית בעבר?",
+        "madeAliyah": "האם המשפחה שלך עשתה עלייה? אם כן, מאיזו מדינה?",
         "isFirstTime": "האם זו הפעם הראשונה שאתה מגיש בקשה למלגה?",
         "liveWith": "עם מי אתה גר?",
         "liveWithFather": "אבא",
@@ -284,7 +285,19 @@
         "personalLife": "מה אתה אוהב לעשות בזמנך הפנוי? מהם כמה מהדברים האהובים עליך?",
         "yourFuture": "מה אתה רוצה לעשות לקריירה? איזה חלומות יש לך? איך אתה רואה את עצמך בעוד 10 שנים?",
         "scholarship": "למה אתה רוצה את המלגה הזו?",
-        "schoolGoodChallengingLabel": "במה אתה טוב ומה מאתגר אותך בבית הספר?\n\nאני טוב ב…\nקשה לי…\nמקצועות שאני מתקשה בהם…"
+        "schoolGoodChallengingLabel": "במה אתה טוב ומה מאתגר אותך בבית הספר?",
+        "defaults": {
+            "introLiveWith": "אני גר/ה עם…",
+            "introHowManySiblings": "יש לי…",
+            "schoolLikeFor": "בשבילי, בית הספר הוא כמו…",
+            "schoolGoodChallenging": "אני טוב/ה ב…\nמאתגר אותי…\nהמקצועות שאני מתקשה בהם הם…",
+            "personalFreeTime": "בזמן הפנוי שלי אני נהנה/ית…",
+            "personalHobbies": "התחביבים/הפעילויות האהובים עליי הם…",
+            "futureBecome": "חלום העתיד שלי הוא להיות/להקים…",
+            "futureDesire": "הייתי רוצה…",
+            "futureTenYears": "בעוד 10 שנים, אני רואה את עצמי…",
+            "scholarshipReason": "אני מאוד רוצה את המלגה הזו כי…"
+        }
     },
     "contactUs": {
         "title": "צור קשר",

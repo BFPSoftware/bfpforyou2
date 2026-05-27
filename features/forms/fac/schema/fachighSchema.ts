@@ -78,6 +78,7 @@ const grade = string50;
 const originCountry = string50;
 const school = string50;
 const returning = string50;
+const madeAliyah = string300;
 
 // Section 2
 // TODO: min characters and show counter
@@ -145,6 +146,7 @@ export const fachighSchema = z
         originCountry: originCountry,
         school,
         returning: returning,
+        madeAliyah: madeAliyah,
 
         // Section 2 (split questions)
         introLiveWith,
@@ -216,11 +218,13 @@ export const defaultData: z.infer<typeof fachighSchema> = {
     originCountry: "Country",
     school: "HaDekel",
     returning: "No",
+    madeAliyah: "",
     introLiveWith: "I live with…",
     introHasSiblings: "Yes",
     introHowManySiblings: "I have…",
     schoolLikeFor: "For me, my school is like…",
-    schoolGoodChallenging: "I am good at… It is challenging for me to… The school subjects that I struggle with are…",
+    // keep defaultData concise; the form itself provides multi-line prefill
+    schoolGoodChallenging: "What are you good at and what is challenging for you in school?",
     personalFreeTime: "When I have my free time, I enjoy…",
     personalHobbies: "My favorite activities are…",
     futureHasPlans: "Yes",

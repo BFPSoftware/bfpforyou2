@@ -209,6 +209,7 @@
         "school": "School",
         "gradeWithSchoolYear": "Grade (in School Year of {year})",
         "wereInProgramBefore": "Were you in the program before?",
+        "madeAliyah": "Votre famille a-t-elle fait une aliyah ? Si oui, de quel pays ?",
         "isFirstTime": "Is this your first time applying for the scholarship?",
         "liveWith": "Who do you live with?",
         "liveWithFather": "Father",
@@ -285,7 +286,19 @@
         "personalLife": "What do you like to do in your free time? What are some of your favorite things? ",
         "yourFuture": "What do you want to do for a career? What dreams do you have? How do you see yourself in 10 years?",
         "scholarship": "Pourquoi voulez-vous cette bourse ?",
-        "schoolGoodChallengingLabel": "What are you good at and what is challenging for you in school?\n\nI am good at…\nIt is challenging for me to…\nThe school subjects that I struggle with are…"
+        "schoolGoodChallengingLabel": "What are you good at and what is challenging for you in school?",
+        "defaults": {
+            "introLiveWith": "Je vis avec…",
+            "introHowManySiblings": "J’ai…",
+            "schoolLikeFor": "Pour moi, l’école est comme…",
+            "schoolGoodChallenging": "Je suis bon(ne) en…\nC’est difficile pour moi de…\nLes matières scolaires avec lesquelles j’ai des difficultés sont…",
+            "personalFreeTime": "Quand j’ai du temps libre, j’aime…",
+            "personalHobbies": "Mes activités préférées sont…",
+            "futureBecome": "Mon rêve pour l’avenir est de devenir/de créer…",
+            "futureDesire": "J’aimerais…",
+            "futureTenYears": "Dans dix ans, je me vois…",
+            "scholarshipReason": "Je veux vraiment cette bourse parce que…"
+        }
     },
     "contactUs": {
         "title": "Contactez-nous",

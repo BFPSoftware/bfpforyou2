@@ -130,6 +130,7 @@ const createAddRecord = (formResponse: FacelemType, t: Dictionary) => {
         grade: { value: formResponse.grade },
         elemSchool: { value: formResponse.elemSchool },
         returning: { value: formResponse.returning },
+        madeAliyah: { value: formResponse.madeAliyah },
         // Section 2
         familyMembers: { value: formResponse.familyMembers },
         liveWith: { value: formResponse.liveWith },

@@ -97,6 +97,16 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
                 <Select label={t.elementary.wereInProgramBefore} options={YesNo(t)} register={register("returning")} required error={errors.returning || undefined} />
             </Row>
 
+            <div className="flex flex-wrap mb-6">
+                <Input
+                    label={t.elementary.madeAliyah}
+                    placeholder={t.common.enterHere}
+                    register={register("madeAliyah")}
+                    required
+                    error={errors.madeAliyah || undefined}
+                />
+            </div>
+
             <div className="text-2xl font-bold my-10">
                 <label>{t.elementary.sectionTitle.meAndMyFamily}</label>
             </div>

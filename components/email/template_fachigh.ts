@@ -45,6 +45,9 @@ const template_fachigh = (
                     ${t.elementary.wereInProgramBefore}: ${formResponse.returning}
                 </div>
                 <div>
+                    ${t.elementary.madeAliyah}: ${formResponse.madeAliyah}
+                </div>
+                <div>
                     ${t.highschool.sectionTitle.introduction} ${combined.introduction}
                 </div>
                 <div>

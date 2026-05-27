@@ -223,6 +223,7 @@
         "school": "School",
         "gradeWithSchoolYear": "Grade (in School Year of {year})",
         "wereInProgramBefore": "Were you in the program before?",
+        "madeAliyah": "Did your family make an aliyah? If so, from which country?",
         "isFirstTime": "Is this your first time applying for the scholarship?",
         "liveWith": "Who do you live with?",
         "liveWithFather": "Father",
@@ -299,6 +300,18 @@
         "personalLife": "What do you like to do in your free time? What are some of your favorite things? ",
         "yourFuture": "What do you want to do for a career? What dreams do you have? How do you see yourself in 10 years?",
         "scholarship": "Why do you want this scholarship?",
-        "schoolGoodChallengingLabel": "What are you good at and what is challenging for you in school?\n\nI am good at…\nIt is challenging for me to…\nThe school subjects that I struggle with are…"
+        "schoolGoodChallengingLabel": "What are you good at and what is challenging for you in school?",
+        "defaults": {
+            "introLiveWith": "I live with…",
+            "introHowManySiblings": "I have…",
+            "schoolLikeFor": "For me, my school is like…",
+            "schoolGoodChallenging": "I am good at…\nIt is challenging for me to…\nThe school subjects that I struggle with are…",
+            "personalFreeTime": "When I have my free time, I enjoy…",
+            "personalHobbies": "My favorite activities are…",
+            "futureBecome": "My future dream is to become/start…",
+            "futureDesire": "I desire to …",
+            "futureTenYears": "In ten years, I see myself…",
+            "scholarshipReason": "I really want this scholarship because…"
+        }
     }
 }

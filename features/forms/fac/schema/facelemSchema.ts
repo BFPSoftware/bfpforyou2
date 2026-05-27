@@ -74,6 +74,7 @@ const elemSchool = string50;
 const returning = string50;
 
 // Section 2
+const madeAliyah = string300;
 const familyMembers = string300;
 const liveWith = z.array(z.enum(["Father", "Mother", "Brother", "Sister", "Grandparents", "Other"])).min(1, error_required);
 const brothers = z.string().max(300, error_maxLength).optional();
@@ -148,6 +149,7 @@ export const facelemSchema = z.object({
     grade: grade,
     elemSchool: elemSchool,
     returning: returning,
+    madeAliyah: madeAliyah,
     familyMembers: familyMembers,
     liveWith,
     brothers: brothers,
@@ -219,6 +221,7 @@ export const defaultData: z.infer<typeof facelemSchema> = {
     grade: "5",
     elemSchool: "HaDekel",
     returning: "No",
+    madeAliyah: "",
     familyMembers: "4",
     liveWith: ["Mother", "Brother"],
     brothers: "1",

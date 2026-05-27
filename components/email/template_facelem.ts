@@ -52,6 +52,9 @@ const template_facelem = (formResponse: FacelemType, t: Dictionary) => {
                     ${t.elementary.wereInProgramBefore}: ${formResponse.returning}
                 </div>
                 <div>
+                    ${t.elementary.madeAliyah}: ${formResponse.madeAliyah}
+                </div>
+                <div>
                     ${t.elementary.q1}: ${formResponse.familyMembers}
                 </div>
                 <div>

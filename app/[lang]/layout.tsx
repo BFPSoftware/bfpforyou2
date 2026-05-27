@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getDictionary } from "./dictionaries";
 import DictionaryProvider from "@/common/locales/Dictionary-provider";
 import { Locale } from "@/types/locales";
+import { locales } from "@/types/locales";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
     title: "BFP for You",
@@ -17,6 +19,9 @@ export default async function RootLayout({
     params: Params;
 }>) {
     const lang = (await params).lang;
+    if (!locales.includes(lang as Locale)) {
+        notFound();
+    }
     const dictionary = await getDictionary(lang);
     return (
         <section dir={lang === "he" ? "rtl" : "ltr"} className={lang === "he" ? "rtl" : "ltr"}>

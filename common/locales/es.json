@@ -209,6 +209,7 @@
         "school": "School",
         "gradeWithSchoolYear": "Grade (in School Year of {year})",
         "wereInProgramBefore": "Were you in the program before?",
+        "madeAliyah": "¿Tu familia hizo aliá? Si es así, ¿de qué país?",
         "isFirstTime": "Is this your first time applying for the scholarship?",
         "liveWith": "Who do you live with?",
         "liveWithFather": "Father",
@@ -285,7 +286,19 @@
         "personalLife": "What do you like to do in your free time? What are some of your favorite things? ",
         "yourFuture": "What do you want to do for a career? What dreams do you have? How do you see yourself in 10 years?",
         "scholarship": "¿Por qué quiere esta beca?",
-        "schoolGoodChallengingLabel": "What are you good at and what is challenging for you in school?\n\nI am good at…\nIt is challenging for me to…\nThe school subjects that I struggle with are…"
+        "schoolGoodChallengingLabel": "What are you good at and what is challenging for you in school?",
+        "defaults": {
+            "introLiveWith": "Vivo con…",
+            "introHowManySiblings": "Tengo…",
+            "schoolLikeFor": "Para mí, la escuela es como…",
+            "schoolGoodChallenging": "Soy bueno/a en…\nMe resulta difícil…\nLas materias escolares con las que tengo dificultades son…",
+            "personalFreeTime": "Cuando tengo tiempo libre, disfruto…",
+            "personalHobbies": "Mis actividades favoritas son…",
+            "futureBecome": "Mi sueño para el futuro es ser/empezar…",
+            "futureDesire": "Me gustaría…",
+            "futureTenYears": "En diez años, me veo…",
+            "scholarshipReason": "Realmente quiero esta beca porque…"
+        }
     },
     "contactUs": {
         "title": "Contáctenos",

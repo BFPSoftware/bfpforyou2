@@ -69,6 +69,16 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
                 <Select label={t.elementary.school} options={Highschools(t)} register={register("school")} required error={errors.school || undefined} />
                 <Select label={t.elementary.wereInProgramBefore} options={YesNo(t)} register={register("returning")} required error={errors.returning || undefined} />
             </div>
+
+            <div className="flex flex-wrap mb-6">
+                <Input
+                    label={t.elementary.madeAliyah}
+                    placeholder={t.common.enterHere}
+                    register={register("madeAliyah")}
+                    required
+                    error={errors.madeAliyah || undefined}
+                />
+            </div>
             {/* Section 2 */}
             <div className="text-2xl font-bold my-10">
                 <label>{t.highschool.sectionTitle.introduction}</label>
@@ -125,7 +135,6 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
                 {/* TODO: i18n */}
                 <Textarea
                     label={t.highschool.schoolGoodChallengingLabel}
-                    labelPreLine
                     register={register("schoolGoodChallenging")}
                     required
                     watch={watch}

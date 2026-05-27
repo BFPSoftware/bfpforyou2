@@ -93,6 +93,7 @@ const createAddRecord = (formResponse: FachighType) => {
         originCountry: { value: formResponse.originCountry },
         school: { value: formResponse.school },
         returning: { value: formResponse.returning },
+        madeAliyah: { value: formResponse.madeAliyah },
         // Section 2
         introduction: { value: combined.introduction },
         aboutSchool: { value: combined.aboutSchool },
