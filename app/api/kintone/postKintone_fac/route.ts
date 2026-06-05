@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import logError from "@/common/logError";
 import { FacApplicationAppID, FacApplicationOriginalResponsesAppID } from "@/common/env";
 import client from "@/hooks/useKintone";
+import { translateFacRecord } from "@/lib/fac/azureTranslation";
 
 export async function POST(req: NextRequest) {
     try {
@@ -14,9 +15,10 @@ export async function POST(req: NextRequest) {
             record: reqsNoPhoto,
         });
         const originalResponseRecordID = resp.id;
-        const resp2 = await client.record.addRecord({
+        const translatedReqs = await translateFacRecord(reqs);
+        await client.record.addRecord({
             app: FacApplicationAppID!,
-            record: { ref: { value: originalResponseRecordID }, ...reqs },
+            record: { ref: { value: originalResponseRecordID }, ...translatedReqs },
         });
         if (!resp) {
             return NextResponse.json({ res: "Failed to add record" }, { status: 501 });
