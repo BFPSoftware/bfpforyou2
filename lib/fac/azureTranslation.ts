@@ -20,6 +20,7 @@ export const TRANSLITERATE_FIELDS = ["firstName", "lastName", "submittedBy"] as 
 
 export const TRANSLATE_FIELDS = [
     "returning",
+    "madeAliyah",
     "introduction",
     "aboutSchool",
     "personalLife",
