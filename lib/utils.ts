@@ -23,25 +23,20 @@ export const isFileExpired = (uploadedAt?: Date): boolean => {
 };
 
 /**
- * Check if a file attachment is lost (has fileKey but no file object)
+ * True when the upload expired and the original File is no longer available for auto re-upload.
+ * A fresh upload with only `fileKey` + `uploadedAt` is valid until expiry.
  */
 export const isFileLost = (attachment: FileWithMeta): boolean => {
-    return !!(attachment?.fileKey && !attachment?.file);
+    if (!attachment?.fileKey || !attachment.uploadedAt) return false;
+    return !attachment.file && isFileExpired(attachment.uploadedAt);
 };
 
 /**
- * Check if a file attachment needs re-upload (expired or lost)
+ * Check if a file attachment needs re-upload (Kintone file keys expire after ~3 days).
  */
 export const needsReupload = (attachment: FileWithMeta): boolean => {
     if (!attachment?.fileKey || !attachment.uploadedAt) return false;
-    
-    // File is lost (fileKey exists but file object is missing)
-    if (isFileLost(attachment)) return true;
-    
-    // File is expired
-    if (isFileExpired(attachment.uploadedAt)) return true;
-    
-    return false;
+    return isFileExpired(attachment.uploadedAt);
 };
 
 /**

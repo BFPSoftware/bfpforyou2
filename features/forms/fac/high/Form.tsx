@@ -1,7 +1,7 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { FieldErrors, SubmitHandler, useForm } from "react-hook-form";
 
 import FirstPage from "./views/FirstPage";
 
@@ -15,6 +15,12 @@ import logError from "@/common/logError";
 
 type FachighFormProps = { ticket: string };
 
+const scrollToFirstError = (errors: FieldErrors<FachighType>) => {
+    const firstErrorField = Object.keys(errors)[0];
+    if (!firstErrorField) return;
+    document.querySelector(`[name="${firstErrorField}"]`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+};
+
 const FachighForm: FC<FachighFormProps> = ({ ticket }) => {
     const [isLoading, setIsLoading] = useState(false);
     const t = useDictionary();
@@ -25,38 +31,26 @@ const FachighForm: FC<FachighFormProps> = ({ ticket }) => {
         if (!window.confirm(t.common.wantToSubmit)) return;
         setIsLoading(true);
         try {
-            const validate = async () => {
-                const isValids = await trigger();
-                if (isValids) return true;
-                else {
-                    console.log("formatError", formatError);
-                    const firstErrorField = Object.keys(formatError)[0];
-                    const errorElement = document.querySelector(`[name="${firstErrorField}"]`);
-                    if (errorElement) {
-                        errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
-                    }
-                    return false;
-                }
-            };
-            if (!(await validate())) return;
             const res = await handleSubmit_fachigh(data, t);
             if (res) location.href = "/fachigh/thank-you";
             else alert("Something went wrong. Please try again later.");
         } catch (e) {
             logError(e, { data }, "handleSubmit_fachigh");
+            alert("Something went wrong. Please try again later.");
         } finally {
             setIsLoading(false);
         }
     };
 
+    const onError = (errors: FieldErrors<FachighType>) => {
+        scrollToFirstError(errors);
+    };
+
     const {
         handleSubmit,
-        formState: { errors: formatError, isValid, isDirty, isSubmitting },
-        trigger,
-        getValues,
+        formState: { errors: formatError },
         setValue,
         watch,
-        control,
         register,
     } = useForm<FachighType>({
         mode: "onChange",
@@ -66,6 +60,7 @@ const FachighForm: FC<FachighFormProps> = ({ ticket }) => {
             submitLang: "en",
             applicationType: "Highschool",
             ticket: ticket,
+            photo: null,
             introLiveWith: t.highschool.defaults.introLiveWith,
             // introHasSiblings: user must pick Yes/No
             introHowManySiblings: t.highschool.defaults.introHowManySiblings,
@@ -88,7 +83,7 @@ const FachighForm: FC<FachighFormProps> = ({ ticket }) => {
             <form
                 method="post"
                 onSubmit={(event) => {
-                    void handleSubmit(handleOnSubmit)(event);
+                    void handleSubmit(handleOnSubmit, onError)(event);
                 }}
                 className={`flex flex-col p-[5%] md:p-[10%] pt-[5%] ${t.lang == "he" ? "flex-row-reverse rtl" : "ltr"}`}
             >

@@ -34,29 +34,25 @@ const string300: z.ZodString = z.string().min(1).max(300, error_maxLength);
 const string2000: z.ZodString = z.string().min(1).max(2000, error_maxLength);
 const string4000: z.ZodString = z.string().min(1).max(4000, error_maxLength);
 const string_optional: z.ZodOptional<z.ZodString> = z.string().optional();
-const file = z
+const uploadedPhoto = z
     .object({
         file: z.instanceof(File).optional(),
         fileKey: z.string().min(1).max(50, "File could not be uploaded"),
         uploadedAt: z.date().optional(),
     })
-    .nullable()
     .refine((data) => {
-        if (data == null) return false;
-        
-        // If we have a fileKey but no file object, check if it's expired
-        // If file object exists, expiration will be handled by re-upload on submit
         if (data.fileKey && !data.file && data.uploadedAt) {
             const expirationDate = new Date(data.uploadedAt);
             expirationDate.setDate(expirationDate.getDate() + 3);
             if (new Date() > expirationDate) {
-                // File is lost and expired - user must re-upload
                 return false;
             }
         }
-        
         return true;
-    }, "This field is required or the uploaded file has expired. Please re-upload the file.");
+    }, "The uploaded file has expired. Please re-upload the file.");
+
+/** Photo is optional in validation; UI still encourages upload with a red asterisk. */
+const photoOptional = z.union([z.null(), uploadedPhoto]).optional();
 
 // system
 const ticket = string50;
@@ -73,7 +69,6 @@ const birthday = z.object({
     year: z.string().max(5, { message: "Required" }),
 });
 const age = string50;
-const photo = file;
 const grade = string50;
 const originCountry = string50;
 const school = string50;
@@ -141,7 +136,7 @@ export const fachighSchema = z
         tz: tz,
         birthday: birthday,
         age: age,
-        photo,
+        photo: photoOptional,
         grade: grade,
         originCountry: originCountry,
         school,

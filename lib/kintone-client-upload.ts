@@ -22,8 +22,15 @@ export class InvalidFileTypeError extends Error {
 
 export class HeicConversionError extends Error {
     constructor() {
-        super("Could not process HEIC/HEIF image. Please convert to JPG/PNG and try again.");
+        super("Could not process HEIC/HEIF image. Please convert to JPG and try again.");
         this.name = "HeicConversionError";
+    }
+}
+
+export class ImageProcessingError extends Error {
+    constructor() {
+        super("Could not process image.");
+        this.name = "ImageProcessingError";
     }
 }
 
@@ -64,6 +71,45 @@ function looksLikeHeic(file: File): boolean {
     return mime === "image/heic" || mime === "image/heif" || name.endsWith(".heic") || name.endsWith(".heif");
 }
 
+/** Browsers often leave `file.type` empty (common on mobile camera rolls). */
+function resolveImageMime(file: File): string {
+    const mime = (file.type || "").toLowerCase().trim();
+    if (mime.startsWith("image/")) return mime;
+
+    const name = (file.name || "").toLowerCase();
+    if (/\.(jpe?g)$/.test(name)) return "image/jpeg";
+    if (name.endsWith(".png")) return "image/png";
+    if (name.endsWith(".gif")) return "image/gif";
+    if (name.endsWith(".webp")) return "image/webp";
+    if (name.endsWith(".bmp")) return "image/bmp";
+    if (name.endsWith(".avif")) return "image/avif";
+    if (/\.tiff?$/.test(name)) return "image/tiff";
+    if (looksLikeHeic(file)) return "image/heic";
+
+    return mime;
+}
+
+const UNSUPPORTED_IMAGE_MIMES = new Set(["image/svg+xml", "image/x-icon"]);
+
+function assertSupportedImage(file: File): void {
+    const mime = resolveImageMime(file);
+    const name = (file.name || "").toLowerCase();
+
+    if (name.endsWith(".svg") || UNSUPPORTED_IMAGE_MIMES.has(mime)) {
+        throw new InvalidFileTypeError(mime || "image/svg+xml");
+    }
+    if (!mime.startsWith("image/")) {
+        throw new InvalidFileTypeError(mime || "(unknown)");
+    }
+}
+
+/** Re-attach inferred MIME so downstream checks and libraries see a consistent type. */
+function withResolvedMime(file: File): File {
+    const mime = resolveImageMime(file);
+    if (!mime || mime === file.type) return file;
+    return new File([file], file.name, { type: mime, lastModified: file.lastModified });
+}
+
 async function convertHeicIfNeeded(file: File): Promise<File> {
     if (!looksLikeHeic(file)) return file;
 
@@ -87,46 +133,54 @@ async function convertHeicIfNeeded(file: File): Promise<File> {
 async function transcodeToJpegIfNeeded(file: File): Promise<File> {
     if (isJpegMime(file)) return file;
 
-    const { default: imageCompression } = await import("browser-image-compression");
-    const out = await imageCompression(file, {
-        maxSizeMB: 100,
-        maxWidthOrHeight: MAX_WIDTH_OR_HEIGHT,
-        fileType: OUTPUT_FILE_TYPE,
-        initialQuality: 0.92,
-        useWebWorker: true,
-    });
+    try {
+        const { default: imageCompression } = await import("browser-image-compression");
+        const out = await imageCompression(file, {
+            maxSizeMB: 100,
+            maxWidthOrHeight: MAX_WIDTH_OR_HEIGHT,
+            fileType: OUTPUT_FILE_TYPE,
+            initialQuality: 0.92,
+            useWebWorker: true,
+        });
 
-    return ensureJpegFile(out, file);
+        return ensureJpegFile(out, file);
+    } catch {
+        throw new ImageProcessingError();
+    }
 }
 
 async function compressIfNeeded(file: File): Promise<File> {
     if (file.size < COMPRESS_THRESHOLD_BYTES) return file;
 
-    const { default: imageCompression } = await import("browser-image-compression");
-    const compressed1 = await imageCompression(file, {
-        maxSizeMB: COMPRESS_TARGET_MB,
-        maxWidthOrHeight: MAX_WIDTH_OR_HEIGHT,
-        fileType: OUTPUT_FILE_TYPE,
-        initialQuality: 0.8,
-        useWebWorker: true,
-    });
-
-    const out1 = ensureJpegFile(compressed1, file);
-
-    // Safety valve: if still too large, run a second pass with lower quality.
-    if (out1.size > VERCEL_UPLOAD_CAP_BYTES) {
-        const compressed2 = await imageCompression(out1, {
+    try {
+        const { default: imageCompression } = await import("browser-image-compression");
+        const compressed1 = await imageCompression(file, {
             maxSizeMB: COMPRESS_TARGET_MB,
-            maxWidthOrHeight: 1920,
+            maxWidthOrHeight: MAX_WIDTH_OR_HEIGHT,
             fileType: OUTPUT_FILE_TYPE,
-            initialQuality: 0.65,
+            initialQuality: 0.8,
             useWebWorker: true,
         });
 
-        return ensureJpegFile(compressed2, file);
-    }
+        const out1 = ensureJpegFile(compressed1, file);
 
-    return out1;
+        // Safety valve: if still too large, run a second pass with lower quality.
+        if (out1.size > VERCEL_UPLOAD_CAP_BYTES) {
+            const compressed2 = await imageCompression(out1, {
+                maxSizeMB: COMPRESS_TARGET_MB,
+                maxWidthOrHeight: 1920,
+                fileType: OUTPUT_FILE_TYPE,
+                initialQuality: 0.65,
+                useWebWorker: true,
+            });
+
+            return ensureJpegFile(compressed2, file);
+        }
+
+        return out1;
+    } catch {
+        throw new ImageProcessingError();
+    }
 }
 
 export async function uploadFileToKintone(file: File): Promise<{ fileKey: string }> {
@@ -136,9 +190,11 @@ export async function uploadFileToKintone(file: File): Promise<{ fileKey: string
         throw new FileTooLargeError(MAX_INPUT_BYTES, file.size);
     }
 
-    const convertedInput = await convertHeicIfNeeded(file);
+    assertSupportedImage(file);
+    const normalizedInput = withResolvedMime(file);
+    const convertedInput = await convertHeicIfNeeded(normalizedInput);
 
-    const mimeType = convertedInput.type || "";
+    const mimeType = resolveImageMime(convertedInput);
     if (!mimeType.startsWith("image/")) {
         throw new InvalidFileTypeError(mimeType);
     }
@@ -151,7 +207,15 @@ export async function uploadFileToKintone(file: File): Promise<{ fileKey: string
     }
 
     const { uploadFile } = await import("@/app/[lang]/actions/kintone/uploadFile");
-    const res = await uploadFile({ file: toUpload });
+
+    let res;
+    try {
+        res = await uploadFile({ file: toUpload });
+    } catch (e) {
+        throw new KintoneUploadError("Upload failed", 0, {
+            networkError: e instanceof Error ? e.message : String(e),
+        });
+    }
 
     const fileKey = res?.data?.success;
     if (fileKey && typeof fileKey === "string") {

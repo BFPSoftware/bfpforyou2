@@ -45,16 +45,8 @@ export const uploadFile = actionClient.schema(schema).action(async ({ parsedInpu
         console.log("[uploadFile] Upload successful. FileKey:", fileKey);
         return { success: fileKey };
     } catch (e) {
-        console.error("[uploadFile] Error during upload:", {
-            error: e,
-            errorMessage: e instanceof Error ? e.message : String(e),
-            errorStack: e instanceof Error ? e.stack : undefined,
-            errorName: e instanceof Error ? e.name : undefined,
-            fileName: file?.name,
-            fileSize: file?.size,
-            fullError: JSON.stringify(e, Object.getOwnPropertyNames(e)),
-        });
-        logError(e, { file: JSON.stringify(file) }, "uploadFile");
+        console.error("[uploadFile] Error during upload:", e instanceof Error ? e.message : e);
+        logError(e, { fileName: file?.name, fileSize: file?.size, fileType: file?.type }, "uploadFile");
         return { failure: "Server error" };
     }
 });

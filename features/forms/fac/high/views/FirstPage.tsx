@@ -54,6 +54,7 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
                     watch={photo}
                     field="photo"
                     error={errors.photo || undefined}
+                    photoOptional
                     showRequiredAsterisk
                     info={{
                         title: "Photo requirements (headshot)",

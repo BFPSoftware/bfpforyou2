@@ -2,8 +2,15 @@ import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import { FieldError, FieldErrorsImpl, Merge, UseFormWatch } from "react-hook-form";
 import { Upload, Loader2, Info } from "lucide-react";
 import Delete from "@/components/icons/Delete";
-import { isFileExpired, isFileLost } from "@/lib/utils";
-import { FileTooLargeError, HeicConversionError, InvalidFileTypeError, KintoneUploadError, uploadFileToKintone } from "@/lib/kintone-client-upload";
+import { isFileExpired } from "@/lib/utils";
+import {
+    FileTooLargeError,
+    HeicConversionError,
+    ImageProcessingError,
+    InvalidFileTypeError,
+    KintoneUploadError,
+    uploadFileToKintone,
+} from "@/lib/kintone-client-upload";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 type FileUploadProps = {
@@ -19,132 +26,132 @@ type FileUploadProps = {
     };
     /** Red asterisk next to label only; does not enforce validation by itself. */
     showRequiredAsterisk?: boolean;
+    /** When true, error copy notes the form may be submitted without a photo. */
+    photoOptional?: boolean;
 };
 
-const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error, info, showRequiredAsterisk }) => {
+const uploadFailedMessage = (photoOptional: boolean) =>
+    photoOptional
+        ? "Image could not be uploaded. You can continue and submit the form without a photo."
+        : "Image could not be uploaded. Please try again.";
+
+const FileUpload: FC<FileUploadProps> = ({
+    label,
+    setValue,
+    watch,
+    field,
+    error,
+    info,
+    showRequiredAsterisk,
+    photoOptional = false,
+}) => {
     const [isError, setIsError] = useState<{ message: string }>({ message: error?.message || "" });
-    const [filePreview, setFilePreview] = useState<any>();
+    const [filePreview, setFilePreview] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const previewUrlRef = useRef<string | null>(null);
+
+    const clearPreviewUrl = () => {
+        if (previewUrlRef.current) {
+            URL.revokeObjectURL(previewUrlRef.current);
+            previewUrlRef.current = null;
+        }
+    };
+
+    const setPreviewFromFile = (file: File) => {
+        clearPreviewUrl();
+        previewUrlRef.current = URL.createObjectURL(file);
+        setFilePreview(previewUrlRef.current);
+    };
+
+    useEffect(() => {
+        return () => clearPreviewUrl();
+    }, []);
 
     useEffect(() => {
         if (error?.message) setIsError({ message: error.message });
     }, [error?.message]);
 
     useEffect(() => {
-        // Show preview from form state if file exists and we're not in the middle of uploading
-        if (watch?.file && !isUploading) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setFilePreview(reader.result);
-            };
-            reader.readAsDataURL(watch.file);
+        // Only clear on expiry — fileKey alone is valid (File objects are not kept in form state).
+        if (!watch?.fileKey || !watch.uploadedAt) return;
+        if (isFileExpired(watch.uploadedAt)) {
+            setIsError({ message: "File has expired. Please re-upload the file." });
+            setValue(field, null);
+            clearPreviewUrl();
+            setFilePreview(null);
+            setSelectedFile(null);
         }
-    }, [watch?.file, isUploading]);
+    }, [watch?.fileKey, watch?.uploadedAt, field, setValue]);
 
-    useEffect(() => {
-        // Check if file is missing or expired
-        if (watch?.fileKey) {
-            if (isFileLost(watch)) {
-                // File is lost (fileKey exists but file object is missing)
-                if (watch.uploadedAt && isFileExpired(watch.uploadedAt)) {
-                    setIsError({ message: "File has expired. Please re-upload the file." });
-                    setValue(field, null);
-                } else {
-                    setIsError({ message: "File is missing. Please upload." });
-                    setValue(field, null);
-                }
-            }
-            // Note: If file exists but is expired, we don't show an error here
-            // because it will be automatically re-uploaded on submit
-        }
-    }, [watch?.fileKey, watch?.file, watch?.uploadedAt, field, setValue]);
-
-    // store the file key after uploading unto Kintone
     const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
         if (isError.message) setIsError({ message: "" });
+
         const files = e.target.files;
-        if (!files?.length) {
-            console.log("[FileUpload] No files selected");
-            return "could not read files";
+        if (!files?.length) return;
+
+        const file = files[0];
+        if (!file) return;
+
+        if (file.size > 50 * 1024 * 1024) {
+            setIsError({ message: "File size should be 50MB or less." });
+            if (inputRef.current) inputRef.current.value = "";
+            return;
         }
-        if (files.length > 0) {
-            const file = files[0];
-            if (file) {
-                console.log("[FileUpload] File selected:", {
-                    name: file.name,
-                    type: file.type,
-                    size: file.size,
-                    sizeMB: (file.size / (1024 * 1024)).toFixed(2),
-                    field: field,
+
+        setIsError({ message: "" });
+        setSelectedFile(file);
+
+        try {
+            setPreviewFromFile(file);
+        } catch {
+            // Preview is optional; upload can still proceed.
+            setFilePreview(null);
+        }
+
+        setIsUploading(true);
+        try {
+            const { fileKey } = await uploadFileToKintone(file);
+            setIsError({ message: "" });
+            // Store fileKey only — keeping File in RHF state is unreliable and triggered false "file lost" clears.
+            setValue(field, {
+                fileKey,
+                uploadedAt: new Date(),
+            });
+        } catch (error) {
+            console.error("[FileUpload] Upload failed:", error instanceof Error ? error.message : error);
+            if (error instanceof FileTooLargeError) {
+                setIsError({ message: "File size should be 50MB or less." });
+            } else if (error instanceof HeicConversionError) {
+                setIsError({ message: error.message });
+            } else if (error instanceof InvalidFileTypeError) {
+                const isSvg =
+                    error.mimeType.includes("svg") ||
+                    (selectedFile?.name || "").toLowerCase().endsWith(".svg");
+                setIsError({
+                    message: isSvg
+                        ? "SVG is not supported. Please use JPG or PNG."
+                        : "Please upload a JPG or PNG photo.",
                 });
-
-                // Validate file size first
-                if (file.size > 50 * 1024 * 1024) {
-                    // 50MB max
-                    console.warn("[FileUpload] File too large:", file.size, "bytes");
-                    setIsError({ message: "File size should be 50MB or less." });
-                    inputRef.current && (inputRef.current.value = "");
-                    return;
-                }
-
-                // Clear any previous errors
-                setIsError({ message: "" });
-                setSelectedFile(file);
-
-                // Show preview immediately after file selection (before upload)
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    setFilePreview(reader.result);
-                };
-                reader.readAsDataURL(file);
-
-                // Start upload process
-                setIsUploading(true);
-                console.log("[FileUpload] Starting upload for field:", field);
-                try {
-                    console.log("[FileUpload] Compressing if needed...");
-                    const { fileKey } = await uploadFileToKintone(file);
-                    console.log("[FileUpload] Upload successful. FileKey:", fileKey);
-                    setIsError({ message: "" });
-                    setValue(field, {
-                        file: file,
-                        fileKey,
-                        uploadedAt: new Date(),
-                    });
-                    setIsUploading(false);
-                } catch (error) {
-                    // Handle expected and unexpected errors
-                    console.error("[FileUpload] Exception during upload:", {
-                        error: error,
-                        errorMessage: error instanceof Error ? error.message : String(error),
-                        errorStack: error instanceof Error ? error.stack : undefined,
-                        errorName: error instanceof Error ? error.name : undefined,
-                        fullError: JSON.stringify(error, Object.getOwnPropertyNames(error)),
-                    });
-                    if (error instanceof FileTooLargeError) {
-                        setIsError({ message: "File size should be 50MB or less." });
-                    } else if (error instanceof HeicConversionError) {
-                        setIsError({ message: "Could not process HEIC/HEIF. Please convert to JPG/PNG and try again." });
-                    } else if (error instanceof InvalidFileTypeError) {
-                        setIsError({ message: "Please upload an image file." });
-                    } else if (error instanceof KintoneUploadError) {
-                        setIsError({ message: "Could not upload. Please try again." });
-                    } else {
-                        setIsError({ message: "An error occurred during upload. Please try again." });
-                    }
-                    setIsUploading(false);
-                } finally {
-                    // Clear input value to allow re-selecting the same file if needed
-                    if (inputRef.current) {
-                        inputRef.current.value = "";
-                    }
-                    console.log("[FileUpload] Upload process completed for field:", field);
-                }
+            } else if (error instanceof ImageProcessingError) {
+                setIsError({ message: uploadFailedMessage(photoOptional) });
+            } else if (error instanceof KintoneUploadError) {
+                setIsError({ message: uploadFailedMessage(photoOptional) });
+            } else {
+                setIsError({ message: uploadFailedMessage(photoOptional) });
             }
+            setValue(field, null);
+            clearPreviewUrl();
+            setFilePreview(null);
+            setSelectedFile(null);
+        } finally {
+            setIsUploading(false);
+            if (inputRef.current) inputRef.current.value = "";
         }
     };
+
+    const hasUploaded = Boolean(watch?.fileKey);
 
     return (
         <div className="flex flex-col w-full space-y-1 py-3 grow md:max-w-sm">
@@ -184,15 +191,16 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error,
             </div>
             <input
                 ref={inputRef}
-                onChange={handleUpload}
+                onChange={(event) => {
+                    void handleUpload(event);
+                }}
                 type="file"
-                accept="image/*,.heic,.heif"
+                accept="image/jpeg,image/png,image/webp,image/gif,.heic,.heif"
                 className="hidden"
             />
-            {/* custom upload button and preview and file name to display */}
             <div className="">
                 <button
-                    name={field} // for form validation scrollIntoView
+                    name={field}
                     type="button"
                     disabled={isUploading}
                     className={`bg-primary text-white px-4 py-2 rounded-full w-40 flex justify-center font-bold ${
@@ -230,10 +238,10 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error,
                             {selectedFile?.name || watch?.file?.name}
                         </div>
                     </div>
-                    {/* delete image button - disabled during upload */}
                     <span
                         onClick={() => {
                             if (!isUploading) {
+                                clearPreviewUrl();
                                 setFilePreview(null);
                                 setSelectedFile(null);
                                 setValue(field, null);
@@ -250,7 +258,10 @@ const FileUpload: FC<FileUploadProps> = ({ label, setValue, watch, field, error,
                     </span>
                 </div>
             )}
-            {isError.message && <div className="text-red-500 pl-1 pt-1 text-xs">{isError?.message}</div>}
+            {!filePreview && hasUploaded && !isUploading && (
+                <div className="text-xs text-green-700 pl-1">Photo uploaded</div>
+            )}
+            {isError.message && <div className="text-red-500 pl-1 pt-1 text-xs">{isError.message}</div>}
         </div>
     );
 };

@@ -1,7 +1,7 @@
 "use client";
 import { FC, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { FieldErrors, SubmitHandler, useForm } from "react-hook-form";
 
 import FirstPage from "./views/FirstPage";
 
@@ -14,6 +14,12 @@ import Spinner from "@/components/spinner/Spinner";
 
 type FacelemFormProps = { ticket: string };
 
+const scrollToFirstError = (errors: FieldErrors<FacelemType>) => {
+    const firstErrorField = Object.keys(errors)[0];
+    if (!firstErrorField) return;
+    document.querySelector(`[name="${firstErrorField}"]`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+};
+
 const FacelemForm: FC<FacelemFormProps> = ({ ticket }) => {
     const [isLoading, setIsLoading] = useState(false);
     const t = useDictionary();
@@ -24,35 +30,25 @@ const FacelemForm: FC<FacelemFormProps> = ({ ticket }) => {
         if (!window.confirm(t.common.wantToSubmit)) return;
         setIsLoading(true);
         try {
-            const validate = async () => {
-                const isValids = await trigger();
-                if (isValids) return true;
-                else {
-                    return false;
-                }
-            };
-            if (!(await validate())) return;
             const res = await handleSubmit_facelem(data, t);
             if (res) location.href = "/facelem/thank-you";
             else alert("Something went wrong. Please try again later.");
         } catch (e) {
             logError(e, { data }, "handleSubmit_facelem");
+            alert("Something went wrong. Please try again later.");
         } finally {
             setIsLoading(false);
         }
     };
-    const onError = () => {
-        window.scrollTo(0, 0); // scroll to top
+    const onError = (errors: FieldErrors<FacelemType>) => {
+        scrollToFirstError(errors);
     };
 
     const {
         handleSubmit,
-        formState: { errors: formatError, isValid, isDirty, isSubmitting },
-        trigger,
+        formState: { errors: formatError },
         watch,
-        getValues,
         setValue,
-        control,
         register,
     } = useForm<FacelemType>({
         mode: "onChange",
