@@ -1,7 +1,13 @@
 import logError from "@/common/logError";
 import { FachighType } from "../schema/fachighSchema";
 import sendConfirmationEmail_high from "@/hooks/confirmation/fac/sendConfirmationEmail_high";
-import { checkAndReuploadFile, needsReupload, isFileLost } from "@/lib/utils";
+import { needsReupload, isFileLost, FileWithMeta } from "@/lib/utils";
+
+const normalizeOptionalPhoto = (photo: FileWithMeta): FileWithMeta => {
+    if (!photo?.fileKey) return null;
+    if (needsReupload(photo) || isFileLost(photo)) return null;
+    return photo;
+};
 
 const joinNonEmpty = (...parts: (string | undefined | null | false)[]) =>
     parts
@@ -110,29 +116,7 @@ const createAddRecord = (formResponse: FachighType) => {
 
 export const handleSubmit_fachigh = async (formResponse: FachighType, t: any) => {
     try {
-        // Check photo for expiration or loss, even if file object is missing
-        if (formResponse.photo && needsReupload(formResponse.photo)) {
-            if (isFileLost(formResponse.photo)) {
-                // File is lost - user must re-upload
-                alert("The photo has expired or is missing. Please re-upload the photo before submitting the form.");
-                return false;
-            } else if (formResponse.photo.file) {
-                // File exists but is expired - try to re-upload
-                const reuploaded = await checkAndReuploadFile(formResponse.photo);
-                if (reuploaded === null) {
-                    // Re-upload failed - user must re-upload
-                    alert("The photo has expired and could not be automatically re-uploaded. Please re-upload the photo before submitting the form.");
-                    return false;
-                } else {
-                    // Update with new fileKey
-                    formResponse.photo = reuploaded;
-                }
-            } else {
-                // File is expired and missing - user must re-upload
-                alert("The photo has expired or is missing. Please re-upload the photo before submitting the form.");
-                return false;
-            }
-        }
+        formResponse.photo = normalizeOptionalPhoto(formResponse.photo ?? null);
 
         const addRecord = createAddRecord(formResponse);
         const res = await fetch("/api/kintone/postKintone_fac", {
@@ -152,21 +136,10 @@ export const handleSubmit_fachigh = async (formResponse: FachighType, t: any) =>
             });
             return true;
         } else {
-            // Check for specific error messages
-            try {
-                const errorData = await res.json();
-                if (errorData.error?.includes("expired")) {
-                    alert("One or more files have expired. Please re-upload the files and try again.");
-                } else {
-                    alert("Something went wrong, please try again. If the problem persists, please contact us.");
-                }
-            } catch {
-                alert("Something went wrong, please try again. If the problem persists, please contact us.");
-            }
             return false;
         }
     } catch (e) {
-        logError(e, formResponse, "handleSubmit_fachigh");
+        void logError(e, formResponse, "handleSubmit_fachigh");
         return false;
     }
 };

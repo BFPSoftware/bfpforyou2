@@ -20,10 +20,9 @@ type SecondPageProps = {
 };
 const SecondPage: FC<SecondPageProps> = ({ setPage, errors, register, control, useWatch, trigger, t }) => {
     const fields: (keyof ImmigrantType)[] = ["spouse", "children"];
+
     const validate = async () => {
-        const isValids = await trigger(fields);
-        if (isValids) return true;
-        else return false;
+        return await trigger(fields, { shouldFocus: true });
     };
 
     const isMarried = useWatch({ control, name: "spouse.maritalStatus" });
@@ -59,6 +58,7 @@ const SecondPage: FC<SecondPageProps> = ({ setPage, errors, register, control, u
 
             <div className="flex flex-col mt-5">
                 <button
+                    type="button"
                     className="btn-theme"
                     onClick={async () => {
                         if (await validate()) setPage(2);

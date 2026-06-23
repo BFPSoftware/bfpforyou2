@@ -46,11 +46,16 @@ export class KintoneUploadError extends Error {
     }
 }
 
+export type UploadPhase = "converting" | "compressing" | "uploading";
+
+export type UploadProgressCallback = (phase: UploadPhase) => void;
+
 const MAX_INPUT_BYTES = 50 * 1024 * 1024; // 50MB
 const COMPRESS_THRESHOLD_BYTES = 4 * 1024 * 1024; // 4MB
 const COMPRESS_TARGET_MB = 3; // 3MB
 const VERCEL_UPLOAD_CAP_BYTES = 4 * 1024 * 1024; // keep below 4.5MB hard cap
 const MAX_WIDTH_OR_HEIGHT = 2560;
+const FORCE_RESIZE_DIMENSION = 4096;
 /** Always JPEG for storage compatibility; lossy compression keeps size down vs PNG. */
 const OUTPUT_FILE_TYPE = "image/jpeg";
 
@@ -110,9 +115,54 @@ function withResolvedMime(file: File): File {
     return new File([file], file.name, { type: mime, lastModified: file.lastModified });
 }
 
-async function convertHeicIfNeeded(file: File): Promise<File> {
+function getImageDimensions(file: File): Promise<{ width: number; height: number } | null> {
+    return new Promise((resolve) => {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+            URL.revokeObjectURL(url);
+            resolve({ width: img.naturalWidth, height: img.naturalHeight });
+        };
+        img.onerror = () => {
+            URL.revokeObjectURL(url);
+            resolve(null);
+        };
+        img.src = url;
+    });
+}
+
+async function needsDimensionResize(file: File): Promise<boolean> {
+    const dims = await getImageDimensions(file);
+    if (!dims) return false;
+    return dims.width > FORCE_RESIZE_DIMENSION || dims.height > FORCE_RESIZE_DIMENSION;
+}
+
+type CompressionOptions = {
+    maxSizeMB: number;
+    maxWidthOrHeight: number;
+    initialQuality: number;
+};
+
+async function compressImage(file: File, options: CompressionOptions): Promise<Blob> {
+    const { default: imageCompression } = await import("browser-image-compression");
+    const base = {
+        maxSizeMB: options.maxSizeMB,
+        maxWidthOrHeight: options.maxWidthOrHeight,
+        fileType: OUTPUT_FILE_TYPE,
+        initialQuality: options.initialQuality,
+    };
+
+    try {
+        return await imageCompression(file, { ...base, useWebWorker: true });
+    } catch {
+        return await imageCompression(file, { ...base, useWebWorker: false });
+    }
+}
+
+async function convertHeicIfNeeded(file: File, onProgress?: UploadProgressCallback): Promise<File> {
     if (!looksLikeHeic(file)) return file;
 
+    onProgress?.("converting");
     try {
         const { default: heic2any } = await import("heic2any");
         const converted = await heic2any({
@@ -129,51 +179,43 @@ async function convertHeicIfNeeded(file: File): Promise<File> {
     }
 }
 
-/** Small PNG/WebP/etc. skip `compressIfNeeded`; still normalize to JPEG for storage. */
-async function transcodeToJpegIfNeeded(file: File): Promise<File> {
+/** Small PNG/WebP/etc. skip heavy `compressIfNeeded`; still normalize to JPEG for storage. */
+async function transcodeToJpegIfNeeded(file: File, onProgress?: UploadProgressCallback): Promise<File> {
     if (isJpegMime(file)) return file;
 
+    onProgress?.("compressing");
     try {
-        const { default: imageCompression } = await import("browser-image-compression");
-        const out = await imageCompression(file, {
+        const out = await compressImage(file, {
             maxSizeMB: 100,
             maxWidthOrHeight: MAX_WIDTH_OR_HEIGHT,
-            fileType: OUTPUT_FILE_TYPE,
             initialQuality: 0.92,
-            useWebWorker: true,
         });
-
         return ensureJpegFile(out, file);
     } catch {
         throw new ImageProcessingError();
     }
 }
 
-async function compressIfNeeded(file: File): Promise<File> {
-    if (file.size < COMPRESS_THRESHOLD_BYTES) return file;
+async function compressIfNeeded(file: File, onProgress?: UploadProgressCallback): Promise<File> {
+    const oversized = await needsDimensionResize(file);
+    if (file.size < COMPRESS_THRESHOLD_BYTES && !oversized) return file;
 
+    onProgress?.("compressing");
     try {
-        const { default: imageCompression } = await import("browser-image-compression");
-        const compressed1 = await imageCompression(file, {
+        const compressed1 = await compressImage(file, {
             maxSizeMB: COMPRESS_TARGET_MB,
             maxWidthOrHeight: MAX_WIDTH_OR_HEIGHT,
-            fileType: OUTPUT_FILE_TYPE,
             initialQuality: 0.8,
-            useWebWorker: true,
         });
 
         const out1 = ensureJpegFile(compressed1, file);
 
-        // Safety valve: if still too large, run a second pass with lower quality.
         if (out1.size > VERCEL_UPLOAD_CAP_BYTES) {
-            const compressed2 = await imageCompression(out1, {
+            const compressed2 = await compressImage(out1, {
                 maxSizeMB: COMPRESS_TARGET_MB,
                 maxWidthOrHeight: 1920,
-                fileType: OUTPUT_FILE_TYPE,
                 initialQuality: 0.65,
-                useWebWorker: true,
             });
-
             return ensureJpegFile(compressed2, file);
         }
 
@@ -183,7 +225,10 @@ async function compressIfNeeded(file: File): Promise<File> {
     }
 }
 
-export async function uploadFileToKintone(file: File): Promise<{ fileKey: string }> {
+export async function uploadFileToKintone(
+    file: File,
+    onProgress?: UploadProgressCallback
+): Promise<{ fileKey: string }> {
     if (!file) throw new Error("No file provided");
 
     if (file.size > MAX_INPUT_BYTES) {
@@ -192,20 +237,21 @@ export async function uploadFileToKintone(file: File): Promise<{ fileKey: string
 
     assertSupportedImage(file);
     const normalizedInput = withResolvedMime(file);
-    const convertedInput = await convertHeicIfNeeded(normalizedInput);
+    const convertedInput = await convertHeicIfNeeded(normalizedInput, onProgress);
 
     const mimeType = resolveImageMime(convertedInput);
     if (!mimeType.startsWith("image/")) {
         throw new InvalidFileTypeError(mimeType);
     }
 
-    const jpegNormalized = await transcodeToJpegIfNeeded(convertedInput);
-    const toUpload = await compressIfNeeded(jpegNormalized);
+    const jpegNormalized = await transcodeToJpegIfNeeded(convertedInput, onProgress);
+    const toUpload = await compressIfNeeded(jpegNormalized, onProgress);
 
     if (toUpload.size > VERCEL_UPLOAD_CAP_BYTES) {
         throw new FileTooLargeError(VERCEL_UPLOAD_CAP_BYTES, toUpload.size);
     }
 
+    onProgress?.("uploading");
     const { uploadFile } = await import("@/app/[lang]/actions/kintone/uploadFile");
 
     let res;
@@ -228,4 +274,3 @@ export async function uploadFileToKintone(file: File): Promise<{ fileKey: string
         failure: res?.data?.failure,
     });
 }
-

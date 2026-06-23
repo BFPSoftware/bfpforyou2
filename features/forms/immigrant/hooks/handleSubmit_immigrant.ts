@@ -1,8 +1,16 @@
 import logError from "@/common/logError";
 import { ImmigrantType } from "../schema/immigrantSchema";
 import sendConfirmationEmail from "@/hooks/confirmation/immigrant/sendConfirmationEmail";
-import { checkAndReuploadFile, needsReupload, isFileLost } from "@/lib/utils";
+import { needsReupload, isFileLost, FileWithMeta } from "@/lib/utils";
 import { DateTime } from "luxon";
+
+type AttachmentField = "attachment1" | "attachment2" | "attachment3";
+
+const normalizeOptionalAttachment = (value: FileWithMeta): FileWithMeta => {
+    if (!value?.fileKey) return null;
+    if (needsReupload(value) || isFileLost(value)) return null;
+    return value;
+};
 
 const convertMonthShortToNumber = (month: string) => {
     switch (month) {
@@ -90,7 +98,7 @@ const createAddRecord = (formResponse: ImmigrantType) => {
                     ? []
                     : formResponse.children.childTable &&
                       formResponse.children.childTable.map((child) => {
-                          if (!child || !child.childBirthday || !child.childBirthday.month || !child.childBirthday.day) return;
+                          if (!child || !child.childBirthday || !child.childBirthday.month || !child.childBirthday.day) return null;
                           const childBirthday = `${zeroPad(child.childBirthday.day)}/${convertMonthShortToNumber(child.childBirthday.month)}/${child.childBirthday.year}`;
                           return {
                               value: {
@@ -101,7 +109,7 @@ const createAddRecord = (formResponse: ImmigrantType) => {
                                   accompaniedInIsrael: { value: child.childAccompanied },
                               },
                           };
-                      }),
+                      }).filter((row): row is NonNullable<typeof row> => row != null),
         },
         aliyahDate: { value: DateTime.fromISO(formResponse.aliyahDate).toFormat("dd/MM/yyyy") },
         whereHeardOfUs: { value: formResponse.whereHeardOfUs },
@@ -110,60 +118,9 @@ const createAddRecord = (formResponse: ImmigrantType) => {
 
 export const handleSubmit_newImmigrant = async (formResponse: ImmigrantType, t: any) => {
     try {
-        // Check all attachments for expiration or loss, even if file object is missing
-        const attachments = [
-            { field: "attachment1", value: formResponse.attachment1 },
-            { field: "attachment2", value: formResponse.attachment2 },
-            { field: "attachment3", value: formResponse.attachment3 },
-        ];
-
-        const expiredOrLostAttachments: string[] = [];
-
-        for (const attachment of attachments) {
-            if (attachment.value) {
-                // Check if file needs re-upload (expired or lost)
-                if (needsReupload(attachment.value)) {
-                    if (isFileLost(attachment.value)) {
-                        // File is lost - user must re-upload
-                        expiredOrLostAttachments.push(attachment.field);
-                    } else if (attachment.value.file) {
-                        // File exists but is expired - try to re-upload
-                        const reuploaded = await checkAndReuploadFile(attachment.value);
-                        if (reuploaded === null) {
-                            // Re-upload failed - user must re-upload
-                            expiredOrLostAttachments.push(attachment.field);
-                        } else {
-                            // Update with new fileKey
-                            if (attachment.field === "attachment1") {
-                                formResponse.attachment1 = reuploaded;
-                            } else if (attachment.field === "attachment2") {
-                                formResponse.attachment2 = reuploaded;
-                            } else if (attachment.field === "attachment3") {
-                                formResponse.attachment3 = reuploaded;
-                            }
-                        }
-                    } else {
-                        // File is expired and missing - user must re-upload
-                        expiredOrLostAttachments.push(attachment.field);
-                    }
-                }
-            }
-        }
-
-        // Prevent submission if any files are expired or lost
-        if (expiredOrLostAttachments.length > 0) {
-            const fieldNames = expiredOrLostAttachments
-                .map((field) => {
-                    if (field === "attachment1") return "Attachment 1";
-                    if (field === "attachment2") return "Attachment 2";
-                    if (field === "attachment3") return "Attachment 3";
-                    return field;
-                })
-                .join(", ");
-            alert(
-                `The following file(s) have expired or are missing: ${fieldNames}. Please re-upload these files before submitting the form.`
-            );
-            return false;
+        const attachmentFields: AttachmentField[] = ["attachment1", "attachment2", "attachment3"];
+        for (const field of attachmentFields) {
+            formResponse[field] = normalizeOptionalAttachment(formResponse[field] ?? null);
         }
 
         const addRecord = createAddRecord(formResponse);
@@ -183,21 +140,10 @@ export const handleSubmit_newImmigrant = async (formResponse: ImmigrantType, t: 
             });
             return true;
         } else {
-            // Check for specific error messages
-            try {
-                const errorData = await res.json();
-                if (errorData.error?.includes("expired")) {
-                    alert("One or more files have expired. Please re-upload the files and try again.");
-                } else {
-                    alert("Something went wrong, please try again. If the problem persists, please contact us.");
-                }
-            } catch {
-                alert("Something went wrong, please try again. If the problem persists, please contact us.");
-            }
             return false;
         }
     } catch (e) {
-        logError(e, formResponse, "handleSubmit_newImmigrant");
+        void logError(e, formResponse, "handleSubmit_newImmigrant");
         return false;
     }
 };

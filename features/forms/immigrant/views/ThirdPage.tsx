@@ -12,8 +12,10 @@ type ThirdPageProps = {
     errors: FieldErrors<ImmigrantType>;
     register: UseFormRegister<ImmigrantType>;
     t: Dictionary;
+    submitError?: string;
+    isSubmitDisabled?: boolean;
 };
-const ThirdPage: FC<ThirdPageProps> = ({ setPage, errors, register, t }) => {
+const ThirdPage: FC<ThirdPageProps> = ({ setPage, errors, register, t, submitError, isSubmitDisabled }) => {
     return (
         <>
             <div className="text-2xl font-bold my-10">
@@ -27,8 +29,10 @@ const ThirdPage: FC<ThirdPageProps> = ({ setPage, errors, register, t }) => {
                 <Select label={t.whereHeardOfUs.title} options={whereHeardOfUs(t)} register={register("whereHeardOfUs")} error={errors.whereHeardOfUs || undefined} />
             </div>
 
+            {submitError && <div className="text-red-500 text-sm mb-4">{submitError}</div>}
+
             <div className="flex flex-col mt-5">
-                <button className="btn-theme" type="submit">
+                <button className="btn-theme" type="submit" disabled={isSubmitDisabled}>
                     {t.button.submit}
                 </button>
                 <button type="button" className="btn-gray" onClick={() => setPage(1)}>

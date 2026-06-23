@@ -1,31 +1,41 @@
 import { ErrorLogsAppID } from "./env";
 import client from "@/hooks/useKintone";
 
-const logError = (e: any, records?: any, functionName?: string) => {
-    console.log(e);
-    if (e.errors) console.log(e.errors);
-    const app = "bfpforyou";
-    
-    // Try to stringify records, but catch errors (e.g., when request body is already consumed)
-    let recordsString = "";
+/** Logs to Kintone error app. Never throws — safe to call from catch blocks and error boundaries. */
+const logError = async (e: unknown, records?: unknown, functionName?: string): Promise<void> => {
     try {
-        recordsString = JSON.stringify(records);
-    } catch (stringifyError: any) {
-        // If stringify fails (e.g., request body already consumed), log a fallback message
-        recordsString = `[Unable to serialize records: ${stringifyError?.message || "Request body may have been consumed"}]`;
+        console.error(e);
+        if (e && typeof e === "object" && "errors" in e) {
+            console.error((e as { errors: unknown }).errors);
+        }
+
+        const app = "bfpforyou";
+        let recordsString = "";
+        try {
+            recordsString = JSON.stringify(records);
+        } catch (stringifyError: unknown) {
+            const msg = stringifyError instanceof Error ? stringifyError.message : "serialization failed";
+            recordsString = `[Unable to serialize records: ${msg}]`;
+        }
+
+        const stack =
+            e instanceof Error && e.stack
+                ? e.stack
+                : e instanceof Error
+                  ? e.message
+                  : String(e);
+        const err = `Fn: ${functionName ?? "unknown"} \n${stack}\nRecord:${recordsString}`;
+
+        await client.record.addRecord({
+            app: ErrorLogsAppID as string,
+            record: {
+                app: { value: app },
+                log: { value: err },
+            },
+        });
+    } catch (loggingFailure) {
+        console.error("[logError] Failed to persist error log:", loggingFailure);
     }
-    
-    const err = `Fn: ${functionName} \n` + (e.stack ? e.stack.toString() : e) + `\nRecord:${recordsString}`;
-    return client.record.addRecord({
-        app: ErrorLogsAppID as string,
-        record: {
-            app: {
-                value: app,
-            },
-            log: {
-                value: err,
-            },
-        },
-    });
 };
+
 export default logError;

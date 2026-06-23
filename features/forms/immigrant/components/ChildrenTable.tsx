@@ -52,6 +52,13 @@ const Children: FC<ChildrenProps> = ({ errors, register, control, useWatch, t })
         setOpenItem(`item-${fields.length}`); // Open the newly added item
     };
 
+    useEffect(() => {
+        if (fields.length === 0) {
+            appendRow();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- seed one row once
+    }, [fields.length]);
+
     return (
         <div className="max-w-4xl">
             <label className="font-bold">Children</label>
@@ -61,7 +68,6 @@ const Children: FC<ChildrenProps> = ({ errors, register, control, useWatch, t })
                     <AccordionContent>Yes. It adheres to the WAI-ARIA design pattern.</AccordionContent>
                 </AccordionItem> */}
                 {fields.map((field, index) => {
-                    if (fields.length == 0) appendRow();
                     return (
                         <AccordionItem key={field.id} value={`item-${index}`}>
                             <div className="flex items-center">

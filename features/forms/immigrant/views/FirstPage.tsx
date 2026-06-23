@@ -19,18 +19,29 @@ type FirstPageProps = {
     watch: UseFormWatch<ImmigrantType>;
 };
 const FirstPage: FC<FirstPageProps> = ({ setPage, errors, register, setValue, trigger, t, watch }) => {
-    const fields: (keyof ImmigrantType)[] = ["firstName", "lastName", "idType", "idNumber", "birthday", "attachment1", "attachment2", "attachment3", "gender", "originCity", "originCountry", "nativeLanguage", "phone", "email", "address1", "address2", "city", "zip"];
+    const fields: (keyof ImmigrantType)[] = [
+        "firstName",
+        "lastName",
+        "idType",
+        "idNumber",
+        "birthday",
+        "attachment1",
+        "attachment2",
+        "attachment3",
+        "gender",
+        "originCity",
+        "originCountry",
+        "nativeLanguage",
+        "phone",
+        "email",
+        "address1",
+        "address2",
+        "city",
+        "zip",
+    ];
+
     const validate = async () => {
-        const isValids = await trigger(fields);
-        if (isValids) return true;
-        else {
-            const firstErrorField = Object.keys(errors).filter((key: any) => fields.includes(key))[0];
-            const errorElement = document.querySelector(`[name="${firstErrorField}"]`);
-            if (errorElement) {
-                errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
-            }
-            return false;
-        }
+        return await trigger(fields, { shouldFocus: true });
     };
 
     const attachment1 = watch("attachment1");
@@ -56,12 +67,39 @@ const FirstPage: FC<FirstPageProps> = ({ setPage, errors, register, setValue, tr
                 <span className="text-red-500">*</span>
             </div>
             <div className="flex flex-wrap mb-6">
-                <FileUpload label={t.attachment1} setValue={setValue} field="attachment1" watch={attachment1} error={errors.attachment1 || undefined} />
-                <FileUpload label={t.attachment2} setValue={setValue} field="attachment2" watch={attachment2} error={errors.attachment2 || undefined} />
-                <FileUpload label={t.attachment3} setValue={setValue} field="attachment3" watch={attachment3} error={errors.attachment3 || undefined} />
+                <FileUpload
+                    label={t.attachment1}
+                    setValue={setValue}
+                    field="attachment1"
+                    watch={attachment1}
+                    error={errors.attachment1 || undefined}
+                    fieldOptional
+                />
+                <FileUpload
+                    label={t.attachment2}
+                    setValue={setValue}
+                    field="attachment2"
+                    watch={attachment2}
+                    error={errors.attachment2 || undefined}
+                    fieldOptional
+                />
+                <FileUpload
+                    label={t.attachment3}
+                    setValue={setValue}
+                    field="attachment3"
+                    watch={attachment3}
+                    error={errors.attachment3 || undefined}
+                    fieldOptional
+                />
             </div>
             <label className="flex space-y-1 mb-6">
-                <Birthday label={t.birthday} register_day={register("birthday.day")} register_month={register("birthday.month")} register_year={register("birthday.year")} error={errors.birthday || undefined} />
+                <Birthday
+                    label={t.birthday}
+                    register_day={register("birthday.day")}
+                    register_month={register("birthday.month")}
+                    register_year={register("birthday.year")}
+                    error={errors.birthday || undefined}
+                />
             </label>
             <div className="flex flex-wrap mb-6">
                 <Radio label={t.gender.title} options={Gender(t)} register={register("gender")} required error={errors.gender || undefined} />
@@ -69,7 +107,13 @@ const FirstPage: FC<FirstPageProps> = ({ setPage, errors, register, setValue, tr
             <div className="flex flex-wrap mb-6">
                 <Input label={t.originCity} register={register("originCity")} required error={errors.originCity || undefined} />
                 <Input label={t.originCountry} register={register("originCountry")} required error={errors.originCountry || undefined} />
-                <Select label={t.nativeLanguage.title} options={Language(t)} register={register("nativeLanguage")} required error={errors.nativeLanguage || undefined} />
+                <Select
+                    label={t.nativeLanguage.title}
+                    options={Language(t)}
+                    register={register("nativeLanguage")}
+                    required
+                    error={errors.nativeLanguage || undefined}
+                />
             </div>
 
             <div className="text-2xl font-bold my-10">
@@ -90,6 +134,7 @@ const FirstPage: FC<FirstPageProps> = ({ setPage, errors, register, setValue, tr
 
             <div className="flex mt-5">
                 <button
+                    type="button"
                     onClick={async () => {
                         const valid = await validate();
                         if (valid) setPage(1);

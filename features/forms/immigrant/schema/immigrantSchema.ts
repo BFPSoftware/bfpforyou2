@@ -15,23 +15,19 @@ const file = z
         fileKey: z.string().min(1).max(50, "File could not be uploaded"),
         uploadedAt: z.date().optional(),
     })
-    .nullable()
     .refine((data) => {
-        if (data == null) return false;
-        
-        // If we have a fileKey but no file object, check if it's expired
-        // If file object exists, expiration will be handled by re-upload on submit
         if (data.fileKey && !data.file && data.uploadedAt) {
             const expirationDate = new Date(data.uploadedAt);
             expirationDate.setDate(expirationDate.getDate() + 3);
             if (new Date() > expirationDate) {
-                // File is lost and expired - user must re-upload
                 return false;
             }
         }
-        
         return true;
-    }, "This field is required or the uploaded file has expired. Please re-upload the file.");
+    }, "The uploaded file has expired. Please re-upload the file.");
+
+/** Attachments are optional in validation; UI still encourages upload with section asterisk. */
+const attachmentOptional = z.union([z.null(), file]).optional();
 
 const ticket: z.ZodString = z.string().min(1).max(9);
 const formLang: z.ZodString = z.string().min(1).max(20);
@@ -58,10 +54,10 @@ const birthday = z.object({
     month: z.string().max(5, { message: "Required" }),
     year: z.string().max(5, { message: "Required" }),
 });
-// attachment 1-3 contains file key
-const attachment1 = file;
-const attachment2 = file;
-const attachment3 = file;
+// attachment 1-3 contains file key (optional — encouraged in UI)
+const attachment1 = attachmentOptional;
+const attachment2 = attachmentOptional;
+const attachment3 = attachmentOptional;
 const originCity: z.ZodString = z.string().min(1).max(50);
 const originCountry: z.ZodString = z.string().min(1).max(50);
 const nativeLanguage: z.ZodString = z.string().min(1).max(50);

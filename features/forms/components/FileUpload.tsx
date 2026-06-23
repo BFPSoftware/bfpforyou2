@@ -9,9 +9,12 @@ import {
     ImageProcessingError,
     InvalidFileTypeError,
     KintoneUploadError,
+    UploadPhase,
     uploadFileToKintone,
 } from "@/lib/kintone-client-upload";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useUploadFormContext } from "./UploadFormContext";
+import logError from "@/common/logError";
 
 type FileUploadProps = {
     label: string;
@@ -26,14 +29,29 @@ type FileUploadProps = {
     };
     /** Red asterisk next to label only; does not enforce validation by itself. */
     showRequiredAsterisk?: boolean;
-    /** When true, error copy notes the form may be submitted without a photo. */
+    /** When true, error copy notes the form may be submitted without this file. */
     photoOptional?: boolean;
+    /** Alias for photoOptional — used for immigrant attachments. */
+    fieldOptional?: boolean;
+    /** Label for success state; defaults based on fieldOptional. */
+    successLabel?: string;
 };
 
-const uploadFailedMessage = (photoOptional: boolean) =>
-    photoOptional
-        ? "Image could not be uploaded. You can continue and submit the form without a photo."
-        : "Image could not be uploaded. Please try again.";
+const uploadFailedMessage = (optional: boolean) =>
+    optional
+        ? "File could not be uploaded. You can continue and submit the form without this file."
+        : "File could not be uploaded. Please try again.";
+
+const phaseLabel = (phase: UploadPhase): string => {
+    switch (phase) {
+        case "converting":
+            return "Converting…";
+        case "compressing":
+            return "Compressing…";
+        case "uploading":
+            return "Uploading…";
+    }
+};
 
 const FileUpload: FC<FileUploadProps> = ({
     label,
@@ -44,13 +62,20 @@ const FileUpload: FC<FileUploadProps> = ({
     info,
     showRequiredAsterisk,
     photoOptional = false,
+    fieldOptional,
+    successLabel,
 }) => {
+    const isOptional = fieldOptional ?? photoOptional;
+    const uploadedLabel = successLabel ?? (isOptional ? "File uploaded" : "Photo uploaded");
+
     const [isError, setIsError] = useState<{ message: string }>({ message: error?.message || "" });
     const [filePreview, setFilePreview] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
+    const [uploadPhase, setUploadPhase] = useState<UploadPhase | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const previewUrlRef = useRef<string | null>(null);
+    const { setFieldUploading } = useUploadFormContext();
 
     const clearPreviewUrl = () => {
         if (previewUrlRef.current) {
@@ -70,11 +95,15 @@ const FileUpload: FC<FileUploadProps> = ({
     }, []);
 
     useEffect(() => {
+        setFieldUploading(field, isUploading);
+        return () => setFieldUploading(field, false);
+    }, [field, isUploading, setFieldUploading]);
+
+    useEffect(() => {
         if (error?.message) setIsError({ message: error.message });
     }, [error?.message]);
 
     useEffect(() => {
-        // Only clear on expiry — fileKey alone is valid (File objects are not kept in form state).
         if (!watch?.fileKey || !watch.uploadedAt) return;
         if (isFileExpired(watch.uploadedAt)) {
             setIsError({ message: "File has expired. Please re-upload the file." });
@@ -106,40 +135,49 @@ const FileUpload: FC<FileUploadProps> = ({
         try {
             setPreviewFromFile(file);
         } catch {
-            // Preview is optional; upload can still proceed.
             setFilePreview(null);
         }
 
         setIsUploading(true);
+        setUploadPhase("compressing");
         try {
-            const { fileKey } = await uploadFileToKintone(file);
+            const { fileKey } = await uploadFileToKintone(file, (phase) => setUploadPhase(phase));
             setIsError({ message: "" });
-            // Store fileKey only — keeping File in RHF state is unreliable and triggered false "file lost" clears.
             setValue(field, {
                 fileKey,
                 uploadedAt: new Date(),
             });
         } catch (error) {
-            console.error("[FileUpload] Upload failed:", error instanceof Error ? error.message : error);
+            void logError(
+                error,
+                {
+                    field,
+                    fileName: file.name,
+                    fileSize: file.size,
+                    fileType: file.type || resolveMimeFromName(file.name),
+                    errorName: error instanceof Error ? error.name : "unknown",
+                },
+                "FileUpload"
+            );
+
             if (error instanceof FileTooLargeError) {
                 setIsError({ message: "File size should be 50MB or less." });
             } else if (error instanceof HeicConversionError) {
                 setIsError({ message: error.message });
             } else if (error instanceof InvalidFileTypeError) {
                 const isSvg =
-                    error.mimeType.includes("svg") ||
-                    (selectedFile?.name || "").toLowerCase().endsWith(".svg");
+                    error.mimeType.includes("svg") || file.name.toLowerCase().endsWith(".svg");
                 setIsError({
                     message: isSvg
                         ? "SVG is not supported. Please use JPG or PNG."
-                        : "Please upload a JPG or PNG photo.",
+                        : "Please upload a JPG or PNG image.",
                 });
             } else if (error instanceof ImageProcessingError) {
-                setIsError({ message: uploadFailedMessage(photoOptional) });
+                setIsError({ message: uploadFailedMessage(isOptional) });
             } else if (error instanceof KintoneUploadError) {
-                setIsError({ message: uploadFailedMessage(photoOptional) });
+                setIsError({ message: uploadFailedMessage(isOptional) });
             } else {
-                setIsError({ message: uploadFailedMessage(photoOptional) });
+                setIsError({ message: uploadFailedMessage(isOptional) });
             }
             setValue(field, null);
             clearPreviewUrl();
@@ -147,11 +185,13 @@ const FileUpload: FC<FileUploadProps> = ({
             setSelectedFile(null);
         } finally {
             setIsUploading(false);
+            setUploadPhase(null);
             if (inputRef.current) inputRef.current.value = "";
         }
     };
 
     const hasUploaded = Boolean(watch?.fileKey);
+    const buttonLabel = isUploading && uploadPhase ? phaseLabel(uploadPhase) : "Upload";
 
     return (
         <div className="flex flex-col w-full space-y-1 py-3 grow md:max-w-sm">
@@ -165,7 +205,7 @@ const FileUpload: FC<FileUploadProps> = ({
                         <DialogTrigger asChild>
                             <button
                                 type="button"
-                                aria-label="Photo requirements"
+                                aria-label="File requirements"
                                 className="inline-flex items-center justify-center rounded-full p-1 text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition"
                             >
                                 <Info size={16} />
@@ -180,7 +220,7 @@ const FileUpload: FC<FileUploadProps> = ({
                                 <div className="w-full">
                                     <img
                                         src={info.imageSrc}
-                                        alt="Headshot example"
+                                        alt="Example"
                                         className="w-full h-auto rounded-md border"
                                     />
                                 </div>
@@ -215,7 +255,7 @@ const FileUpload: FC<FileUploadProps> = ({
                     {isUploading ? (
                         <>
                             <Loader2 className="mx-2 animate-spin" />
-                            Uploading...
+                            {buttonLabel}
                         </>
                     ) : (
                         <>
@@ -259,11 +299,19 @@ const FileUpload: FC<FileUploadProps> = ({
                 </div>
             )}
             {!filePreview && hasUploaded && !isUploading && (
-                <div className="text-xs text-green-700 pl-1">Photo uploaded</div>
+                <div className="text-xs text-green-700 pl-1">{uploadedLabel}</div>
             )}
             {isError.message && <div className="text-red-500 pl-1 pt-1 text-xs">{isError.message}</div>}
         </div>
     );
 };
+
+function resolveMimeFromName(name: string): string {
+    const lower = name.toLowerCase();
+    if (/\.(jpe?g)$/.test(lower)) return "image/jpeg";
+    if (lower.endsWith(".png")) return "image/png";
+    if (lower.endsWith(".heic")) return "image/heic";
+    return "";
+}
 
 export default FileUpload;

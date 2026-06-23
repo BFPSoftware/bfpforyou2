@@ -114,7 +114,7 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
             <Row>
                 <Input label={t.elementary.q1} placeholder={t.common.enterHere} register={register("familyMembers")} required error={errors.familyMembers || undefined} />
             </Row>
-            <div className="flex flex-col gap-3 mb-6 w-full max-w-3xl">
+            <div id="live-with-section" className="flex flex-col gap-3 mb-6 w-full max-w-3xl">
                 <div className="font-semibold mb-1">
                     {t.elementary.liveWith}
                     <span className="text-red-500">*</span>
