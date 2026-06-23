@@ -271,20 +271,20 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
                 <Input label={t.elementary.relationship} placeholder={t.elementary.relationship_helper} register={register("relationship")} required error={errors.relationship || undefined} />
             </Row>
             <Row>
-                <label className="hover:opacity-80 text-xl m-2 cursor-pointer">
-                    <input id="check1" type="checkbox" {...register("check1")} />
-                    <label className="m-2 cursor-pointer" htmlFor="check1">
-                        {t.elementary.check1}
+                <div className="hover:opacity-80 text-xl m-2">
+                    <label htmlFor="check1" className="flex items-start gap-2 cursor-pointer">
+                        <input id="check1" type="checkbox" className="mt-1" {...register("check1")} />
+                        <span>{t.elementary.check1}</span>
                     </label>
                     {errors.check1 && <div className="text-sm text-red-500">{errors.check1.message}</div>}
-                </label>
-                <label className="hover:opacity-80 text-xl m-2 cursor-pointer">
-                    <input id="check2" type="checkbox" {...register("check2")} />
-                    <label className="m-2 cursor-pointer" htmlFor="check2">
-                        {t.elementary.check2}
+                </div>
+                <div className="hover:opacity-80 text-xl m-2">
+                    <label htmlFor="check2" className="flex items-start gap-2 cursor-pointer">
+                        <input id="check2" type="checkbox" className="mt-1" {...register("check2")} />
+                        <span>{t.elementary.check2}</span>
                     </label>
                     {errors.check2 && <div className="text-sm text-red-500">{errors.check2.message}</div>}
-                </label>
+                </div>
             </Row>
         </>
     );

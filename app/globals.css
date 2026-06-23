@@ -9,6 +9,9 @@
     @apply btn;
     @apply bg-[#012c66] hover:bg-blue-700;
 }
+.btn-theme:disabled {
+    @apply opacity-50 cursor-not-allowed pointer-events-none;
+}
 .btn-gray {
     @apply btn;
     @apply bg-gray-400 hover:opacity-70;

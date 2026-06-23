@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FC, useCallback, useEffect, useRef, useState } from "react";
 import { FieldError, FieldErrorsImpl, Merge, UseFormWatch } from "react-hook-form";
 import { Upload, Loader2, Info } from "lucide-react";
 import Delete from "@/components/icons/Delete";
@@ -10,6 +10,7 @@ import {
     InvalidFileTypeError,
     KintoneUploadError,
     UploadPhase,
+    UploadTimeoutError,
     uploadFileToKintone,
 } from "@/lib/kintone-client-upload";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -75,7 +76,21 @@ const FileUpload: FC<FileUploadProps> = ({
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const previewUrlRef = useRef<string | null>(null);
+    const uploadStartedAtRef = useRef<number | null>(null);
     const { setFieldUploading } = useUploadFormContext();
+
+    const resetUploadUi = useCallback(
+        (message?: string) => {
+            setIsUploading(false);
+            setUploadPhase(null);
+            if (message) setIsError({ message });
+            clearPreviewUrl();
+            setFilePreview(null);
+            setSelectedFile(null);
+            if (inputRef.current) inputRef.current.value = "";
+        },
+        []
+    );
 
     const clearPreviewUrl = () => {
         if (previewUrlRef.current) {
@@ -114,6 +129,19 @@ const FileUpload: FC<FileUploadProps> = ({
         }
     }, [watch?.fileKey, watch?.uploadedAt, field, setValue]);
 
+    useEffect(() => {
+        const onVisibilityChange = () => {
+            if (document.hidden || !isUploading) return;
+            const started = uploadStartedAtRef.current;
+            if (started && Date.now() - started > 90_000) {
+                resetUploadUi(uploadFailedMessage(isOptional));
+                setValue(field, null);
+            }
+        };
+        document.addEventListener("visibilitychange", onVisibilityChange);
+        return () => document.removeEventListener("visibilitychange", onVisibilityChange);
+    }, [field, isOptional, isUploading, resetUploadUi, setValue]);
+
     const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
         if (isError.message) setIsError({ message: "" });
 
@@ -140,6 +168,7 @@ const FileUpload: FC<FileUploadProps> = ({
 
         setIsUploading(true);
         setUploadPhase("compressing");
+        uploadStartedAtRef.current = Date.now();
         try {
             const { fileKey } = await uploadFileToKintone(file, (phase) => setUploadPhase(phase));
             setIsError({ message: "" });
@@ -174,6 +203,8 @@ const FileUpload: FC<FileUploadProps> = ({
                 });
             } else if (error instanceof ImageProcessingError) {
                 setIsError({ message: uploadFailedMessage(isOptional) });
+            } else if (error instanceof UploadTimeoutError) {
+                setIsError({ message: error.message });
             } else if (error instanceof KintoneUploadError) {
                 setIsError({ message: uploadFailedMessage(isOptional) });
             } else {
@@ -184,6 +215,7 @@ const FileUpload: FC<FileUploadProps> = ({
             setFilePreview(null);
             setSelectedFile(null);
         } finally {
+            uploadStartedAtRef.current = null;
             setIsUploading(false);
             setUploadPhase(null);
             if (inputRef.current) inputRef.current.value = "";

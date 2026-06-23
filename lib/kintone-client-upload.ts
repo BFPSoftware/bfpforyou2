@@ -46,6 +46,13 @@ export class KintoneUploadError extends Error {
     }
 }
 
+export class UploadTimeoutError extends Error {
+    constructor() {
+        super("Upload timed out. Please try again.");
+        this.name = "UploadTimeoutError";
+    }
+}
+
 export type UploadPhase = "converting" | "compressing" | "uploading";
 
 export type UploadProgressCallback = (phase: UploadPhase) => void;
@@ -56,6 +63,7 @@ const COMPRESS_TARGET_MB = 3; // 3MB
 const VERCEL_UPLOAD_CAP_BYTES = 4 * 1024 * 1024; // keep below 4.5MB hard cap
 const MAX_WIDTH_OR_HEIGHT = 2560;
 const FORCE_RESIZE_DIMENSION = 4096;
+const UPLOAD_TIMEOUT_MS = 120_000;
 /** Always JPEG for storage compatibility; lossy compression keeps size down vs PNG. */
 const OUTPUT_FILE_TYPE = "image/jpeg";
 
@@ -225,7 +233,29 @@ async function compressIfNeeded(file: File, onProgress?: UploadProgressCallback)
     }
 }
 
+function withUploadTimeout<T>(promise: Promise<T>, ms = UPLOAD_TIMEOUT_MS): Promise<T> {
+    return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => reject(new UploadTimeoutError()), ms);
+        promise
+            .then((value) => {
+                clearTimeout(timer);
+                resolve(value);
+            })
+            .catch((err) => {
+                clearTimeout(timer);
+                reject(err);
+            });
+    });
+}
+
 export async function uploadFileToKintone(
+    file: File,
+    onProgress?: UploadProgressCallback
+): Promise<{ fileKey: string }> {
+    return withUploadTimeout(uploadFileToKintoneInner(file, onProgress));
+}
+
+async function uploadFileToKintoneInner(
     file: File,
     onProgress?: UploadProgressCallback
 ): Promise<{ fileKey: string }> {

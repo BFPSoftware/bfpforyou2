@@ -28,7 +28,10 @@ const SCROLL_SELECTOR_OVERRIDES: Record<string, string> = {
     attachment3: '[name="attachment3"]',
     "spouse.maritalStatus": '[name="spouse.maritalStatus"]',
     "spouse.spouseBirthday": '[name="spouse.spouseBirthday.day"]',
-    "children.childStatus": '[name="children.childStatus"]',
+    introHasSiblings: '[name="introHasSiblings"]',
+    futureHasPlans: '[name="futureHasPlans"]',
+    check1: "#check1",
+    check2: "#check2",
 };
 
 function selectorForPath(path: string): string {

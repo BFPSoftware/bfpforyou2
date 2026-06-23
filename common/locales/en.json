@@ -301,6 +301,22 @@
         "yourFuture": "What do you want to do for a career? What dreams do you have? How do you see yourself in 10 years?",
         "scholarship": "Why do you want this scholarship?",
         "schoolGoodChallengingLabel": "What are you good at and what is challenging for you in school?",
+        "introductionHint": "Introduce yourself and describe your family and living situation.",
+        "photoInfoTitle": "Photo requirements (headshot)",
+        "photoInfoDescription": "Please upload a clear, well-lit headshot where your face is fully visible.",
+        "questions": {
+            "introLiveWith": "Do you live with your parents?",
+            "introHasSiblings": "Do you have siblings?",
+            "introHowManySiblings": "If so, how many brothers or sisters?",
+            "schoolLikeFor": "What is school like for you?",
+            "personalFreeTime": "What do you like to do in your free time?",
+            "personalHobbies": "What are some of your favorite hobbies, activities, or things to do?",
+            "futureHasPlans": "Do you have plans for your future?",
+            "futureBecome": "If so, what would you like to become and what dreams do you have?",
+            "futureDesire": "If not, what would you desire to do?",
+            "futureTenYears": "How do you see yourself in 10 years as far as career or family?",
+            "scholarshipReason": "What are the reasons you want this scholarship?"
+        },
         "defaults": {
             "introLiveWith": "I live with…",
             "introHowManySiblings": "I have…",

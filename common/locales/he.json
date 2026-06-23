@@ -286,6 +286,22 @@
         "yourFuture": "מה אתה רוצה לעשות לקריירה? איזה חלומות יש לך? איך אתה רואה את עצמך בעוד 10 שנים?",
         "scholarship": "למה אתה רוצה את המלגה הזו?",
         "schoolGoodChallengingLabel": "במה אתה טוב ומה מאתגר אותך בבית הספר?",
+        "introductionHint": "הצג את עצמך ותאר את המשפחה שלך ואת מצב המגורים שלך.",
+        "photoInfoTitle": "דרישות לתמונה (תמונת פנים)",
+        "photoInfoDescription": "אנא העלה תמונת פנים ברורה ומוארת היטב, שבה פניך נראות במלואן.",
+        "questions": {
+            "introLiveWith": "האם אתה גר עם ההורים שלך?",
+            "introHasSiblings": "האם יש לך אחים?",
+            "introHowManySiblings": "אם כן, כמה אחים או אחיות?",
+            "schoolLikeFor": "איך בית הספר בשבילך?",
+            "personalFreeTime": "מה אתה אוהב לעשות בזמנך הפנוי?",
+            "personalHobbies": "מהם כמה מתחביביך, הפעילויות או הדברים האהובים עליך?",
+            "futureHasPlans": "האם יש לך תוכניות לעתיד?",
+            "futureBecome": "אם כן, במה היית רוצה להיות ואילו חלומות יש לך?",
+            "futureDesire": "אם לא, מה היית רוצה לעשות?",
+            "futureTenYears": "איך אתה רואה את עצמך בעוד 10 שנים מבחינת קריירה או משפחה?",
+            "scholarshipReason": "מה הסיבות שבגללן אתה רוצה את המלגה הזו?"
+        },
         "defaults": {
             "introLiveWith": "אני גר/ה עם…",
             "introHowManySiblings": "יש לי…",

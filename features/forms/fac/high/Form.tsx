@@ -12,14 +12,27 @@ import { handleSubmit_fachigh } from "../hooks/handleSubmit_fachigh";
 import Spinner from "@/components/spinner/Spinner";
 import logError from "@/common/logError";
 import { scrollToFormError } from "@/lib/form-scroll";
-import { UploadFormProvider, useUploadFormContext } from "../../components/UploadFormContext";
+import { UploadFormProvider } from "../../components/UploadFormContext";
+import FacFormSubmitFooter from "../../components/FacFormSubmitFooter";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 type FachighFormProps = { ticket: string };
 
 const FachighFormInner: FC<FachighFormProps> = ({ ticket }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [submitError, setSubmitError] = useState("");
-    const { isAnyUploading } = useUploadFormContext();
+    const [validationError, setValidationError] = useState("");
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [pendingData, setPendingData] = useState<FachighType | null>(null);
     const t = useDictionary();
 
     useEffect(() => {
@@ -57,23 +70,32 @@ const FachighFormInner: FC<FachighFormProps> = ({ ticket }) => {
         setValue("submitLang", (t.lang as (typeof submitLangsShort)[number]) || "en");
     }, [t.lang, setValue]);
 
-    const handleOnSubmit: SubmitHandler<FachighType> = async (data) => {
-        if (!window.confirm(t.common.wantToSubmit)) return;
+    const handleOnSubmit: SubmitHandler<FachighType> = (data) => {
+        setValidationError("");
+        setPendingData(data);
+        setConfirmOpen(true);
+    };
+
+    const confirmSubmit = async () => {
+        if (!pendingData) return;
+        setConfirmOpen(false);
         setSubmitError("");
         setIsLoading(true);
         try {
-            const res = await handleSubmit_fachigh(data, t);
+            const res = await handleSubmit_fachigh(pendingData, t);
             if (res) location.href = "/fachigh/thank-you";
             else setSubmitError("Something went wrong. Please try again later.");
         } catch (e) {
-            void logError(e, { data }, "handleSubmit_fachigh");
+            void logError(e, { data: pendingData }, "handleSubmit_fachigh");
             setSubmitError("Something went wrong. Please try again later.");
         } finally {
             setIsLoading(false);
+            setPendingData(null);
         }
     };
 
     const onError = (errors: FieldErrors<FachighType>) => {
+        setValidationError("Please complete the required fields above.");
         scrollToFormError(errors as FieldErrors<Record<string, unknown>>);
     };
 
@@ -83,17 +105,39 @@ const FachighFormInner: FC<FachighFormProps> = ({ ticket }) => {
             <form
                 method="post"
                 onSubmit={(event) => {
+                    setValidationError("");
                     void handleSubmit(handleOnSubmit, onError)(event);
                 }}
-                className={`flex flex-col p-[5%] md:p-[10%] pt-[5%] ${t.lang == "he" ? "flex-row-reverse rtl" : "ltr"}`}
+                className={`flex flex-col p-[5%] md:p-[10%] pt-[5%] ${t.lang == "he" ? "rtl" : "ltr"}`}
             >
                 <div className="font-bold text-3xl font-serif my-5 text-center">{t.fac.title}</div>
                 <FirstPage errors={formatError} register={register} setValue={setValue} t={t} watch={watch} />
-                {submitError && <div className="text-red-500 text-sm mb-4">{submitError}</div>}
-                <button className="btn-theme" type="submit" disabled={isLoading || isAnyUploading}>
-                    {t.button.submit}
-                </button>
+                <FacFormSubmitFooter
+                    submitLabel={t.button.submit}
+                    isLoading={isLoading}
+                    submitError={submitError}
+                    validationError={validationError}
+                />
             </form>
+
+            <AlertDialog
+                open={confirmOpen}
+                onOpenChange={(open) => {
+                    setConfirmOpen(open);
+                    if (!open) setPendingData(null);
+                }}
+            >
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{t.common.wantToSubmit}</AlertDialogTitle>
+                        <AlertDialogDescription className="sr-only">{t.common.wantToSubmit}</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>{t.select.No}</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => void confirmSubmit()}>{t.button.submit}</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 };
