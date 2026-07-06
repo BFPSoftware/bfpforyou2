@@ -77,6 +77,7 @@ const madeAliyah = string300;
 
 // Section 2
 // TODO: min characters and show counter
+const introFamilyAndLiving = string2000;
 const introLiveWith = string2000;
 const introHasSiblings = z.enum(["Yes", "No"]);
 const introHowManySiblings = z.string().max(2000, error_maxLength).optional();
@@ -144,6 +145,7 @@ export const fachighSchema = z
         madeAliyah: madeAliyah,
 
         // Section 2 (split questions)
+        introFamilyAndLiving,
         introLiveWith,
         introHasSiblings,
         introHowManySiblings,
@@ -214,19 +216,20 @@ export const defaultData: z.infer<typeof fachighSchema> = {
     school: "HaDekel",
     returning: "No",
     madeAliyah: "",
-    introLiveWith: "I live with…",
+    introFamilyAndLiving: "I am \nMy family is \nWe live ",
+    introLiveWith: "I live with ",
     introHasSiblings: "Yes",
-    introHowManySiblings: "I have…",
-    schoolLikeFor: "For me, my school is like…",
+    introHowManySiblings: "I have ",
+    schoolLikeFor: "For me, my school is like ",
     // keep defaultData concise; the form itself provides multi-line prefill
-    schoolGoodChallenging: "What are you good at and what is challenging for you in school?",
-    personalFreeTime: "When I have my free time, I enjoy…",
-    personalHobbies: "My favorite activities are…",
+    schoolGoodChallenging: "I am good at \nIt is challenging for me to \nThe school subjects that I struggle with are ",
+    personalFreeTime: "When I have my free time, I enjoy ",
+    personalHobbies: "My favorite activities are ",
     futureHasPlans: "Yes",
-    futureBecome: "My future dream is to become/start…",
-    futureDesire: "I desire to …",
-    futureTenYears: "In ten years, I see myself…",
-    scholarshipReason: "I really want this scholarship because…",
+    futureBecome: "My future dream is to become/start ",
+    futureDesire: "I desire to ",
+    futureTenYears: "In ten years, I see myself ",
+    scholarshipReason: "I really want this scholarship because ",
     submittedBy: "Parent",
     relationship: "Father",
     check1: false,

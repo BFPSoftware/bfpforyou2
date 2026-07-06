@@ -287,10 +287,10 @@
         "yourFuture": "¿Qué quieres hacer como carrera? ¿Qué sueños tienes? ¿Cómo te ves en 10 años?",
         "scholarship": "¿Por qué quiere esta beca?",
         "schoolGoodChallengingLabel": "¿En qué eres bueno/a y qué te resulta difícil en la escuela?",
-        "introductionHint": "Preséntate y describe tu familia y tu situación de vivienda.",
         "photoInfoTitle": "Requisitos de la foto (retrato)",
         "photoInfoDescription": "Sube un retrato claro y bien iluminado en el que tu rostro sea completamente visible.",
         "questions": {
+            "introFamilyAndLiving": "Preséntate y describe tu familia y tu situación de vivienda.",
             "introLiveWith": "¿Vives con tus padres?",
             "introHasSiblings": "¿Tienes hermanos?",
             "introHowManySiblings": "Si es así, ¿cuántos hermanos o hermanas?",
@@ -304,16 +304,17 @@
             "scholarshipReason": "¿Cuáles son las razones por las que quieres esta beca?"
         },
         "defaults": {
-            "introLiveWith": "Vivo con…",
-            "introHowManySiblings": "Tengo…",
-            "schoolLikeFor": "Para mí, la escuela es como…",
-            "schoolGoodChallenging": "Soy bueno/a en…\nMe resulta difícil…\nLas materias escolares con las que tengo dificultades son…",
-            "personalFreeTime": "Cuando tengo tiempo libre, disfruto…",
-            "personalHobbies": "Mis actividades favoritas son…",
-            "futureBecome": "Mi sueño para el futuro es ser/empezar…",
-            "futureDesire": "Me gustaría…",
-            "futureTenYears": "En diez años, me veo…",
-            "scholarshipReason": "Realmente quiero esta beca porque…"
+            "introFamilyAndLiving": "Soy \nMi familia \nVivimos ",
+            "introLiveWith": "Vivo con ",
+            "introHowManySiblings": "Tengo ",
+            "schoolLikeFor": "Para mí, la escuela es como ",
+            "schoolGoodChallenging": "Soy bueno/a en \nMe resulta difícil \nLas materias escolares con las que tengo dificultades son ",
+            "personalFreeTime": "Cuando tengo tiempo libre, disfruto ",
+            "personalHobbies": "Mis actividades favoritas son ",
+            "futureBecome": "Mi sueño para el futuro es ser/empezar ",
+            "futureDesire": "Me gustaría ",
+            "futureTenYears": "En diez años, me veo ",
+            "scholarshipReason": "Realmente quiero esta beca porque "
         }
     },
     "contactUs": {

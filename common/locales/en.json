@@ -301,10 +301,10 @@
         "yourFuture": "What do you want to do for a career? What dreams do you have? How do you see yourself in 10 years?",
         "scholarship": "Why do you want this scholarship?",
         "schoolGoodChallengingLabel": "What are you good at and what is challenging for you in school?",
-        "introductionHint": "Introduce yourself and describe your family and living situation.",
         "photoInfoTitle": "Photo requirements (headshot)",
         "photoInfoDescription": "Please upload a clear, well-lit headshot where your face is fully visible.",
         "questions": {
+            "introFamilyAndLiving": "Introduce yourself and describe your family and living situation.",
             "introLiveWith": "Do you live with your parents?",
             "introHasSiblings": "Do you have siblings?",
             "introHowManySiblings": "If so, how many brothers or sisters?",
@@ -318,16 +318,17 @@
             "scholarshipReason": "What are the reasons you want this scholarship?"
         },
         "defaults": {
-            "introLiveWith": "I live with…",
-            "introHowManySiblings": "I have…",
-            "schoolLikeFor": "For me, my school is like…",
-            "schoolGoodChallenging": "I am good at…\nIt is challenging for me to…\nThe school subjects that I struggle with are…",
-            "personalFreeTime": "When I have my free time, I enjoy…",
-            "personalHobbies": "My favorite activities are…",
-            "futureBecome": "My future dream is to become/start…",
-            "futureDesire": "I desire to …",
-            "futureTenYears": "In ten years, I see myself…",
-            "scholarshipReason": "I really want this scholarship because…"
+            "introFamilyAndLiving": "I am \nMy family is \nWe live ",
+            "introLiveWith": "I live with ",
+            "introHowManySiblings": "I have ",
+            "schoolLikeFor": "For me, my school is like ",
+            "schoolGoodChallenging": "I am good at \nIt is challenging for me to \nThe school subjects that I struggle with are ",
+            "personalFreeTime": "When I have my free time, I enjoy ",
+            "personalHobbies": "My favorite activities are ",
+            "futureBecome": "My future dream is to become/start ",
+            "futureDesire": "I desire to ",
+            "futureTenYears": "In ten years, I see myself ",
+            "scholarshipReason": "I really want this scholarship because "
         }
     }
 }

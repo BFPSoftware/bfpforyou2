@@ -72,7 +72,9 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
             <div className="text-2xl font-bold my-10">
                 <label>{t.highschool.sectionTitle.introduction}</label>
             </div>
-            <div className="text-sm text-gray-600 -mt-6 mb-6">{t.highschool.introductionHint}</div>
+            <Row>
+                <Textarea label={q.introFamilyAndLiving} register={register("introFamilyAndLiving")} required watch={watch} error={errors.introFamilyAndLiving || undefined} minLength={1} />
+            </Row>
             <Row>
                 <Textarea label={q.introLiveWith} register={register("introLiveWith")} required watch={watch} error={errors.introLiveWith || undefined} minLength={1} />
             </Row>

@@ -17,14 +17,13 @@ const joinNonEmpty = (...parts: (string | undefined | null | false)[]) =>
 export const combineFachighAnswers = (f: FachighType) => {
     return {
         introduction: joinNonEmpty(
+            f.introFamilyAndLiving,
             f.introLiveWith,
-            f.introHasSiblings === "Yes" ? "Yes, I have…" : "No, I do not have any siblings.",
             f.introHasSiblings === "Yes" ? f.introHowManySiblings : undefined
         ),
         aboutSchool: joinNonEmpty(f.schoolLikeFor, f.schoolGoodChallenging),
         personalLife: joinNonEmpty(f.personalFreeTime, f.personalHobbies),
         future: joinNonEmpty(
-            f.futureHasPlans === "Yes" ? "Yes, I do." : "No, I don't.",
             f.futureHasPlans === "Yes" ? f.futureBecome : f.futureDesire,
             f.futureTenYears
         ),

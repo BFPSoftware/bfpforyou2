@@ -287,10 +287,10 @@
         "yourFuture": "Que voulez-vous faire comme carrière ? Quels rêves avez-vous ? Comment vous voyez-vous dans 10 ans ?",
         "scholarship": "Pourquoi voulez-vous cette bourse ?",
         "schoolGoodChallengingLabel": "Dans quoi êtes-vous bon(ne) et qu’est-ce qui est difficile pour vous à l’école ?",
-        "introductionHint": "Présentez-vous et décrivez votre famille et votre situation de vie.",
         "photoInfoTitle": "Exigences pour la photo (portrait)",
         "photoInfoDescription": "Veuillez télécharger un portrait clair et bien éclairé où votre visage est entièrement visible.",
         "questions": {
+            "introFamilyAndLiving": "Présentez-vous et décrivez votre famille et votre situation de vie.",
             "introLiveWith": "Vivez-vous avec vos parents ?",
             "introHasSiblings": "Avez-vous des frères ou sœurs ?",
             "introHowManySiblings": "Si oui, combien de frères ou sœurs ?",
@@ -304,16 +304,17 @@
             "scholarshipReason": "Quelles sont les raisons pour lesquelles vous voulez cette bourse ?"
         },
         "defaults": {
-            "introLiveWith": "Je vis avec…",
-            "introHowManySiblings": "J’ai…",
-            "schoolLikeFor": "Pour moi, l’école est comme…",
-            "schoolGoodChallenging": "Je suis bon(ne) en…\nC’est difficile pour moi de…\nLes matières scolaires avec lesquelles j’ai des difficultés sont…",
-            "personalFreeTime": "Quand j’ai du temps libre, j’aime…",
-            "personalHobbies": "Mes activités préférées sont…",
-            "futureBecome": "Mon rêve pour l’avenir est de devenir/de créer…",
-            "futureDesire": "J’aimerais…",
-            "futureTenYears": "Dans dix ans, je me vois…",
-            "scholarshipReason": "Je veux vraiment cette bourse parce que…"
+            "introFamilyAndLiving": "Je suis \nMa famille \nNous vivons ",
+            "introLiveWith": "Je vis avec ",
+            "introHowManySiblings": "J’ai ",
+            "schoolLikeFor": "Pour moi, l’école est comme ",
+            "schoolGoodChallenging": "Je suis bon(ne) en \nC’est difficile pour moi de \nLes matières scolaires avec lesquelles j’ai des difficultés sont ",
+            "personalFreeTime": "Quand j’ai du temps libre, j’aime ",
+            "personalHobbies": "Mes activités préférées sont ",
+            "futureBecome": "Mon rêve pour l’avenir est de devenir/de créer ",
+            "futureDesire": "J’aimerais ",
+            "futureTenYears": "Dans dix ans, je me vois ",
+            "scholarshipReason": "Je veux vraiment cette bourse parce que "
         }
     },
     "contactUs": {

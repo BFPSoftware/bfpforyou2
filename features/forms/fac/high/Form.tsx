@@ -53,6 +53,7 @@ const FachighFormInner: FC<FachighFormProps> = ({ ticket }) => {
             applicationType: "Highschool",
             ticket: ticket,
             photo: null,
+            introFamilyAndLiving: t.highschool.defaults.introFamilyAndLiving,
             introLiveWith: t.highschool.defaults.introLiveWith,
             introHowManySiblings: t.highschool.defaults.introHowManySiblings,
             schoolLikeFor: t.highschool.defaults.schoolLikeFor,

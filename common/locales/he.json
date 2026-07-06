@@ -286,10 +286,10 @@
         "yourFuture": "מה אתה רוצה לעשות לקריירה? איזה חלומות יש לך? איך אתה רואה את עצמך בעוד 10 שנים?",
         "scholarship": "למה אתה רוצה את המלגה הזו?",
         "schoolGoodChallengingLabel": "במה אתה טוב ומה מאתגר אותך בבית הספר?",
-        "introductionHint": "הצג את עצמך ותאר את המשפחה שלך ואת מצב המגורים שלך.",
         "photoInfoTitle": "דרישות לתמונה (תמונת פנים)",
         "photoInfoDescription": "אנא העלה תמונת פנים ברורה ומוארת היטב, שבה פניך נראות במלואן.",
         "questions": {
+            "introFamilyAndLiving": "הצג את עצמך ותאר את המשפחה שלך ואת מצב המגורים שלך.",
             "introLiveWith": "האם אתה גר עם ההורים שלך?",
             "introHasSiblings": "האם יש לך אחים?",
             "introHowManySiblings": "אם כן, כמה אחים או אחיות?",
@@ -303,16 +303,17 @@
             "scholarshipReason": "מה הסיבות שבגללן אתה רוצה את המלגה הזו?"
         },
         "defaults": {
-            "introLiveWith": "אני גר/ה עם…",
-            "introHowManySiblings": "יש לי…",
-            "schoolLikeFor": "בשבילי, בית הספר הוא כמו…",
-            "schoolGoodChallenging": "אני טוב/ה ב…\nמאתגר אותי…\nהמקצועות שאני מתקשה בהם הם…",
-            "personalFreeTime": "בזמן הפנוי שלי אני נהנה/ית…",
-            "personalHobbies": "התחביבים/הפעילויות האהובים עליי הם…",
-            "futureBecome": "חלום העתיד שלי הוא להיות/להקים…",
-            "futureDesire": "הייתי רוצה…",
-            "futureTenYears": "בעוד 10 שנים, אני רואה את עצמי…",
-            "scholarshipReason": "אני מאוד רוצה את המלגה הזו כי…"
+            "introFamilyAndLiving": "אני \nהמשפחה שלי \nאנחנו גרים ",
+            "introLiveWith": "אני גר/ה עם ",
+            "introHowManySiblings": "יש לי ",
+            "schoolLikeFor": "בשבילי, בית הספר הוא כמו ",
+            "schoolGoodChallenging": "אני טוב/ה ב \nמאתגר אותי \nהמקצועות שאני מתקשה בהם הם ",
+            "personalFreeTime": "בזמן הפנוי שלי אני נהנה/ית ",
+            "personalHobbies": "התחביבים/הפעילויות האהובים עליי הם ",
+            "futureBecome": "חלום העתיד שלי הוא להיות/להקים ",
+            "futureDesire": "הייתי רוצה ",
+            "futureTenYears": "בעוד 10 שנים, אני רואה את עצמי ",
+            "scholarshipReason": "אני מאוד רוצה את המלגה הזו כי "
         }
     },
     "contactUs": {
