@@ -53,16 +53,22 @@ const logError = async (e: unknown, records?: unknown, functionName?: string): P
             console.error((e as { errors: unknown }).errors);
         }
 
-        // Browser: credentials are not available — route through a server action.
+        // Browser: credentials are not available — POST to Route Handler (not a Server Action).
         if (typeof window !== "undefined") {
             const { message, name, stack } = toErrorParts(e);
-            const { logClientError } = await import("@/app/[lang]/actions/logClientError");
-            await logClientError({
-                message,
-                name,
-                stack,
-                records,
-                functionName,
+            let safeRecords: unknown = undefined;
+            if (records !== undefined) {
+                try {
+                    safeRecords = JSON.parse(serializeRecords(records));
+                } catch {
+                    safeRecords = { note: "records omitted (unserializable)" };
+                }
+            }
+
+            await fetch("/api/log-error", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message, name, stack, records: safeRecords, functionName }),
             });
             return;
         }

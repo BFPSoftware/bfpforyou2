@@ -4,6 +4,7 @@ import { Upload, Loader2, Info } from "lucide-react";
 import Delete from "@/components/icons/Delete";
 import { isFileExpired } from "@/lib/utils";
 import {
+    EmptyFileError,
     FileTooLargeError,
     HeicConversionError,
     ImageProcessingError,
@@ -148,88 +149,104 @@ const FileUpload: FC<FileUploadProps> = ({
     }, [field, isOptional, isUploading, resetUploadUi, setValue]);
 
     const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-        if (isError.message) setIsError({ message: "" });
-
-        const files = e.target.files;
-        if (!files?.length) return;
-
-        const file = files[0];
-        if (!file) return;
-
-        if (file.size > 50 * 1024 * 1024) {
-            setIsError({ message: "File size should be 50MB or less." });
-            void logError(
-                new Error("Client rejected file over 50MB"),
-                {
-                    field,
-                    fileName: file.name,
-                    fileSize: file.size,
-                    fileType: file.type || resolveMimeFromName(file.name),
-                },
-                "FileUpload.clientSizeLimit"
-            );
-            if (inputRef.current) inputRef.current.value = "";
-            return;
-        }
-
-        setIsError({ message: "" });
-        setSelectedFile(file);
-
         try {
-            setPreviewFromFile(file);
-        } catch {
-            setFilePreview(null);
-        }
+            if (isError.message) setIsError({ message: "" });
 
-        setIsUploading(true);
-        setUploadPhase("compressing");
-        uploadStartedAtRef.current = Date.now();
-        try {
-            const { fileKey } = await uploadFileToKintone(file, (phase) => setUploadPhase(phase));
-            setIsError({ message: "" });
-            setValue(field, {
-                fileKey,
-                uploadedAt: new Date(),
-            });
-        } catch (error) {
-            void logError(
-                error,
-                {
-                    field,
-                    fileName: file.name,
-                    fileSize: file.size,
-                    fileType: file.type || resolveMimeFromName(file.name),
-                    errorName: error instanceof Error ? error.name : "unknown",
-                },
-                "FileUpload"
-            );
+            const files = e.target.files;
+            if (!files?.length) return;
 
-            if (error instanceof FileTooLargeError) {
+            const file = files[0];
+            if (!file) return;
+
+            if (file.size > 50 * 1024 * 1024) {
                 setIsError({ message: "File size should be 50MB or less." });
-            } else if (error instanceof HeicConversionError) {
-                setIsError({ message: error.message });
-            } else if (error instanceof InvalidFileTypeError) {
-                const isSvg =
-                    error.mimeType.includes("svg") || file.name.toLowerCase().endsWith(".svg");
-                setIsError({
-                    message: isSvg
-                        ? "SVG is not supported. Please use JPG or PNG."
-                        : "Please upload a JPG or PNG image.",
-                });
-            } else if (error instanceof ImageProcessingError) {
-                setIsError({ message: uploadFailedMessage(isOptional) });
-            } else if (error instanceof UploadTimeoutError) {
-                setIsError({ message: error.message });
-            } else if (error instanceof KintoneUploadError) {
-                setIsError({ message: uploadFailedMessage(isOptional) });
-            } else {
-                setIsError({ message: uploadFailedMessage(isOptional) });
+                void logError(
+                    new Error("Client rejected file over 50MB"),
+                    {
+                        field,
+                        fileName: file.name,
+                        fileSize: file.size,
+                        fileType: file.type || resolveMimeFromName(file.name),
+                    },
+                    "FileUpload.clientSizeLimit"
+                );
+                if (inputRef.current) inputRef.current.value = "";
+                return;
             }
+
+            setIsError({ message: "" });
+            setSelectedFile(file);
+
+            try {
+                setPreviewFromFile(file);
+            } catch {
+                setFilePreview(null);
+            }
+
+            setIsUploading(true);
+            setUploadPhase("compressing");
+            uploadStartedAtRef.current = Date.now();
+            try {
+                const { fileKey } = await uploadFileToKintone(file, (phase) => setUploadPhase(phase));
+                setIsError({ message: "" });
+                setValue(field, {
+                    fileKey,
+                    uploadedAt: new Date(),
+                });
+            } catch (error) {
+                void logError(
+                    error,
+                    {
+                        field,
+                        fileName: file.name,
+                        fileSize: file.size,
+                        fileType: file.type || resolveMimeFromName(file.name),
+                        errorName: error instanceof Error ? error.name : "unknown",
+                    },
+                    "FileUpload"
+                );
+
+                if (error instanceof FileTooLargeError) {
+                    setIsError({ message: "File size should be 50MB or less." });
+                } else if (error instanceof EmptyFileError) {
+                    setIsError({ message: error.message });
+                } else if (error instanceof HeicConversionError) {
+                    setIsError({ message: error.message });
+                } else if (error instanceof InvalidFileTypeError) {
+                    const isSvg =
+                        error.mimeType.includes("svg") || file.name.toLowerCase().endsWith(".svg");
+                    setIsError({
+                        message: isSvg
+                            ? "SVG is not supported. Please use JPG or PNG."
+                            : "Please upload a JPG or PNG image.",
+                    });
+                } else if (error instanceof ImageProcessingError) {
+                    setIsError({ message: uploadFailedMessage(isOptional) });
+                } else if (error instanceof UploadTimeoutError) {
+                    setIsError({ message: error.message });
+                } else if (error instanceof KintoneUploadError) {
+                    setIsError({ message: uploadFailedMessage(isOptional) });
+                } else {
+                    setIsError({ message: uploadFailedMessage(isOptional) });
+                }
+                setValue(field, null);
+                clearPreviewUrl();
+                setFilePreview(null);
+                setSelectedFile(null);
+            } finally {
+                uploadStartedAtRef.current = null;
+                setIsUploading(false);
+                setUploadPhase(null);
+                if (inputRef.current) inputRef.current.value = "";
+            }
+        } catch (unexpected) {
+            // Last-resort: never let an upload failure escape to the route error boundary.
+            void logError(unexpected, { field }, "FileUpload.unexpected");
+            setIsError({ message: uploadFailedMessage(isOptional) });
             setValue(field, null);
             clearPreviewUrl();
             setFilePreview(null);
             setSelectedFile(null);
-        } finally {
             uploadStartedAtRef.current = null;
             setIsUploading(false);
             setUploadPhase(null);
@@ -282,7 +299,7 @@ const FileUpload: FC<FileUploadProps> = ({
                     void handleUpload(event);
                 }}
                 type="file"
-                accept="image/jpeg,image/png,image/webp,image/gif,.heic,.heif"
+                accept="image/*,image/heic,image/heif,.heic,.heif,image/jpeg,image/png,image/webp"
                 className="hidden"
             />
             <div className="">
