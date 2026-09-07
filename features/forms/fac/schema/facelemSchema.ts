@@ -38,7 +38,7 @@ const uploadedPhoto = z
     .object({
         file: z.instanceof(File).optional(),
         fileKey: z.string().min(1).max(50, "File could not be uploaded"),
-        uploadedAt: z.date().optional(),
+        uploadedAt: z.coerce.date().optional(),
     })
     .refine((data) => {
         if (data.fileKey && !data.file && data.uploadedAt) {
@@ -51,8 +51,11 @@ const uploadedPhoto = z
         return true;
     }, "The uploaded file has expired. Please re-upload the file.");
 
-/** Photo is optional in validation; UI still encourages upload with a red asterisk. */
-const photoOptional = z.union([z.null(), uploadedPhoto]).optional();
+/**
+ * Photo is optional. Invalid/expired upload metadata is coerced to null so it never blocks submit.
+ * UI may still encourage upload with a red asterisk.
+ */
+const photoOptional = z.union([z.null(), uploadedPhoto]).optional().catch(null);
 
 // system
 const ticket = string50;

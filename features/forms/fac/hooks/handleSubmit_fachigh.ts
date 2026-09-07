@@ -135,6 +135,17 @@ export const handleSubmit_fachigh = async (formResponse: FachighType, t: any) =>
             });
             return true;
         } else {
+            let body = "";
+            try {
+                body = await res.text();
+            } catch {
+                body = "[unreadable response body]";
+            }
+            void logError(
+                new Error(`FAC high submit failed: HTTP ${res.status}`),
+                { status: res.status, body: body.slice(0, 2000), ticket: formResponse.ticket },
+                "handleSubmit_fachigh.httpError"
+            );
             return false;
         }
     } catch (e) {

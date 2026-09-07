@@ -1,6 +1,50 @@
 import { ErrorLogsAppID } from "./env";
 import client from "@/hooks/useKintone";
 
+function serializeRecords(records: unknown): string {
+    try {
+        return JSON.stringify(records, (_key, value) => {
+            if (typeof File !== "undefined" && value instanceof File) {
+                return { name: value.name, size: value.size, type: value.type };
+            }
+            return value;
+        });
+    } catch (stringifyError: unknown) {
+        const msg = stringifyError instanceof Error ? stringifyError.message : "serialization failed";
+        return `[Unable to serialize records: ${msg}]`;
+    }
+}
+
+function toErrorParts(e: unknown): { message: string; name: string; stack: string } {
+    if (e instanceof Error) {
+        return {
+            message: e.message || e.name || "Error",
+            name: e.name || "Error",
+            stack: e.stack || e.message,
+        };
+    }
+    return {
+        message: String(e),
+        name: "NonError",
+        stack: String(e),
+    };
+}
+
+async function persistToKintone(e: unknown, records?: unknown, functionName?: string): Promise<void> {
+    const app = "bfpforyou";
+    const recordsString = serializeRecords(records);
+    const { stack } = toErrorParts(e);
+    const err = `Fn: ${functionName ?? "unknown"} \n${stack}\nRecord:${recordsString}`;
+
+    await client.record.addRecord({
+        app: ErrorLogsAppID as string,
+        record: {
+            app: { value: app },
+            log: { value: err },
+        },
+    });
+}
+
 /** Logs to Kintone error app. Never throws — safe to call from catch blocks and error boundaries. */
 const logError = async (e: unknown, records?: unknown, functionName?: string): Promise<void> => {
     try {
@@ -9,30 +53,21 @@ const logError = async (e: unknown, records?: unknown, functionName?: string): P
             console.error((e as { errors: unknown }).errors);
         }
 
-        const app = "bfpforyou";
-        let recordsString = "";
-        try {
-            recordsString = JSON.stringify(records);
-        } catch (stringifyError: unknown) {
-            const msg = stringifyError instanceof Error ? stringifyError.message : "serialization failed";
-            recordsString = `[Unable to serialize records: ${msg}]`;
+        // Browser: credentials are not available — route through a server action.
+        if (typeof window !== "undefined") {
+            const { message, name, stack } = toErrorParts(e);
+            const { logClientError } = await import("@/app/[lang]/actions/logClientError");
+            await logClientError({
+                message,
+                name,
+                stack,
+                records,
+                functionName,
+            });
+            return;
         }
 
-        const stack =
-            e instanceof Error && e.stack
-                ? e.stack
-                : e instanceof Error
-                  ? e.message
-                  : String(e);
-        const err = `Fn: ${functionName ?? "unknown"} \n${stack}\nRecord:${recordsString}`;
-
-        await client.record.addRecord({
-            app: ErrorLogsAppID as string,
-            record: {
-                app: { value: app },
-                log: { value: err },
-            },
-        });
+        await persistToKintone(e, records, functionName);
     } catch (loggingFailure) {
         console.error("[logError] Failed to persist error log:", loggingFailure);
     }

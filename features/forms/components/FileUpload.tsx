@@ -134,6 +134,11 @@ const FileUpload: FC<FileUploadProps> = ({
             if (document.hidden || !isUploading) return;
             const started = uploadStartedAtRef.current;
             if (started && Date.now() - started > 90_000) {
+                void logError(
+                    new Error("Upload reset after tab was backgrounded >90s"),
+                    { field, elapsedMs: Date.now() - started },
+                    "FileUpload.visibilityTimeout"
+                );
                 resetUploadUi(uploadFailedMessage(isOptional));
                 setValue(field, null);
             }
@@ -153,6 +158,16 @@ const FileUpload: FC<FileUploadProps> = ({
 
         if (file.size > 50 * 1024 * 1024) {
             setIsError({ message: "File size should be 50MB or less." });
+            void logError(
+                new Error("Client rejected file over 50MB"),
+                {
+                    field,
+                    fileName: file.name,
+                    fileSize: file.size,
+                    fileType: file.type || resolveMimeFromName(file.name),
+                },
+                "FileUpload.clientSizeLimit"
+            );
             if (inputRef.current) inputRef.current.value = "";
             return;
         }

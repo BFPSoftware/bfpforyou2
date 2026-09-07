@@ -194,6 +194,17 @@ export const handleSubmit_facelem = async (formResponse: FacelemType, t: any) =>
             });
             return true;
         } else {
+            let body = "";
+            try {
+                body = await res.text();
+            } catch {
+                body = "[unreadable response body]";
+            }
+            void logError(
+                new Error(`FAC elem submit failed: HTTP ${res.status}`),
+                { status: res.status, body: body.slice(0, 2000), ticket: formResponse.ticket },
+                "handleSubmit_facelem.httpError"
+            );
             return false;
         }
     } catch (e) {

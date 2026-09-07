@@ -24,6 +24,11 @@ export const uploadFile = actionClient.schema(schema).action(async ({ parsedInpu
 
         if (!file || !(file.size > 0)) {
             console.error("[uploadFile] Invalid file:", { file: file, hasFile: !!file, size: file?.size });
+            void logError(
+                new Error("No file found"),
+                { fileName: file?.name, fileSize: file?.size, fileType: file?.type },
+                "uploadFile.noFile"
+            );
             return { failure: "No file found" };
         }
 
