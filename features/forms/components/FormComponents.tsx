@@ -78,7 +78,7 @@ export const Select = (props: SelectProps) => {
                 {props.label}
                 {props.required && <span className="text-red-500">*</span>}
             </div>
-            <select {...props.register} className={"text-gray-800 mt-4 rounded-md border py-2 px-3" + (props.error ? " border-red-500" : "")} defaultValue="">
+            <select {...props.register} className={"text-gray-800 mt-4 rounded-md border py-2 px-3" + (props.error ? " border-red-500" : "")}>
                 <option disabled={true} hidden={true} value="" key="default">
                     --Select--
                 </option>

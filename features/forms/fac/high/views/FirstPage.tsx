@@ -4,7 +4,7 @@ import { Input, Select, Textarea } from "../../../components/FormComponents";
 import { Birthday } from "../../../components/Birthday";
 import { FC } from "react";
 import { FieldErrors, UseFormRegister, UseFormWatch } from "react-hook-form";
-import { Grades, Highschools, YesNo } from "@/common/enums";
+import { HighGrades, Highschools, YesNo } from "@/common/enums";
 import { Dictionary } from "@/common/locales/Dictionary-provider";
 import { FachighType } from "../../schema/fachighSchema";
 
@@ -23,6 +23,9 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
     const introHasSiblings = watch("introHasSiblings");
     const futureHasPlans = watch("futureHasPlans");
     const q = t.highschool.questions;
+    const showSiblingsFollowup = introHasSiblings === "Yes";
+    const showFutureBecome = futureHasPlans === "Yes";
+    const showFutureDesire = futureHasPlans === "No";
 
     return (
         <>
@@ -35,11 +38,10 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
                 <Input label={t.elementary.tz} register={register("tz")} required error={errors.tz || undefined} />
                 <Birthday label={t.birthday} register_day={register("birthday.day")} register_month={register("birthday.month")} register_year={register("birthday.year")} error={errors.birthday || undefined} required />
             </Row>
-            <label className="flex space-y-1 mb-6"></label>
             <Row>
                 <Input label={t.elementary.age} register={register("age")} required error={errors.age || undefined} />
                 <div className="flex flex-wrap mb-6">
-                    <Select label={t.elementary.grade} options={Grades(t)} register={register("grade")} required error={errors.grade || undefined} />
+                    <Select label={t.elementary.grade} options={HighGrades(t)} register={register("grade")} required error={errors.grade || undefined} />
                 </div>
             </Row>
             <div className="flex flex-wrap mb-6">
@@ -87,11 +89,11 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
                     error={errors.introHasSiblings || undefined}
                 />
             </Row>
-            {introHasSiblings === "Yes" && (
+            <div key="intro-siblings-followup" hidden={!showSiblingsFollowup} aria-hidden={!showSiblingsFollowup}>
                 <Row>
-                    <Textarea label={q.introHowManySiblings} register={register("introHowManySiblings")} required watch={watch} error={errors.introHowManySiblings || undefined} minLength={1} />
+                    <Textarea label={q.introHowManySiblings} register={register("introHowManySiblings")} required={showSiblingsFollowup} watch={watch} error={errors.introHowManySiblings || undefined} minLength={1} />
                 </Row>
-            )}
+            </div>
             <div className="text-2xl font-bold my-10">
                 <label>{t.highschool.sectionTitle.school}</label>
             </div>
@@ -122,16 +124,16 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
                     error={errors.futureHasPlans || undefined}
                 />
             </Row>
-            {futureHasPlans === "Yes" && (
+            <div key="future-become" hidden={!showFutureBecome} aria-hidden={!showFutureBecome}>
                 <Row>
-                    <Textarea label={q.futureBecome} register={register("futureBecome")} required watch={watch} error={errors.futureBecome || undefined} minLength={1} />
+                    <Textarea label={q.futureBecome} register={register("futureBecome")} required={showFutureBecome} watch={watch} error={errors.futureBecome || undefined} minLength={1} />
                 </Row>
-            )}
-            {futureHasPlans === "No" && (
+            </div>
+            <div key="future-desire" hidden={!showFutureDesire} aria-hidden={!showFutureDesire}>
                 <Row>
-                    <Textarea label={q.futureDesire} register={register("futureDesire")} required watch={watch} error={errors.futureDesire || undefined} minLength={1} />
+                    <Textarea label={q.futureDesire} register={register("futureDesire")} required={showFutureDesire} watch={watch} error={errors.futureDesire || undefined} minLength={1} />
                 </Row>
-            )}
+            </div>
             <Row>
                 <Textarea label={q.futureTenYears} register={register("futureTenYears")} required watch={watch} error={errors.futureTenYears || undefined} minLength={1} />
             </Row>
@@ -147,20 +149,20 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
                 <Input label={t.elementary.relationship} placeholder={t.elementary.relationship_helper} register={register("relationship")} required error={errors.relationship || undefined} />
             </Row>
             <Row>
-                <label className="hover:opacity-80 text-xl m-2 cursor-pointer">
-                    <input id="check1" type="checkbox" {...register("check1")} />
-                    <label className="m-2 cursor-pointer" htmlFor="check1">
-                        {t.elementary.check1}
+                <div className="hover:opacity-80 text-xl m-2">
+                    <label htmlFor="check1" className="flex items-start gap-2 cursor-pointer">
+                        <input id="check1" type="checkbox" className="mt-1" {...register("check1")} />
+                        <span>{t.elementary.check1}</span>
                     </label>
                     {errors.check1 && <div className="text-sm text-red-500">{errors.check1.message}</div>}
-                </label>
-                <label className="hover:opacity-80 text-xl m-2 cursor-pointer">
-                    <input id="check2" type="checkbox" {...register("check2")} />
-                    <label className="m-2 cursor-pointer" htmlFor="check2">
-                        {t.elementary.check2}
+                </div>
+                <div className="hover:opacity-80 text-xl m-2">
+                    <label htmlFor="check2" className="flex items-start gap-2 cursor-pointer">
+                        <input id="check2" type="checkbox" className="mt-1" {...register("check2")} />
+                        <span>{t.elementary.check2}</span>
                     </label>
                     {errors.check2 && <div className="text-sm text-red-500">{errors.check2.message}</div>}
-                </label>
+                </div>
             </Row>
         </>
     );

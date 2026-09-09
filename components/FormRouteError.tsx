@@ -12,7 +12,17 @@ type FormRouteErrorProps = {
 
 export default function FormRouteError({ error, reset, routeName }: FormRouteErrorProps) {
     useEffect(() => {
-        void logError(error, { digest: error.digest, route: routeName }, `FormRouteError:${routeName}`);
+        void logError(
+            error,
+            {
+                digest: error.digest,
+                route: routeName,
+                name: error.name,
+                message: error.message,
+                userAgent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
+            },
+            `FormRouteError:${routeName}`
+        );
     }, [error, routeName]);
 
     return (
