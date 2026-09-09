@@ -79,23 +79,13 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
                 <Textarea label={q.introLiveWith} register={register("introLiveWith")} required watch={watch} error={errors.introLiveWith || undefined} minLength={1} />
             </Row>
             <Row>
-                <label className="flex flex-col space-y-1 w-auto me-5 grow md:max-w-xl">
-                    <div className="font-semibold mb-1">
-                        {q.introHasSiblings}
-                        <span className="text-red-500">*</span>
-                    </div>
-                    <div className="mt-4 flex gap-6">
-                        <label className="cursor-pointer">
-                            <input className="mx-2" type="radio" value="Yes" {...register("introHasSiblings")} />
-                            {t.select.Yes}
-                        </label>
-                        <label className="cursor-pointer">
-                            <input className="mx-2" type="radio" value="No" {...register("introHasSiblings")} />
-                            {t.select.No}
-                        </label>
-                    </div>
-                    {errors.introHasSiblings && <div className="text-red-500 pl-1 pt-1 text-xs">{errors.introHasSiblings.message}</div>}
-                </label>
+                <Select
+                    label={q.introHasSiblings}
+                    options={YesNo(t)}
+                    register={register("introHasSiblings")}
+                    required
+                    error={errors.introHasSiblings || undefined}
+                />
             </Row>
             {introHasSiblings === "Yes" && (
                 <Row>
@@ -124,23 +114,13 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
                 <label>{t.highschool.sectionTitle.yourFuture}</label>
             </div>
             <Row>
-                <label className="flex flex-col space-y-1 w-auto me-5 grow md:max-w-xl">
-                    <div className="font-semibold mb-1">
-                        {q.futureHasPlans}
-                        <span className="text-red-500">*</span>
-                    </div>
-                    <div className="mt-4 flex gap-6">
-                        <label className="cursor-pointer">
-                            <input className="mx-2" type="radio" value="Yes" {...register("futureHasPlans")} />
-                            {t.select.Yes}
-                        </label>
-                        <label className="cursor-pointer">
-                            <input className="mx-2" type="radio" value="No" {...register("futureHasPlans")} />
-                            {t.select.No}
-                        </label>
-                    </div>
-                    {errors.futureHasPlans && <div className="text-red-500 pl-1 pt-1 text-xs">{errors.futureHasPlans.message}</div>}
-                </label>
+                <Select
+                    label={q.futureHasPlans}
+                    options={YesNo(t)}
+                    register={register("futureHasPlans")}
+                    required
+                    error={errors.futureHasPlans || undefined}
+                />
             </Row>
             {futureHasPlans === "Yes" && (
                 <Row>
