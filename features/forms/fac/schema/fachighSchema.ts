@@ -5,7 +5,7 @@ import { z } from "zod";
 export const applicationType_fachigh = "Highschool";
 export const submitLangs = ["English", "Hebrew", "Russian", "Spanish", "French"] as const;
 export const submitLangsShort = ["en", "he", "ru", "es", "fr"] as const;
-export const grades = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
+export const grades = ["7", "8", "9", "10", "11", "12"] as const;
 export const schools = ["Devir", "Shachar", "Branco Weiss"] as const;
 
 const validateRadio = (value: string | null) => value !== null;
@@ -72,7 +72,7 @@ const birthday = z.object({
     year: z.string().max(5, { message: "Required" }),
 });
 const age = string50;
-const grade = string50;
+const grade = z.enum(["7", "8", "9", "10", "11", "12"]);
 const originCountry = string50;
 const school = string50;
 const returning = string50;
@@ -214,7 +214,7 @@ export const defaultData: z.infer<typeof fachighSchema> = {
     },
     age: "10",
     photo: null,
-    grade: "5",
+    grade: "9",
     originCountry: "Country",
     school: "HaDekel",
     returning: "No",

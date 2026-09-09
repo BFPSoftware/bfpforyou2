@@ -58,17 +58,26 @@ export const Highschools = (t: Dictionary) => ({
     "Branco Weiss": t.highschool.schools["Branco Weiss"],
 });
 
-export const Grades = (t: Dictionary) => ({
+export const ElemGrades = (_t?: Dictionary) => ({
     1: "1",
     2: "2",
     3: "3",
     4: "4",
     5: "5",
     6: "6",
+});
+
+export const HighGrades = (_t?: Dictionary) => ({
     7: "7",
     8: "8",
     9: "9",
     10: "10",
     11: "11",
     12: "12",
+});
+
+/** @deprecated Use ElemGrades or HighGrades */
+export const Grades = (t: Dictionary) => ({
+    ...ElemGrades(t),
+    ...HighGrades(t),
 });

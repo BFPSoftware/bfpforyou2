@@ -4,7 +4,7 @@ import { Input, Select, Textarea } from "../../../components/FormComponents";
 import { Birthday } from "../../../components/Birthday";
 import { FC } from "react";
 import { FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
-import { ElemSchools, Grades, YesNo } from "@/common/enums";
+import { ElemSchools, ElemGrades, YesNo } from "@/common/enums";
 import { Dictionary } from "@/common/locales/Dictionary-provider";
 import { FacelemType } from "../../schema/facelemSchema";
 
@@ -91,7 +91,7 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
                 />
             </div>
             <div className="flex flex-wrap mb-6">
-                <Select label={gradeLabel} options={Grades(t)} register={register("grade")} required error={errors.grade || undefined} />
+                <Select label={gradeLabel} options={ElemGrades(t)} register={register("grade")} required error={errors.grade || undefined} />
             </div>
             <Row>
                 <Select label={t.elementary.school} options={ElemSchools(t)} register={register("elemSchool")} required error={errors.elemSchool || undefined} />
