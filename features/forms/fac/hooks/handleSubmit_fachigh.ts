@@ -1,6 +1,6 @@
 import logError from "@/common/logError";
 import { FachighType } from "../schema/fachighSchema";
-import sendConfirmationEmail_high from "@/hooks/confirmation/fac/sendConfirmationEmail_high";
+import { buildConfirmationEmail_high } from "@/hooks/confirmation/fac/sendConfirmationEmail_high";
 import { needsReupload, isFileLost, FileWithMeta } from "@/lib/utils";
 
 const normalizeOptionalPhoto = (photo: FileWithMeta): FileWithMeta => {
@@ -118,21 +118,16 @@ export const handleSubmit_fachigh = async (formResponse: FachighType, t: any) =>
         formResponse.photo = normalizeOptionalPhoto(formResponse.photo ?? null);
 
         const addRecord = createAddRecord(formResponse);
+        const combined = combineFachighAnswers(formResponse);
+        const confirmationEmail = buildConfirmationEmail_high(formResponse, t, combined);
         const res = await fetch("/api/kintone/postKintone_fac", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(addRecord),
+            body: JSON.stringify({ record: addRecord, confirmationEmail }),
         });
         if (await res.ok) {
-            const combined = combineFachighAnswers(formResponse);
-            // Send email asynchronously (non-blocking) to avoid Vercel 10s timeout
-            // Don't await - let it run in background
-            sendConfirmationEmail_high(formResponse, t, combined).catch((error) => {
-                console.error("[handleSubmit_fachigh] Email sending failed (non-blocking):", error);
-                // Email failure is logged but doesn't affect form submission success
-            });
             return true;
         } else {
             let body = "";

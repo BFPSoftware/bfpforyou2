@@ -1,7 +1,7 @@
 import logError from "@/common/logError";
 import { Dictionary } from "@/common/locales/Dictionary-provider";
 import { FacelemType } from "../schema/facelemSchema";
-import sendConfirmationEmail_elem from "@/hooks/confirmation/fac/sendConfirmationEmail_elem";
+import { buildConfirmationEmail_elem } from "@/hooks/confirmation/fac/sendConfirmationEmail_elem";
 import { needsReupload, isFileLost, FileWithMeta } from "@/lib/utils";
 
 /** Photo is optional — drop expired or unusable metadata instead of blocking submit. */
@@ -178,20 +178,15 @@ export const handleSubmit_facelem = async (formResponse: FacelemType, t: any) =>
         formResponse.photo = normalizeOptionalPhoto(formResponse.photo ?? null);
 
         const addRecord = createAddRecord(formResponse, t);
+        const confirmationEmail = buildConfirmationEmail_elem(formResponse, t);
         const res = await fetch("/api/kintone/postKintone_fac", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(addRecord),
+            body: JSON.stringify({ record: addRecord, confirmationEmail }),
         });
         if (await res.ok) {
-            // Send email asynchronously (non-blocking) to avoid Vercel 10s timeout
-            // Don't await - let it run in background
-            sendConfirmationEmail_elem(formResponse, t).catch((error) => {
-                console.error("[handleSubmit_facelem] Email sending failed (non-blocking):", error);
-                // Email failure is logged but doesn't affect form submission success
-            });
             return true;
         } else {
             let body = "";
