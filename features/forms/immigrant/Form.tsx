@@ -47,6 +47,9 @@ const NewImmigrantFormInner: FC<NewImmigrantFormProps> = ({ ticket }) => {
             attachment1: null,
             attachment2: null,
             attachment3: null,
+            spouse: {
+                maritalStatus: "1",
+            },
             children: {
                 childStatus: "",
                 childTable: [
