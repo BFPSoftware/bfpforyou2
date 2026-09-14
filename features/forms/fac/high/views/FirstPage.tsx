@@ -91,7 +91,7 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
             </Row>
             <div key="intro-siblings-followup" hidden={!showSiblingsFollowup} aria-hidden={!showSiblingsFollowup}>
                 <Row>
-                    <Textarea label={q.introHowManySiblings} register={register("introHowManySiblings")} required={showSiblingsFollowup} watch={watch} error={errors.introHowManySiblings || undefined} minLength={1} />
+                    <Textarea label={q.introHowManySiblings} register={register("introHowManySiblings")} required={false} watch={watch} error={errors.introHowManySiblings || undefined} minLength={1} />
                 </Row>
             </div>
             <div className="text-2xl font-bold my-10">
@@ -126,12 +126,12 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
             </Row>
             <div key="future-become" hidden={!showFutureBecome} aria-hidden={!showFutureBecome}>
                 <Row>
-                    <Textarea label={q.futureBecome} register={register("futureBecome")} required={showFutureBecome} watch={watch} error={errors.futureBecome || undefined} minLength={1} />
+                    <Textarea label={q.futureBecome} register={register("futureBecome")} required={false} watch={watch} error={errors.futureBecome || undefined} minLength={1} />
                 </Row>
             </div>
             <div key="future-desire" hidden={!showFutureDesire} aria-hidden={!showFutureDesire}>
                 <Row>
-                    <Textarea label={q.futureDesire} register={register("futureDesire")} required={showFutureDesire} watch={watch} error={errors.futureDesire || undefined} minLength={1} />
+                    <Textarea label={q.futureDesire} register={register("futureDesire")} required={false} watch={watch} error={errors.futureDesire || undefined} minLength={1} />
                 </Row>
             </div>
             <Row>

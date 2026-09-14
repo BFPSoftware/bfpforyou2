@@ -1,8 +1,13 @@
+"use client";
+
 import React from "react";
+import { createPortal } from "react-dom";
 import { FadeLoader } from "react-spinners";
 
 const Spinner = ({ isLoading }: { isLoading: boolean }) => {
-    return (
+    if (!isLoading) return null;
+
+    const overlay = (
         <div
             style={{
                 position: "fixed",
@@ -20,5 +25,9 @@ const Spinner = ({ isLoading }: { isLoading: boolean }) => {
             <FadeLoader color="white" loading={isLoading} />
         </div>
     );
+
+    if (typeof document === "undefined") return overlay;
+    return createPortal(overlay, document.body);
 };
+
 export default Spinner;

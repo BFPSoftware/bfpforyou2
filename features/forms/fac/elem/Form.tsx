@@ -14,6 +14,7 @@ import Spinner from "@/components/spinner/Spinner";
 import { scrollToFormError } from "@/lib/form-scroll";
 import { UploadFormProvider } from "../../components/UploadFormContext";
 import FacFormSubmitFooter from "../../components/FacFormSubmitFooter";
+import FormSectionErrorBoundary from "@/components/FormSectionErrorBoundary";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -73,9 +74,9 @@ const FacelemFormInner: FC<FacelemFormProps> = ({ ticket }) => {
 
     const confirmSubmit = async () => {
         if (!pendingData) return;
-        setConfirmOpen(false);
         setSubmitError("");
         setIsLoading(true);
+        setConfirmOpen(false);
         try {
             const res = await handleSubmit_facelem(pendingData, t);
             if (res) location.href = "/facelem/thank-you";
@@ -103,10 +104,13 @@ const FacelemFormInner: FC<FacelemFormProps> = ({ ticket }) => {
                     setValidationError("");
                     void handleSubmit(handleOnSubmit, onError)(event);
                 }}
-                className={`flex flex-col p-[5%] md:p-[10%] pt-[5%] ${t.lang == "he" ? "rtl" : "ltr"}`}
+                translate="no"
+                className={`notranslate flex flex-col p-[5%] md:p-[10%] pt-[5%] ${t.lang == "he" ? "rtl" : "ltr"}`}
             >
                 <div className="font-bold text-3xl font-serif my-5 text-center">{t.fac.title}</div>
-                <FirstPage errors={formatError} register={register} setValue={setValue} t={t} watch={watch} />
+                <FormSectionErrorBoundary routeName="facelem">
+                    <FirstPage errors={formatError} register={register} setValue={setValue} t={t} watch={watch} />
+                </FormSectionErrorBoundary>
                 <FacFormSubmitFooter
                     submitLabel={t.button.submit}
                     isLoading={isLoading}
@@ -119,7 +123,7 @@ const FacelemFormInner: FC<FacelemFormProps> = ({ ticket }) => {
                 open={confirmOpen}
                 onOpenChange={(open) => {
                     setConfirmOpen(open);
-                    if (!open) setPendingData(null);
+                    if (!open && !isLoading) setPendingData(null);
                 }}
             >
                 <AlertDialogContent>
@@ -129,7 +133,14 @@ const FacelemFormInner: FC<FacelemFormProps> = ({ ticket }) => {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>{t.select.No}</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => void confirmSubmit()}>{t.button.submit}</AlertDialogAction>
+                        <AlertDialogAction
+                            onClick={(event) => {
+                                event.preventDefault();
+                                void confirmSubmit();
+                            }}
+                        >
+                            {t.button.submit}
+                        </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

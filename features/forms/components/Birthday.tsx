@@ -46,7 +46,9 @@ export const Birthday = ({ label, error, register_day, register_month, register_
         <label className="flex flex-col space-y-1 w-80 me-5 grow md:max-w-sm">
             <div className="font-semibold mb-1">
                 {label}
-                {required && <span className="text-red-500">*</span>}
+                <span className={required ? "text-red-500" : "invisible"} aria-hidden={!required}>
+                    *
+                </span>
             </div>
             <div className="row flex">
                 <div className="flex flex-col">

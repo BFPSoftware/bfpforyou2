@@ -19,7 +19,11 @@ export default function FormRouteError({ error, reset, routeName }: FormRouteErr
                 route: routeName,
                 name: error.name,
                 message: error.message,
+                stack: error.stack?.slice(0, 4000),
+                href: typeof window !== "undefined" ? window.location.href : undefined,
                 userAgent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
+                language: typeof navigator !== "undefined" ? navigator.language : undefined,
+                timestamp: new Date().toISOString(),
             },
             `FormRouteError:${routeName}`
         );
