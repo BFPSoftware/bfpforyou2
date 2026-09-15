@@ -121,7 +121,8 @@ export function DashboardClient({ lang, dict }: DashboardClientProps) {
     const filtered = useMemo(() => {
         const term = searchTerm.trim().toLowerCase();
         const list = enriched.filter((r) => {
-            if (attention === "unseen" && r.seen) return false;
+            // Keep the open record visible on "unseen" so the detail modal can stay open
+            if (attention === "unseen" && r.seen && r.$id.value !== selectedId) return false;
             if (attention === "needsAttention" && !hasNeedsAttention(r.issues)) return false;
             if (attention === "missingFiles" && !hasMissingFiles(r.issues)) return false;
             if (attention === "duplicates" && !r.issues.includes("duplicate")) return false;
@@ -142,16 +143,20 @@ export function DashboardClient({ lang, dict }: DashboardClientProps) {
             return hay.includes(term);
         });
         return sortOriginalResponses(list, sortConfig) as Enriched[];
-    }, [enriched, searchTerm, sortConfig, attention, schoolFilter, typeFilter, statusFilter]);
+    }, [enriched, searchTerm, sortConfig, attention, schoolFilter, typeFilter, statusFilter, selectedId]);
 
     const pagination = usePagination(filtered, 25);
     const pageItems = pagination.pageItems;
 
+    // Resolve from full enriched list so marking seen never closes the modal early
+    const selectedResponse = useMemo(
+        () => enriched.find((r) => r.$id.value === selectedId) || null,
+        [enriched, selectedId]
+    );
     const selectedIndex = useMemo(
         () => filtered.findIndex((r) => r.$id.value === selectedId),
         [filtered, selectedId]
     );
-    const selectedResponse = selectedIndex >= 0 ? filtered[selectedIndex] : null;
 
     const setSelectedId = useCallback(
         (id: string | null) => {
