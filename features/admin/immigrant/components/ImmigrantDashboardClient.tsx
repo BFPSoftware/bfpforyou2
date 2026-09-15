@@ -2,17 +2,25 @@
 import { Locale } from "@/types/locales";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { OriginalResponseDetailModal } from "./OriginalResponsesModal";
 import { parseCookies } from "nookies";
-import { SortableHeader } from "./SortableHeader";
-import { SortConfig, SortField, sortOriginalResponses } from "../utils/sorting";
 import { DateTime } from "luxon";
-import { REST_SavedFACApplication } from "@/types/FACApplication";
+import { ImmigrantDetailModal } from "./ImmigrantDetailModal";
+import { ImmigrantSortableHeader } from "./SortableHeader";
+import {
+    ImmigrantApplication,
+    ImmigrantSortConfig,
+    ImmigrantSortField,
+    sortImmigrantApplications,
+} from "../utils/sorting";
 import { AttentionTabs } from "@/features/admin/shared/components/AttentionTabs";
 import { FetchErrorState } from "@/features/admin/shared/components/FetchErrorState";
 import { IssueChips } from "@/features/admin/shared/components/IssueChips";
-import { detectFacIssues, hasMissingFiles, hasNeedsAttention } from "@/features/admin/shared/issues";
-import { findFacDuplicateIds } from "@/features/admin/shared/duplicates";
+import {
+    detectImmigrantIssues,
+    hasMissingFiles,
+    hasNeedsAttention,
+} from "@/features/admin/shared/issues";
+import { findImmigrantDuplicateIds } from "@/features/admin/shared/duplicates";
 import { downloadCsv } from "@/features/admin/shared/exportCsv";
 import { AttentionFilter, IssueCode, ReviewStatus } from "@/features/admin/shared/reviewTypes";
 import { getLocalReview } from "@/features/admin/shared/localReviewStorage";
@@ -20,35 +28,27 @@ import { useLocalReviews } from "@/features/admin/shared/useLocalReviews";
 import { PaginationControls, usePagination, VirtualizedTableBody } from "@/features/admin/shared/pagination";
 import { Button } from "@/components/ui/button";
 
-const getSchoolValue = (response: REST_SavedFACApplication): string => {
-    if (response.applicationType.value === "Highschool") {
-        return response.school?.value || "";
-    }
-    return response.elemSchool?.value || "";
-};
-
-interface DashboardClientProps {
+interface ImmigrantDashboardClientProps {
     lang: Locale;
     dict: any;
 }
 
-type Enriched = REST_SavedFACApplication & { issues: IssueCode[]; seen: boolean; localStatus: ReviewStatus };
+type Enriched = ImmigrantApplication & { issues: IssueCode[]; seen: boolean; localStatus: ReviewStatus };
 
-export function DashboardClient({ lang, dict }: DashboardClientProps) {
-    const t = dict.admin.dashboard;
+export function ImmigrantDashboardClient({ lang, dict }: ImmigrantDashboardClientProps) {
+    const t = dict.admin.immigrant.dashboard;
     const review = dict.admin.review;
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [originalResponses, setOriginalResponses] = useState<REST_SavedFACApplication[]>([]);
+    const [applications, setApplications] = useState<ImmigrantApplication[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [teacherName, setTeacherName] = useState("");
+    const [adminName, setAdminName] = useState("");
     const [adminId, setAdminId] = useState("");
     const [attention, setAttention] = useState<AttentionFilter>("unseen");
-    const [schoolFilter, setSchoolFilter] = useState("all");
-    const [typeFilter, setTypeFilter] = useState("all");
+    const [ticketFilter, setTicketFilter] = useState("all");
     const [statusFilter, setStatusFilter] = useState("all");
     const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-    const [sortConfig, setSortConfig] = useState<SortConfig | null>({
+    const [sortConfig, setSortConfig] = useState<ImmigrantSortConfig | null>({
         field: "createdDateTime",
         direction: "desc",
     });
@@ -56,24 +56,24 @@ export function DashboardClient({ lang, dict }: DashboardClientProps) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const selectedId = searchParams.get("id");
-    const { reviews, markRecordSeen, saveReview, markManySeen } = useLocalReviews("fac", adminId);
+    const { reviews, markRecordSeen, saveReview, markManySeen } = useLocalReviews("immigrant", adminId);
 
     const load = useCallback(async () => {
         try {
             setIsLoading(true);
             setError(null);
-            const response = await fetch("/api/admin/get-original-responses");
+            const response = await fetch("/api/admin/immigrant/get-applications");
             if (response.status === 401) {
-                router.push(`/${lang}/admin`);
+                router.push(`/${lang}/admin/immigrant`);
                 return;
             }
             if (!response.ok) throw new Error("Failed to fetch");
             const data = await response.json();
-            setOriginalResponses(data);
+            setApplications(data);
             setLastUpdated(new Date());
         } catch {
             setError(review.fetchError);
-            setOriginalResponses([]);
+            setApplications([]);
         } finally {
             setIsLoading(false);
         }
@@ -85,25 +85,25 @@ export function DashboardClient({ lang, dict }: DashboardClientProps) {
 
     useEffect(() => {
         const cookies = parseCookies();
-        if (cookies.teacherName) setTeacherName(cookies.teacherName);
-        if (cookies.teacherId) setAdminId(cookies.teacherId);
+        if (cookies.immigrantAdminName) setAdminName(cookies.immigrantAdminName);
+        if (cookies.immigrantAdminId) setAdminId(cookies.immigrantAdminId);
     }, []);
 
-    const duplicateIds = useMemo(() => findFacDuplicateIds(originalResponses), [originalResponses]);
+    const duplicateIds = useMemo(() => findImmigrantDuplicateIds(applications), [applications]);
 
     const enriched: Enriched[] = useMemo(
         () =>
-            originalResponses.map((r) => {
-                const issues = detectFacIssues(r);
+            applications.map((r) => {
+                const issues = detectImmigrantIssues(r);
                 if (duplicateIds.has(r.$id.value)) issues.push("duplicate");
                 const local = getLocalReview(reviews, r.$id.value);
                 return { ...r, issues, seen: local.seen, localStatus: local.status };
             }),
-        [originalResponses, duplicateIds, reviews]
+        [applications, duplicateIds, reviews]
     );
 
-    const schools = useMemo(() => {
-        const set = new Set(enriched.map(getSchoolValue).filter(Boolean));
+    const tickets = useMemo(() => {
+        const set = new Set(enriched.map((r) => r.ticket?.value).filter(Boolean) as string[]);
         return Array.from(set).sort();
     }, [enriched]);
 
@@ -125,24 +125,24 @@ export function DashboardClient({ lang, dict }: DashboardClientProps) {
             if (attention === "needsAttention" && !hasNeedsAttention(r.issues)) return false;
             if (attention === "missingFiles" && !hasMissingFiles(r.issues)) return false;
             if (attention === "duplicates" && !r.issues.includes("duplicate")) return false;
-            if (schoolFilter !== "all" && getSchoolValue(r) !== schoolFilter) return false;
-            if (typeFilter !== "all" && r.applicationType?.value !== typeFilter) return false;
+            if (ticketFilter !== "all" && r.ticket?.value !== ticketFilter) return false;
             if (statusFilter !== "all" && r.localStatus !== statusFilter) return false;
             if (!term) return true;
             const hay = [
                 r.firstName?.value,
                 r.lastName?.value,
-                r.tz?.value,
-                getSchoolValue(r),
-                r.grade?.value,
                 r.ticket?.value,
+                r.addressCity?.value,
+                r.IDNumber?.value,
+                r.Phone_Number?.value,
+                r.email?.value,
             ]
                 .join(" ")
                 .toLowerCase();
             return hay.includes(term);
         });
-        return sortOriginalResponses(list, sortConfig) as Enriched[];
-    }, [enriched, searchTerm, sortConfig, attention, schoolFilter, typeFilter, statusFilter]);
+        return sortImmigrantApplications(list, sortConfig) as Enriched[];
+    }, [enriched, searchTerm, sortConfig, attention, ticketFilter, statusFilter]);
 
     const pagination = usePagination(filtered, 25);
     const pageItems = pagination.pageItems;
@@ -151,7 +151,7 @@ export function DashboardClient({ lang, dict }: DashboardClientProps) {
         () => filtered.findIndex((r) => r.$id.value === selectedId),
         [filtered, selectedId]
     );
-    const selectedResponse = selectedIndex >= 0 ? filtered[selectedIndex] : null;
+    const selected = selectedIndex >= 0 ? filtered[selectedIndex] : null;
 
     const setSelectedId = useCallback(
         (id: string | null) => {
@@ -185,7 +185,7 @@ export function DashboardClient({ lang, dict }: DashboardClientProps) {
         return () => window.removeEventListener("keydown", onKey);
     }, [selectedId, selectedIndex, filtered, setSelectedId]);
 
-    const handleSort = (field: SortField) => {
+    const handleSort = (field: ImmigrantSortField) => {
         setSortConfig((prev) => {
             if (!prev || prev.field !== field) return { field, direction: "asc" };
             return { field, direction: prev.direction === "asc" ? "desc" : "asc" };
@@ -193,22 +193,23 @@ export function DashboardClient({ lang, dict }: DashboardClientProps) {
     };
 
     const handleLogout = async () => {
-        await fetch("/api/admin/logout", { method: "POST" });
-        router.push(`/${lang}/admin`);
+        await fetch("/api/admin/immigrant/logout", { method: "POST" });
+        router.push(`/${lang}/admin/immigrant`);
         router.refresh();
     };
 
     const handleExport = () => {
         downloadCsv(
-            `fac-submissions-${DateTime.now().toFormat("yyyyMMdd")}.csv`,
-            ["ID", "Name", "School", "Grade", "Type", "TZ", "My Status", "Seen", "Issues", "Submitted"],
+            `immigrant-submissions-${DateTime.now().toFormat("yyyyMMdd")}.csv`,
+            ["ID", "Name", "Gift Code", "City", "Aliyah Date", "Phone", "Email", "My Status", "Seen", "Issues", "Submitted"],
             filtered.map((r) => [
                 r.$id.value,
                 `${r.firstName?.value || ""} ${r.lastName?.value || ""}`.trim(),
-                getSchoolValue(r),
-                r.grade?.value || "",
-                r.applicationType?.value || "",
-                r.tz?.value || "",
+                r.ticket?.value || "",
+                r.addressCity?.value || "",
+                r.aliyahDate?.value || "",
+                r.Phone_Number?.value || "",
+                r.email?.value || "",
                 r.localStatus,
                 r.seen ? "yes" : "no",
                 r.issues.join("; "),
@@ -217,16 +218,14 @@ export function DashboardClient({ lang, dict }: DashboardClientProps) {
         );
     };
 
-    const localReview = selectedResponse
-        ? getLocalReview(reviews, selectedResponse.$id.value)
-        : null;
+    const localReview = selected ? getLocalReview(reviews, selected.$id.value) : null;
 
     return (
         <div>
             <div className="flex flex-wrap justify-between items-center gap-3 mb-6">
                 <h1 className="text-2xl font-bold">{t.title}</h1>
                 <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm text-gray-500">{teacherName || "—"}</span>
+                    <span className="text-sm text-gray-500">{adminName || "—"}</span>
                     {lastUpdated && (
                         <span className="text-xs text-gray-400">
                             {review.updated} {DateTime.fromJSDate(lastUpdated).toFormat("HH:mm")}
@@ -275,25 +274,16 @@ export function DashboardClient({ lang, dict }: DashboardClientProps) {
                     className="w-full px-4 py-2 border rounded-lg md:col-span-2"
                 />
                 <select
-                    value={schoolFilter}
-                    onChange={(e) => setSchoolFilter(e.target.value)}
+                    value={ticketFilter}
+                    onChange={(e) => setTicketFilter(e.target.value)}
                     className="w-full px-3 py-2 border rounded-lg bg-white"
                 >
-                    <option value="all">{review.filters.allSchools}</option>
-                    {schools.map((s) => (
-                        <option key={s} value={s}>
-                            {s}
+                    <option value="all">{review.filters.allCodes}</option>
+                    {tickets.map((code) => (
+                        <option key={code} value={code}>
+                            {code}
                         </option>
                     ))}
-                </select>
-                <select
-                    value={typeFilter}
-                    onChange={(e) => setTypeFilter(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-lg bg-white"
-                >
-                    <option value="all">{review.filters.allTypes}</option>
-                    <option value="Elementary">Elementary</option>
-                    <option value="Highschool">Highschool</option>
                 </select>
                 <select
                     value={statusFilter}
@@ -316,11 +306,11 @@ export function DashboardClient({ lang, dict }: DashboardClientProps) {
                 ) : error ? (
                     <FetchErrorState message={error} retryLabel={review.retry} onRetry={load} />
                 ) : filtered.length === 0 ? (
-                    <div className="p-8 text-center text-gray-500">{t.noStudents}</div>
+                    <div className="p-8 text-center text-gray-500">{t.noApplications}</div>
                 ) : (
                     <>
                         <div className="px-4 py-2 text-sm text-gray-600">
-                            {review.total} {filtered.length}
+                            {t.total} {filtered.length}
                         </div>
                         <VirtualizedTableBody
                             items={pageItems}
@@ -328,12 +318,12 @@ export function DashboardClient({ lang, dict }: DashboardClientProps) {
                             header={
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <SortableHeader field="name" label={t.details.name} currentSort={sortConfig} onSort={handleSort} />
-                                        <SortableHeader field="school" label={t.details.school} currentSort={sortConfig} onSort={handleSort} />
-                                        <SortableHeader field="grade" label={t.details.grade} currentSort={sortConfig} onSort={handleSort} />
-                                        <SortableHeader field="status" label={review.status} currentSort={sortConfig} onSort={handleSort} />
+                                        <ImmigrantSortableHeader field="name" label={t.details.name} currentSort={sortConfig} onSort={handleSort} />
+                                        <ImmigrantSortableHeader field="ticket" label={t.details.giftCode} currentSort={sortConfig} onSort={handleSort} />
+                                        <ImmigrantSortableHeader field="city" label={t.details.city} currentSort={sortConfig} onSort={handleSort} />
+                                        <ImmigrantSortableHeader field="status" label={review.status} currentSort={sortConfig} onSort={handleSort} />
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{review.issues}</th>
-                                        <SortableHeader
+                                        <ImmigrantSortableHeader
                                             field="createdDateTime"
                                             label={t.details.submissionDate}
                                             currentSort={sortConfig}
@@ -342,31 +332,31 @@ export function DashboardClient({ lang, dict }: DashboardClientProps) {
                                     </tr>
                                 </thead>
                             }
-                            renderRow={(response) => (
+                            renderRow={(app) => (
                                 <>
                                     <td
-                                        className={`px-6 py-4 whitespace-nowrap cursor-pointer ${!response.seen ? "font-semibold" : ""}`}
-                                        onClick={() => setSelectedId(response.$id.value)}
+                                        className={`px-6 py-4 whitespace-nowrap cursor-pointer ${!app.seen ? "font-semibold" : ""}`}
+                                        onClick={() => setSelectedId(app.$id.value)}
                                     >
-                                        {!response.seen && (
+                                        {!app.seen && (
                                             <span className="inline-block w-2 h-2 rounded-full bg-sky-500 mr-2 align-middle" title={review.tabs.unseen} />
                                         )}
-                                        {response.firstName.value} {response.lastName.value}
+                                        {app.firstName?.value} {app.lastName?.value}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap cursor-pointer" onClick={() => setSelectedId(response.$id.value)}>
-                                        {getSchoolValue(response)}
+                                    <td className="px-6 py-4 whitespace-nowrap cursor-pointer" onClick={() => setSelectedId(app.$id.value)}>
+                                        {app.ticket?.value}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap cursor-pointer" onClick={() => setSelectedId(response.$id.value)}>
-                                        {response.grade.value}
+                                    <td className="px-6 py-4 whitespace-nowrap cursor-pointer" onClick={() => setSelectedId(app.$id.value)}>
+                                        {app.addressCity?.value}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm cursor-pointer" onClick={() => setSelectedId(response.$id.value)}>
-                                        {response.localStatus}
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm cursor-pointer" onClick={() => setSelectedId(app.$id.value)}>
+                                        {app.localStatus}
                                     </td>
-                                    <td className="px-6 py-4 cursor-pointer" onClick={() => setSelectedId(response.$id.value)}>
-                                        <IssueChips issues={response.issues} labels={review.issueLabels} compact />
+                                    <td className="px-6 py-4 cursor-pointer" onClick={() => setSelectedId(app.$id.value)}>
+                                        <IssueChips issues={app.issues} labels={review.issueLabels} compact />
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap cursor-pointer" onClick={() => setSelectedId(response.$id.value)}>
-                                        {DateTime.fromISO(response.Created_datetime.value).toFormat("dd LLL, yyyy")}
+                                    <td className="px-6 py-4 whitespace-nowrap cursor-pointer" onClick={() => setSelectedId(app.$id.value)}>
+                                        {DateTime.fromISO(app.Created_datetime.value).toFormat("dd LLL, yyyy")}
                                     </td>
                                 </>
                             )}
@@ -392,14 +382,14 @@ export function DashboardClient({ lang, dict }: DashboardClientProps) {
                 )}
             </div>
 
-            <OriginalResponseDetailModal
-                response={selectedResponse}
-                isOpen={!!selectedResponse}
+            <ImmigrantDetailModal
+                application={selected}
+                isOpen={!!selected}
                 onClose={() => setSelectedId(null)}
                 dict={dict}
                 localReview={localReview}
                 onSaveLocalReview={(status, notes) => {
-                    if (selectedResponse) saveReview(selectedResponse.$id.value, status, notes);
+                    if (selected) saveReview(selected.$id.value, status, notes);
                 }}
                 onPrev={selectedIndex > 0 ? () => setSelectedId(filtered[selectedIndex - 1].$id.value) : undefined}
                 onNext={

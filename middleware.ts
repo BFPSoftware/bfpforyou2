@@ -15,8 +15,19 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(request.nextUrl);
     }
 
-    // Check if accessing admin routes (except login)
-    if (pathname.includes("/admin") && !pathname.endsWith("/admin")) {
+    // Immigrant admin routes (except login at .../admin/immigrant)
+    if (pathname.includes("/admin/immigrant")) {
+        const isImmigrantLogin = /\/admin\/immigrant\/?$/.test(pathname);
+        if (!isImmigrantLogin) {
+            const immigrantAdminId = request.cookies.get("immigrantAdminId");
+            if (!immigrantAdminId) {
+                const locale = getLocale(request);
+                request.nextUrl.pathname = `/${locale}/admin/immigrant`;
+                return NextResponse.redirect(request.nextUrl);
+            }
+        }
+    } else if (pathname.includes("/admin") && !pathname.endsWith("/admin")) {
+        // FAC teacher admin routes (except login at .../admin)
         const teacherId = request.cookies.get("teacherId");
         if (!teacherId) {
             const locale = getLocale(request);

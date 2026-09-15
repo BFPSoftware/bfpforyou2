@@ -66,7 +66,7 @@
             "logout": "Logout",
             "studentList": "Student List",
             "noStudents": "No students found",
-            "search": "Search students...",
+            "search": "Search by name, TZ, school, or grade...",
             "sort": {
                 "asc": "Sort ascending",
                 "desc": "Sort descending",
@@ -79,6 +79,84 @@
                 "school": "School",
                 "grade": "Grade",
                 "submissionDate": "Submission Date"
+            }
+        },
+        "review": {
+            "status": "My status",
+            "notes": "My notes",
+            "notesPlaceholder": "e.g. unclear photo, call family...",
+            "save": "Save on this device",
+            "saving": "Saving...",
+            "saved": "Saved on this device",
+            "saveError": "Could not save on this device.",
+            "localOnly": "Personal tracking only - saved in this browser, not shared and not written to Kintone.",
+            "markSeen": "Mark seen",
+            "markPageSeen": "Mark page seen",
+            "seenLabel": "Seen",
+            "issues": "Issues",
+            "fetchError": "Failed to load submissions. Please try again.",
+            "retry": "Retry",
+            "refresh": "Refresh",
+            "exportCsv": "Export CSV",
+            "updated": "Updated",
+            "total": "Total",
+            "prev": "Previous",
+            "next": "Next",
+            "pagination": {
+                "pageSize": "Per page",
+                "showing": "Showing",
+                "of": "of"
+            },
+            "tabs": {
+                "all": "All",
+                "unseen": "New / unseen",
+                "needsAttention": "Needs attention",
+                "missingFiles": "Missing files",
+                "duplicates": "Duplicates"
+            },
+            "filters": {
+                "allSchools": "All schools",
+                "allTypes": "All types",
+                "allStatuses": "All my statuses",
+                "allCodes": "All gift codes"
+            },
+            "issueLabels": {
+                "ok": "OK",
+                "missing_photo": "Missing photo",
+                "missing_attachment_1": "Missing Teudat Oleh p.2-3",
+                "missing_attachment_2": "Missing Teudat Oleh p.4-5",
+                "missing_attachment_3": "Missing Teudat Oleh p.16",
+                "empty_essay": "Incomplete answers",
+                "missing_id": "Missing ID",
+                "missing_phone": "Missing phone",
+                "missing_email": "Missing email",
+                "incomplete_spouse": "Incomplete spouse info",
+                "duplicate": "Possible duplicate"
+            }
+        },
+        "immigrant": {
+            "loginTitle": "New Immigrant Admin Login",
+            "accessCode": "Access Code",
+            "enterAccessCode": "Enter your access code",
+            "login": "Login",
+            "invalidCode": "Invalid access code. Please try again.",
+            "dashboard": {
+                "title": "New Immigrant Applications",
+                "logout": "Logout",
+                "search": "Search by name, gift code, city, ID, phone, or email...",
+                "noApplications": "No applications found",
+                "total": "Total",
+                "details": {
+                    "title": "Application Details",
+                    "close": "Close",
+                    "name": "Name",
+                    "giftCode": "Gift Code",
+                    "city": "City",
+                    "aliyahDate": "Arrival Date",
+                    "submissionDate": "Submission Date",
+                    "formLanguage": "Form Language",
+                    "status": "Status"
+                }
             }
         }
     },

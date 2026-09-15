@@ -28,6 +28,7 @@ export interface BeneficiaryApplicationForm {
     Spouse_Birthday: kintone.fieldTypes.SingleLineText;
     spouseName: kintone.fieldTypes.SingleLineText;
     status: kintone.fieldTypes.DropDown;
+    reviewerNotes?: kintone.fieldTypes.MultiLineText;
 
     Photo: kintone.fieldTypes.File;
     Attachment3: kintone.fieldTypes.File;
@@ -89,6 +90,8 @@ export type REST_BeneficiaryApplicationForm = {
     Spouse_Birthday: KintoneRecordField.SingleLineText;
     spouseName: KintoneRecordField.SingleLineText;
     status: KintoneRecordField.DropDown;
+    /** Optional — add to beneficiary Kintone app for admin review notes */
+    reviewerNotes?: KintoneRecordField.MultiLineText;
 
     Photo: KintoneRecordField.File;
     Attachment3: KintoneRecordField.File;

@@ -129,6 +129,9 @@ export type REST_FACApplication = {
     Check_box: KintoneRecordField.CheckBox;
 
     photo: KintoneRecordField.File;
+    /** Optional review fields — add to FAC original-responses Kintone app */
+    status?: KintoneRecordField.DropDown;
+    reviewerNotes?: KintoneRecordField.MultiLineText;
 };
 export type REST_SavedFACApplication = REST_FACApplication & {
     $id: KintoneRecordField.Id;

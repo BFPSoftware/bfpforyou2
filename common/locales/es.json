@@ -66,6 +66,85 @@
                 "grade": "Grado",
                 "submissionDate": "Fecha de envío"
             }
+        },
+        "review": {
+            "status": "My status",
+            "notes": "My notes",
+            "notesPlaceholder": "e.g. unclear photo, call family...",
+            "save": "Save on this device",
+            "saving": "Saving...",
+            "saved": "Saved on this device",
+            "saveError": "Could not save on this device.",
+            "localOnly": "Personal tracking only - saved in this browser, not shared and not written to Kintone.",
+            "markSeen": "Mark seen",
+            "markPageSeen": "Mark page seen",
+            "seenLabel": "Seen",
+            "issues": "Issues",
+            "fetchError": "Failed to load submissions. Please try again.",
+            "retry": "Retry",
+            "refresh": "Refresh",
+            "exportCsv": "Export CSV",
+            "updated": "Updated",
+            "total": "Total",
+            "prev": "Previous",
+            "next": "Next",
+            "pagination": {
+                "pageSize": "Per page",
+                "showing": "Showing",
+                "of": "of"
+            },
+            "tabs": {
+                "all": "All",
+                "unseen": "New / unseen",
+                "needsAttention": "Needs attention",
+                "missingFiles": "Missing files",
+                "duplicates": "Duplicates"
+            },
+            "filters": {
+                "allSchools": "All schools",
+                "allTypes": "All types",
+                "allStatuses": "All my statuses",
+                "allCodes": "All gift codes"
+            },
+            "issueLabels": {
+                "ok": "OK",
+                "missing_photo": "Missing photo",
+                "missing_attachment_1": "Missing Teudat Oleh p.2-3",
+                "missing_attachment_2": "Missing Teudat Oleh p.4-5",
+                "missing_attachment_3": "Missing Teudat Oleh p.16",
+                "empty_essay": "Incomplete answers",
+                "missing_id": "Missing ID",
+                "missing_phone": "Missing phone",
+                "missing_email": "Missing email",
+                "incomplete_spouse": "Incomplete spouse info",
+                "duplicate": "Possible duplicate"
+            }
+        },
+
+        "immigrant": {
+            "loginTitle": "Inicio de sesión de administrador de nuevos inmigrantes",
+            "accessCode": "Código de acceso",
+            "enterAccessCode": "Introduzca su código de acceso",
+            "login": "Iniciar sesión",
+            "invalidCode": "Código de acceso inválido. Por favor, inténtelo de nuevo.",
+            "dashboard": {
+                "title": "Solicitudes de nuevos inmigrantes",
+                "logout": "Cerrar sesión",
+                "search": "Buscar por nombre, código de regalo o ciudad...",
+                "noApplications": "No se encontraron solicitudes",
+                "total": "Total",
+                "details": {
+                    "title": "Detalles de la solicitud",
+                    "close": "Cerrar",
+                    "name": "Nombre",
+                    "giftCode": "Código de regalo",
+                    "city": "Ciudad",
+                    "aliyahDate": "Fecha de llegada",
+                    "submissionDate": "Fecha de envío",
+                    "formLanguage": "Idioma del formulario",
+                    "status": "Estado"
+                }
+            }
         }
     },
 

@@ -1,7 +1,7 @@
 import { REST_SavedFACApplication } from "@/types/FACApplication";
 import { Student } from "@/types/student";
 
-export type SortField = "name" | "school" | "grade" | "createdDateTime";
+export type SortField = "name" | "school" | "grade" | "createdDateTime" | "status";
 
 /**
  * Get the school value based on application type
@@ -44,6 +44,11 @@ export function sortOriginalResponses(students: REST_SavedFACApplication[], sort
                 break;
             case "grade":
                 comparison = a.grade.value.localeCompare(b.grade.value);
+                break;
+            case "status":
+                comparison = String((a as { localStatus?: string }).localStatus || a.status?.value || "").localeCompare(
+                    String((b as { localStatus?: string }).localStatus || b.status?.value || "")
+                );
                 break;
             default:
                 comparison = 0;

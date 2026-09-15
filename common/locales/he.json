@@ -66,6 +66,85 @@
                 "grade": "כיתה",
                 "submissionDate": "תאריך שליחה"
             }
+        },
+        "review": {
+            "status": "My status",
+            "notes": "My notes",
+            "notesPlaceholder": "e.g. unclear photo, call family...",
+            "save": "Save on this device",
+            "saving": "Saving...",
+            "saved": "Saved on this device",
+            "saveError": "Could not save on this device.",
+            "localOnly": "Personal tracking only - saved in this browser, not shared and not written to Kintone.",
+            "markSeen": "Mark seen",
+            "markPageSeen": "Mark page seen",
+            "seenLabel": "Seen",
+            "issues": "Issues",
+            "fetchError": "Failed to load submissions. Please try again.",
+            "retry": "Retry",
+            "refresh": "Refresh",
+            "exportCsv": "Export CSV",
+            "updated": "Updated",
+            "total": "Total",
+            "prev": "Previous",
+            "next": "Next",
+            "pagination": {
+                "pageSize": "Per page",
+                "showing": "Showing",
+                "of": "of"
+            },
+            "tabs": {
+                "all": "All",
+                "unseen": "New / unseen",
+                "needsAttention": "Needs attention",
+                "missingFiles": "Missing files",
+                "duplicates": "Duplicates"
+            },
+            "filters": {
+                "allSchools": "All schools",
+                "allTypes": "All types",
+                "allStatuses": "All my statuses",
+                "allCodes": "All gift codes"
+            },
+            "issueLabels": {
+                "ok": "OK",
+                "missing_photo": "Missing photo",
+                "missing_attachment_1": "Missing Teudat Oleh p.2-3",
+                "missing_attachment_2": "Missing Teudat Oleh p.4-5",
+                "missing_attachment_3": "Missing Teudat Oleh p.16",
+                "empty_essay": "Incomplete answers",
+                "missing_id": "Missing ID",
+                "missing_phone": "Missing phone",
+                "missing_email": "Missing email",
+                "incomplete_spouse": "Incomplete spouse info",
+                "duplicate": "Possible duplicate"
+            }
+        },
+
+        "immigrant": {
+            "loginTitle": "כניסת מנהל עולים חדשים",
+            "accessCode": "קוד גישה",
+            "enterAccessCode": "הזן קוד גישה",
+            "login": "כניסה",
+            "invalidCode": "קוד גישה שגוי. אנא נסה שנית.",
+            "dashboard": {
+                "title": "בקשות עולים חדשים",
+                "logout": "יציאה",
+                "search": "חיפוש לפי שם, קוד מתנה או עיר...",
+                "noApplications": "לא נמצאו בקשות",
+                "total": "סה״כ",
+                "details": {
+                    "title": "פרטי בקשה",
+                    "close": "סגירה",
+                    "name": "שם",
+                    "giftCode": "קוד מתנה",
+                    "city": "עיר",
+                    "aliyahDate": "תאריך עלייה",
+                    "submissionDate": "תאריך שליחה",
+                    "formLanguage": "שפת הטופס",
+                    "status": "סטטוס"
+                }
+            }
         }
     },
 

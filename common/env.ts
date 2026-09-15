@@ -8,6 +8,8 @@ export const FacOriginalResponsesAppID = process.env.FAC_ORIGINAL_RESPONSES_APPI
 export const FacApplicationOriginalResponsesAppID = process.env.FAC_APPLICATION_ORIGINAL_RESPONSES_APPID;
 export const BfpforyouMasterAPPID = process.env.BFPFORYOU_MASTER_APPID;
 export const TeachersAppID = process.env.KINTONE_TEACHERS_APP_ID;
+/** Same coordinator/teachers Kintone app; immigrant admins use the giftCodes field. */
+export const CoordinatorsAppID = process.env.KINTONE_COORDINATORS_APP_ID || process.env.KINTONE_TEACHERS_APP_ID;
 // Azure Translator (FAC post-submission translation)
 export const AzureTranslatorSubscriptionKey = process.env.AZURE_TRANSLATOR_SUBSCRIPTION_KEY;
 export const AzureTranslatorRegion = process.env.AZURE_TRANSLATOR_REGION;
