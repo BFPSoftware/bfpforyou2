@@ -4,7 +4,7 @@ import { useWatch, Control, useFieldArray, UseFormRegisterReturn, UseFormWatch, 
 // import { Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, IconButton } from '@chakra-ui/react';
 // import { DeleteIcon } from '@chakra-ui/icons';
 
-import { Input, Radio } from "../../components/FormComponents";
+import { Input, Select } from "../../components/FormComponents";
 import { Birthday } from "../../components/Birthday";
 import { Gender, YesNo } from "@/common/enums";
 
@@ -88,9 +88,9 @@ const Children: FC<ChildrenProps> = ({ errors, register, control, useWatch, t })
                                             <Input label={t.children.childLastName} register={register(`children.childTable.${index}.childLastName`)} error={errors?.[index]?.childLastName || undefined} />
                                         </div>
                                         <div className="flex flex-wrap mb-6">
-                                            <Radio label={t.children.childGender} register={register(`children.childTable.${index}.childGender`)} options={Gender(t)} error={errors?.[index]?.childGender || undefined} />
+                                            <Select label={t.children.childGender} register={register(`children.childTable.${index}.childGender`)} options={Gender(t)} error={errors?.[index]?.childGender || undefined} />
                                             <Birthday label={t.children.childBirthday} register_day={register(`children.childTable.${index}.childBirthday.day`)} register_month={register(`children.childTable.${index}.childBirthday.month`)} register_year={register(`children.childTable.${index}.childBirthday.year`)} error={errors?.[index]?.childBirthday || undefined} />
-                                            <Radio label={t.children.childAccompanied} register={register(`children.childTable.${index}.childAccompanied`)} options={YesNo(t)} error={errors?.[index]?.childAccompanied || undefined} />
+                                            <Select label={t.children.childAccompanied} register={register(`children.childTable.${index}.childAccompanied`)} options={YesNo(t)} error={errors?.[index]?.childAccompanied || undefined} />
                                         </div>
                                     </section>
                                 </div>

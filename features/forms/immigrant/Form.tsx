@@ -16,6 +16,17 @@ import logError from "@/common/logError";
 import Spinner from "@/components/spinner/Spinner";
 import { immigrantPageForErrorPath, findFirstErrorPath, scrollToFormError } from "@/lib/form-scroll";
 import { UploadFormProvider, useUploadFormContext } from "../components/UploadFormContext";
+import FormSectionErrorBoundary from "@/components/FormSectionErrorBoundary";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 type NewImmigrantFormProps = { ticket: string };
 
@@ -23,6 +34,8 @@ const NewImmigrantFormInner: FC<NewImmigrantFormProps> = ({ ticket }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [submitError, setSubmitError] = useState("");
     const [page, setPage] = useState(0);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [pendingData, setPendingData] = useState<ImmigrantType | null>(null);
     const { isAnyUploading } = useUploadFormContext();
     const t = useDictionary();
 
@@ -69,19 +82,26 @@ const NewImmigrantFormInner: FC<NewImmigrantFormProps> = ({ ticket }) => {
         setValue("formLang", t.lang || "en");
     }, [t.lang, setValue]);
 
-    const handleOnSubmit: SubmitHandler<ImmigrantType> = async (data) => {
-        if (!window.confirm(t.common.wantToSubmit)) return;
+    const handleOnSubmit: SubmitHandler<ImmigrantType> = (data) => {
+        setPendingData(data);
+        setConfirmOpen(true);
+    };
+
+    const confirmSubmit = async () => {
+        if (!pendingData) return;
         setSubmitError("");
         setIsLoading(true);
+        setConfirmOpen(false);
         try {
-            const res = await handleSubmit_newImmigrant(data, t);
+            const res = await handleSubmit_newImmigrant(pendingData, t);
             if (res) location.href = "/immigrant/thank-you";
             else setSubmitError("Something went wrong. Please try again later.");
         } catch (e) {
-            void logError(e, { data }, "handleSubmit_newImmigrant");
+            void logError(e, { data: pendingData }, "handleSubmit_newImmigrant");
             setSubmitError("Something went wrong. Please try again later.");
         } finally {
             setIsLoading(false);
+            setPendingData(null);
         }
     };
 
@@ -105,42 +125,75 @@ const NewImmigrantFormInner: FC<NewImmigrantFormProps> = ({ ticket }) => {
                 onSubmit={(event) => {
                     void handleSubmit(handleOnSubmit, onError)(event);
                 }}
-                className={`flex flex-col p-[5%] md:p-[10%] pt-[5%] ${t.lang == "he" ? "flex-row-reverse rtl" : "ltr"}`}
+                translate="no"
+                className={`notranslate flex flex-col p-[5%] md:p-[10%] pt-[5%] ${t.lang == "he" ? "flex-row-reverse rtl" : "ltr"}`}
             >
                 <div className="font-bold text-3xl font-serif my-5 text-center">{t.immigrant.title}</div>
-                {page === 0 && (
-                    <FirstPage
-                        setPage={setPage}
-                        errors={formatError}
-                        register={register}
-                        setValue={setValue}
-                        trigger={trigger}
-                        t={t}
-                        watch={watch}
-                    />
-                )}
-                {page === 1 && (
-                    <SecondPage
-                        setPage={setPage}
-                        errors={formatError}
-                        register={register}
-                        trigger={trigger}
-                        useWatch={useWatch}
-                        control={control}
-                        t={t}
-                    />
-                )}
-                {page === 2 && (
-                    <ThirdPage
-                        setPage={setPage}
-                        errors={formatError}
-                        register={register}
-                        t={t}
-                        submitError={submitError}
-                        isSubmitDisabled={isLoading || isAnyUploading}
-                    />
-                )}
+                <div hidden={page !== 0} aria-hidden={page !== 0}>
+                    <FormSectionErrorBoundary routeName="immigrant-page1">
+                        <FirstPage
+                            setPage={setPage}
+                            errors={formatError}
+                            register={register}
+                            setValue={setValue}
+                            trigger={trigger}
+                            t={t}
+                            watch={watch}
+                        />
+                    </FormSectionErrorBoundary>
+                </div>
+                <div hidden={page !== 1} aria-hidden={page !== 1}>
+                    <FormSectionErrorBoundary routeName="immigrant-page2">
+                        <SecondPage
+                            setPage={setPage}
+                            errors={formatError}
+                            register={register}
+                            trigger={trigger}
+                            useWatch={useWatch}
+                            control={control}
+                            t={t}
+                        />
+                    </FormSectionErrorBoundary>
+                </div>
+                <div hidden={page !== 2} aria-hidden={page !== 2}>
+                    <FormSectionErrorBoundary routeName="immigrant-page3">
+                        <ThirdPage
+                            setPage={setPage}
+                            errors={formatError}
+                            register={register}
+                            t={t}
+                            submitError={submitError}
+                            isSubmitDisabled={isLoading || isAnyUploading}
+                        />
+                    </FormSectionErrorBoundary>
+                </div>
             </form>
+
+            <AlertDialog
+                open={confirmOpen}
+                onOpenChange={(open) => {
+                    setConfirmOpen(open);
+                    if (!open && !isLoading) setPendingData(null);
+                }}
+            >
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{t.common.wantToSubmit}</AlertDialogTitle>
+                        <AlertDialogDescription className="sr-only">{t.common.wantToSubmit}</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>{t.select.No}</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={(event) => {
+                                event.preventDefault();
+                                void confirmSubmit();
+                            }}
+                        >
+                            {t.button.submit}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { Input, Select, Radio } from "../../components/FormComponents";
+import { Input, Select } from "../../components/FormComponents";
 import ChildrenTable from "../components/ChildrenTable";
 import { Birthday } from "../../components/Birthday";
 import { Dispatch, SetStateAction, FC } from "react";
@@ -27,6 +27,8 @@ const SecondPage: FC<SecondPageProps> = ({ setPage, errors, register, control, u
 
     const isMarried = useWatch({ control, name: "spouse.maritalStatus" });
     const hasChild = useWatch({ control, name: "children.childStatus" });
+    const showSpouseFields = isMarried === "0";
+    const showChildrenTable = hasChild === "Yes";
 
     return (
         <>
@@ -35,12 +37,12 @@ const SecondPage: FC<SecondPageProps> = ({ setPage, errors, register, control, u
             </div>
             <div className="flex flex-wrap mb-6">
                 <Select label={t.maritalStatus.title} options={MaritalStatus(t)} register={register("spouse.maritalStatus")} required error={errors.spouse?.maritalStatus || undefined} />
-                <div className={"flex flex-wrap md:mb-6 " + (isMarried == "0" || "hidden")}>
+                <div key="spouse-names" className="flex flex-wrap md:mb-6" hidden={!showSpouseFields} aria-hidden={!showSpouseFields}>
                     <Input label={t.spouse.spouseFirstName} register={register("spouse.spouseFirstName")} required error={errors.spouse?.spouseFirstName || undefined} />
                     <Input label={t.spouse.spouseFamilyName} register={register("spouse.spouseFamilyName")} required error={errors.spouse?.spouseFamilyName || undefined} />
                 </div>
             </div>
-            <div className={"flex flex-wrap mb-6 " + (isMarried == "0" || "hidden")}>
+            <div key="spouse-details" className="flex flex-wrap mb-6" hidden={!showSpouseFields} aria-hidden={!showSpouseFields}>
                 <Select label={t.spouse.spouseIDType} options={IDType(t)} register={register("spouse.spouseIDType")} required error={errors.spouse?.spouseIDType || undefined} />
                 <Input label={t.spouse.spouseIDNumber} register={register("spouse.spouseIDNumber")} required error={errors.spouse?.spouseIDNumber || undefined} />
                 <Birthday label={t.spouse.spouseBirthday} register_day={register("spouse.spouseBirthday.day")} register_month={register("spouse.spouseBirthday.month")} register_year={register("spouse.spouseBirthday.year")} error={errors.spouse?.spouseBirthday || undefined} />
@@ -48,12 +50,8 @@ const SecondPage: FC<SecondPageProps> = ({ setPage, errors, register, control, u
             <div className="flex flex-wrap mb-6">
                 <Select label={t.children.title} options={YesNo(t)} register={register("children.childStatus")} required error={errors.children?.childStatus || undefined} />
             </div>
-            <div>
-                {hasChild == "Yes" && (
-                    <>
-                        <ChildrenTable register={register} useWatch={useWatch} control={control} errors={errors.children?.childTable} t={t} />
-                    </>
-                )}
+            <div key="children-table" hidden={!showChildrenTable} aria-hidden={!showChildrenTable}>
+                <ChildrenTable register={register} useWatch={useWatch} control={control} errors={errors.children?.childTable} t={t} />
             </div>
 
             <div className="flex flex-col mt-5">

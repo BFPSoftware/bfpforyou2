@@ -1,6 +1,6 @@
 "use client";
 
-import { Input, Select, Radio } from "../../components/FormComponents";
+import { Input, Select } from "../../components/FormComponents";
 import { Birthday } from "../../components/Birthday";
 import { Dispatch, FC, SetStateAction } from "react";
 import { FieldErrors, UseFormRegister, UseFormTrigger, UseFormWatch } from "react-hook-form";
@@ -102,7 +102,7 @@ const FirstPage: FC<FirstPageProps> = ({ setPage, errors, register, setValue, tr
                 />
             </label>
             <div className="flex flex-wrap mb-6">
-                <Radio label={t.gender.title} options={Gender(t)} register={register("gender")} required error={errors.gender || undefined} />
+                <Select label={t.gender.title} options={Gender(t)} register={register("gender")} required error={errors.gender || undefined} />
             </div>
             <div className="flex flex-wrap mb-6">
                 <Input label={t.originCity} register={register("originCity")} required error={errors.originCity || undefined} />

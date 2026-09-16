@@ -156,16 +156,18 @@ export const Birthday = (props: BirthdayProps) => {
 };
 export const Radio = (props: RadioProps) => {
     return (
-        <label className="flex flex-col space-y-1 w-10 me-5 grow md:max-w-sm">
+        <div className="flex flex-col space-y-1 w-10 me-5 grow md:max-w-sm">
             <div className="font-semibold mb-1">
                 {props.label}
-                {props.required && <span className="text-red-500">*</span>}
+                <span className={props.required ? "text-red-500" : "invisible"} aria-hidden={!props.required}>
+                    *
+                </span>
             </div>
             <div>
                 {Object.entries(props.options).map(([key, value]) => {
                     return (
                         <div key={key}>
-                            <label>
+                            <label className="inline-flex items-center cursor-pointer">
                                 <input className="mx-2" type="radio" value={key} {...props.register} />
                                 {value}
                             </label>
@@ -174,8 +176,10 @@ export const Radio = (props: RadioProps) => {
                 })}
             </div>
 
-            {props.error && <div className="text-red-500 pl-1 pt-1 text-xs">{props.error.message as string}</div>}
-        </label>
+            <div className="text-red-500 pl-1 pt-1 text-xs min-h-[1rem]" aria-live="polite">
+                {props.error?.message || "\u00a0"}
+            </div>
+        </div>
     );
 };
 export const Date = (props: InputProps) => {

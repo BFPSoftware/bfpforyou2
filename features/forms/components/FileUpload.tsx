@@ -365,7 +365,9 @@ const FileUpload: FC<FileUploadProps> = ({
             {!filePreview && hasUploaded && !isUploading && (
                 <div className="text-xs text-green-700 pl-1">{uploadedLabel}</div>
             )}
-            {isError.message && <div className="text-red-500 pl-1 pt-1 text-xs">{isError.message}</div>}
+            <div className="text-red-500 pl-1 pt-1 text-xs min-h-[1rem]" aria-live="polite">
+                {isError.message || "\u00a0"}
+            </div>
         </div>
     );
 };
