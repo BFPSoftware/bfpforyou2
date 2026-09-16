@@ -350,7 +350,7 @@
             "Branco Weiss": "Branco Weiss"
         },
 
-        "enter100": "Introduzca más de 100 caracteres",
+        "enter100": "Introduzca al menos 150 caracteres",
 
         "sectionTitle": {
             "introduction": "Introducción:",
@@ -365,15 +365,17 @@
         "personalLife": "¿Qué te gusta hacer en tu tiempo libre? ¿Cuáles son algunas de tus cosas favoritas?",
         "yourFuture": "¿Qué quieres hacer como carrera? ¿Qué sueños tienes? ¿Cómo te ves en 10 años?",
         "scholarship": "¿Por qué quiere esta beca?",
-        "schoolGoodChallengingLabel": "¿En qué eres bueno/a y qué te resulta difícil en la escuela?",
+        "schoolGoodChallengingLabel": "¿En qué materias eres bueno/a y en cuáles tienes dificultades en la escuela?",
         "photoInfoTitle": "Requisitos de la foto (retrato)",
         "photoInfoDescription": "Sube un retrato claro y bien iluminado en el que tu rostro sea completamente visible.",
         "questions": {
             "introFamilyAndLiving": "Preséntate y describe tu familia y tu situación de vivienda.",
-            "introLiveWith": "¿Vives con tus padres?",
+            "introLiveWith": "¿Vives con tus padres? ¿Abuelos u otros familiares?",
             "introHasSiblings": "¿Tienes hermanos?",
             "introHowManySiblings": "Si es así, ¿cuántos hermanos o hermanas?",
             "schoolLikeFor": "¿Cómo es la escuela para ti?",
+            "schoolGoodChallenging": "¿En qué materias eres bueno/a y en cuáles tienes dificultades en la escuela?",
+            "schoolChallenging": "¿Qué te resulta difícil en la escuela?",
             "personalFreeTime": "¿Qué te gusta hacer en tu tiempo libre?",
             "personalHobbies": "¿Cuáles son algunos de tus pasatiempos, actividades o cosas favoritas?",
             "futureHasPlans": "¿Tienes planes para tu futuro?",
@@ -383,15 +385,16 @@
             "scholarshipReason": "¿Cuáles son las razones por las que quieres esta beca?"
         },
         "defaults": {
-            "introFamilyAndLiving": "Soy \nMi familia \nVivimos ",
-            "introLiveWith": "Vivo con ",
+            "introFamilyAndLiving": "",
+            "introLiveWith": "",
             "introHowManySiblings": "Tengo ",
-            "schoolLikeFor": "Para mí, la escuela es como ",
-            "schoolGoodChallenging": "Soy bueno/a en \nMe resulta difícil \nLas materias escolares con las que tengo dificultades son ",
-            "personalFreeTime": "Cuando tengo tiempo libre, disfruto ",
+            "schoolLikeFor": "La escuela es ",
+            "schoolGoodChallenging": "Tengo dificultades con ",
+            "schoolChallenging": "",
+            "personalFreeTime": "Disfruto ",
             "personalHobbies": "Mis actividades favoritas son ",
-            "futureBecome": "Mi sueño para el futuro es ser/empezar ",
-            "futureDesire": "Me gustaría ",
+            "futureBecome": "",
+            "futureDesire": "",
             "futureTenYears": "En diez años, me veo ",
             "scholarshipReason": "Realmente quiero esta beca porque "
         }

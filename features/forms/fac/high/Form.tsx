@@ -59,6 +59,7 @@ const FachighFormInner: FC<FachighFormProps> = ({ ticket }) => {
             introHowManySiblings: t.highschool.defaults.introHowManySiblings,
             schoolLikeFor: t.highschool.defaults.schoolLikeFor,
             schoolGoodChallenging: t.highschool.defaults.schoolGoodChallenging,
+            schoolChallenging: t.highschool.defaults.schoolChallenging,
             personalFreeTime: t.highschool.defaults.personalFreeTime,
             personalHobbies: t.highschool.defaults.personalHobbies,
             futureBecome: t.highschool.defaults.futureBecome,

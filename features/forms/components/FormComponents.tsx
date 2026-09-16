@@ -68,7 +68,7 @@ export const Textarea = (props: TextareaProps) => {
                     *
                 </span>
             </div>
-            <textarea rows={5} {...props.register} minLength={minLength} className={"text-gray-800 mt-4 rounded-md border py-2 px-3 focus:outline focus:outline-sky-500 focus:ring-4 focus:ring-sky-500/30" + (props.error ? " border-red-500" : " border-inherit")} placeholder={props.placeholder || props.label} />
+            <textarea rows={5} {...props.register} minLength={minLength} className={"text-gray-800 mt-4 rounded-md border py-2 px-3 focus:outline focus:outline-sky-500 focus:ring-4 focus:ring-sky-500/30" + (props.error ? " border-red-500" : " border-inherit")} placeholder={props.placeholder !== undefined ? props.placeholder : props.label} />
             <div className="text-red-500 pl-1 pt-1 text-xs min-h-[1rem]" aria-live="polite">
                 {showCounter ? `${textValue.length}/${minLength}` : props.error?.message || "\u00a0"}
             </div>

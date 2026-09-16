@@ -21,7 +21,7 @@ export const combineFachighAnswers = (f: FachighType) => {
             f.introLiveWith,
             f.introHasSiblings === "Yes" ? f.introHowManySiblings : undefined
         ),
-        aboutSchool: joinNonEmpty(f.schoolLikeFor, f.schoolGoodChallenging),
+        aboutSchool: joinNonEmpty(f.schoolLikeFor, f.schoolGoodChallenging, f.schoolChallenging),
         personalLife: joinNonEmpty(f.personalFreeTime, f.personalHobbies),
         future: joinNonEmpty(
             f.futureHasPlans === "Yes" ? f.futureBecome : f.futureDesire,

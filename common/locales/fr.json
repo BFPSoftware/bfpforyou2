@@ -350,7 +350,7 @@
             "Branco Weiss": "Branco Weiss"
         },
 
-        "enter100": "Veuillez saisir plus de 100 caractères",
+        "enter100": "Veuillez saisir au moins 150 caractères",
 
         "sectionTitle": {
             "introduction": "Introduction :",
@@ -365,15 +365,17 @@
         "personalLife": "Qu’aimez-vous faire pendant votre temps libre ? Quelles sont certaines de vos choses préférées ?",
         "yourFuture": "Que voulez-vous faire comme carrière ? Quels rêves avez-vous ? Comment vous voyez-vous dans 10 ans ?",
         "scholarship": "Pourquoi voulez-vous cette bourse ?",
-        "schoolGoodChallengingLabel": "Dans quoi êtes-vous bon(ne) et qu’est-ce qui est difficile pour vous à l’école ?",
+        "schoolGoodChallengingLabel": "Dans quelles matières êtes-vous bon(ne) et dans lesquelles avez-vous des difficultés à l’école ?",
         "photoInfoTitle": "Exigences pour la photo (portrait)",
         "photoInfoDescription": "Veuillez télécharger un portrait clair et bien éclairé où votre visage est entièrement visible.",
         "questions": {
             "introFamilyAndLiving": "Présentez-vous et décrivez votre famille et votre situation de vie.",
-            "introLiveWith": "Vivez-vous avec vos parents ?",
+            "introLiveWith": "Vivez-vous avec vos parents ? Grands-parents ou d’autres membres de la famille ?",
             "introHasSiblings": "Avez-vous des frères ou sœurs ?",
             "introHowManySiblings": "Si oui, combien de frères ou sœurs ?",
             "schoolLikeFor": "Comment est l’école pour vous ?",
+            "schoolGoodChallenging": "Dans quelles matières êtes-vous bon(ne) et dans lesquelles avez-vous des difficultés à l’école ?",
+            "schoolChallenging": "Qu’est-ce qui est difficile pour vous à l’école ?",
             "personalFreeTime": "Qu’aimez-vous faire pendant votre temps libre ?",
             "personalHobbies": "Quels sont certains de vos passe-temps, activités ou choses préférées ?",
             "futureHasPlans": "Avez-vous des projets pour votre avenir ?",
@@ -383,15 +385,16 @@
             "scholarshipReason": "Quelles sont les raisons pour lesquelles vous voulez cette bourse ?"
         },
         "defaults": {
-            "introFamilyAndLiving": "Je suis \nMa famille \nNous vivons ",
-            "introLiveWith": "Je vis avec ",
+            "introFamilyAndLiving": "",
+            "introLiveWith": "",
             "introHowManySiblings": "J’ai ",
-            "schoolLikeFor": "Pour moi, l’école est comme ",
-            "schoolGoodChallenging": "Je suis bon(ne) en \nC’est difficile pour moi de \nLes matières scolaires avec lesquelles j’ai des difficultés sont ",
-            "personalFreeTime": "Quand j’ai du temps libre, j’aime ",
+            "schoolLikeFor": "L’école est ",
+            "schoolGoodChallenging": "J’ai des difficultés avec ",
+            "schoolChallenging": "",
+            "personalFreeTime": "J’aime ",
             "personalHobbies": "Mes activités préférées sont ",
-            "futureBecome": "Mon rêve pour l’avenir est de devenir/de créer ",
-            "futureDesire": "J’aimerais ",
+            "futureBecome": "",
+            "futureDesire": "",
             "futureTenYears": "Dans dix ans, je me vois ",
             "scholarshipReason": "Je veux vraiment cette bourse parce que "
         }

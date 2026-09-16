@@ -32,6 +32,7 @@ const date_optional: z.ZodEffects<z.ZodOptional<z.ZodString>> = z.string().optio
 const string50: z.ZodString = z.string().min(1).max(50, error_maxLength);
 const string300: z.ZodString = z.string().min(1).max(300, error_maxLength);
 const string2000: z.ZodString = z.string().min(1).max(2000, error_maxLength);
+const string150to2000: z.ZodString = z.string().min(150).max(2000, error_maxLength);
 const string4000: z.ZodString = z.string().min(1).max(4000, error_maxLength);
 const string_optional: z.ZodOptional<z.ZodString> = z.string().optional();
 const uploadedPhoto = z
@@ -79,24 +80,24 @@ const returning = string50;
 const madeAliyah = string300;
 
 // Section 2
-// TODO: min characters and show counter
-const introFamilyAndLiving = string2000;
+const introFamilyAndLiving = string150to2000;
 const introLiveWith = string2000;
 const introHasSiblings = z.enum(["Yes", "No"]);
 const introHowManySiblings = z.string().max(2000, error_maxLength).optional();
 
-const schoolLikeFor = string2000;
+const schoolLikeFor = string150to2000;
 const schoolGoodChallenging = string2000;
+const schoolChallenging = string2000;
 
-const personalFreeTime = string2000;
-const personalHobbies = string2000;
+const personalFreeTime = string150to2000;
+const personalHobbies = string150to2000;
 
 const futureHasPlans = z.enum(["Yes", "No"]);
 const futureBecome = z.string().max(2000, error_maxLength).optional();
 const futureDesire = z.string().max(2000, error_maxLength).optional();
-const futureTenYears = string2000;
+const futureTenYears = string150to2000;
 
-const scholarshipReason = string2000;
+const scholarshipReason = string150to2000;
 
 // Section 3
 const submittedBy = string300;
@@ -111,6 +112,9 @@ export const customErrorMap =
     (error, ctx) => {
         switch (error.code) {
             case z.ZodIssueCode.too_small:
+                if (error.type === "string" && typeof error.minimum === "number" && error.minimum > 1) {
+                    return { message: t.highschool.enter100 };
+                }
                 return { message: t.error.required };
             case z.ZodIssueCode.too_big:
                 return { message: t.error.too_big };
@@ -155,6 +159,7 @@ export const fachighSchema = z
 
         schoolLikeFor,
         schoolGoodChallenging,
+        schoolChallenging,
 
         personalFreeTime,
         personalHobbies,
@@ -219,20 +224,20 @@ export const defaultData: z.infer<typeof fachighSchema> = {
     school: "HaDekel",
     returning: "No",
     madeAliyah: "",
-    introFamilyAndLiving: "I am \nMy family is \nWe live ",
-    introLiveWith: "I live with ",
+    introFamilyAndLiving: "I am a student living with my family. We have been in Israel for several years and I want to share more about our living situation and daily life together at home.",
+    introLiveWith: "I live with my parents.",
     introHasSiblings: "Yes",
-    introHowManySiblings: "I have ",
-    schoolLikeFor: "For me, my school is like ",
-    // keep defaultData concise; the form itself provides multi-line prefill
-    schoolGoodChallenging: "I am good at \nIt is challenging for me to \nThe school subjects that I struggle with are ",
-    personalFreeTime: "When I have my free time, I enjoy ",
-    personalHobbies: "My favorite activities are ",
+    introHowManySiblings: "I have two siblings.",
+    schoolLikeFor: "School is a place where I learn every day with friends and teachers, and I want to describe what my experience is like across classes and activities.",
+    schoolGoodChallenging: "I struggle with math sometimes.",
+    schoolChallenging: "Staying focused during long tests can be challenging for me.",
+    personalFreeTime: "I enjoy spending time with friends, playing sports, and reading books when I have free time after school and on weekends.",
+    personalHobbies: "My favorite activities are soccer, drawing, listening to music, and spending time outdoors with my family and friends whenever I can.",
     futureHasPlans: "Yes",
-    futureBecome: "My future dream is to become/start ",
-    futureDesire: "I desire to ",
-    futureTenYears: "In ten years, I see myself ",
-    scholarshipReason: "I really want this scholarship because ",
+    futureBecome: "I would like to become a teacher and help other students.",
+    futureDesire: "",
+    futureTenYears: "In ten years, I see myself building a career I care about, supporting my family, and continuing to grow as a person in my community.",
+    scholarshipReason: "I really want this scholarship because it would help me continue my education and give me more opportunities to succeed in school and in the future.",
     submittedBy: "Parent",
     relationship: "Father",
     check1: false,

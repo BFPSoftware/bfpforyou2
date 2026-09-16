@@ -75,10 +75,10 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
                 <label>{t.highschool.sectionTitle.introduction}</label>
             </div>
             <Row>
-                <Textarea label={q.introFamilyAndLiving} register={register("introFamilyAndLiving")} required watch={watch} error={errors.introFamilyAndLiving || undefined} minLength={1} />
+                <Textarea label={q.introFamilyAndLiving} register={register("introFamilyAndLiving")} required watch={watch} error={errors.introFamilyAndLiving || undefined} minLength={150} placeholder="" />
             </Row>
             <Row>
-                <Textarea label={q.introLiveWith} register={register("introLiveWith")} required watch={watch} error={errors.introLiveWith || undefined} minLength={1} />
+                <Textarea label={q.introLiveWith} register={register("introLiveWith")} required watch={watch} error={errors.introLiveWith || undefined} minLength={1} placeholder="" />
             </Row>
             <Row>
                 <Select
@@ -98,19 +98,22 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
                 <label>{t.highschool.sectionTitle.school}</label>
             </div>
             <Row>
-                <Textarea label={q.schoolLikeFor} register={register("schoolLikeFor")} required watch={watch} error={errors.schoolLikeFor || undefined} minLength={1} />
+                <Textarea label={q.schoolLikeFor} register={register("schoolLikeFor")} required watch={watch} error={errors.schoolLikeFor || undefined} minLength={150} />
             </Row>
             <Row>
-                <Textarea label={t.highschool.schoolGoodChallengingLabel} register={register("schoolGoodChallenging")} required watch={watch} error={errors.schoolGoodChallenging || undefined} minLength={1} />
+                <Textarea label={q.schoolGoodChallenging} register={register("schoolGoodChallenging")} required watch={watch} error={errors.schoolGoodChallenging || undefined} minLength={1} />
+            </Row>
+            <Row>
+                <Textarea label={q.schoolChallenging} register={register("schoolChallenging")} required watch={watch} error={errors.schoolChallenging || undefined} minLength={1} placeholder="" />
             </Row>
             <div className="text-2xl font-bold my-10">
                 <label>{t.highschool.sectionTitle.personalLife}</label>
             </div>
             <Row>
-                <Textarea label={q.personalFreeTime} register={register("personalFreeTime")} required watch={watch} error={errors.personalFreeTime || undefined} minLength={1} />
+                <Textarea label={q.personalFreeTime} register={register("personalFreeTime")} required watch={watch} error={errors.personalFreeTime || undefined} minLength={150} />
             </Row>
             <Row>
-                <Textarea label={q.personalHobbies} register={register("personalHobbies")} required watch={watch} error={errors.personalHobbies || undefined} minLength={1} />
+                <Textarea label={q.personalHobbies} register={register("personalHobbies")} required watch={watch} error={errors.personalHobbies || undefined} minLength={150} />
             </Row>
             <div className="text-2xl font-bold my-10">
                 <label>{t.highschool.sectionTitle.yourFuture}</label>
@@ -126,22 +129,22 @@ const FirstPage: FC<FirstPageProps> = ({ errors, register, setValue, t, watch })
             </Row>
             <div key="future-become" hidden={!showFutureBecome} aria-hidden={!showFutureBecome}>
                 <Row>
-                    <Textarea label={q.futureBecome} register={register("futureBecome")} required={false} watch={watch} error={errors.futureBecome || undefined} minLength={1} />
+                    <Textarea label={q.futureBecome} register={register("futureBecome")} required={false} watch={watch} error={errors.futureBecome || undefined} minLength={1} placeholder="" />
                 </Row>
             </div>
             <div key="future-desire" hidden={!showFutureDesire} aria-hidden={!showFutureDesire}>
                 <Row>
-                    <Textarea label={q.futureDesire} register={register("futureDesire")} required={false} watch={watch} error={errors.futureDesire || undefined} minLength={1} />
+                    <Textarea label={q.futureDesire} register={register("futureDesire")} required={false} watch={watch} error={errors.futureDesire || undefined} minLength={1} placeholder="" />
                 </Row>
             </div>
             <Row>
-                <Textarea label={q.futureTenYears} register={register("futureTenYears")} required watch={watch} error={errors.futureTenYears || undefined} minLength={1} />
+                <Textarea label={q.futureTenYears} register={register("futureTenYears")} required watch={watch} error={errors.futureTenYears || undefined} minLength={150} />
             </Row>
             <div className="text-2xl font-bold my-10">
                 <label>{t.highschool.sectionTitle.scholarship}</label>
             </div>
             <Row>
-                <Textarea label={q.scholarshipReason} register={register("scholarshipReason")} required watch={watch} error={errors.scholarshipReason || undefined} minLength={1} />
+                <Textarea label={q.scholarshipReason} register={register("scholarshipReason")} required watch={watch} error={errors.scholarshipReason || undefined} minLength={150} />
             </Row>
             <div className="my-5"></div>
             <Row>
