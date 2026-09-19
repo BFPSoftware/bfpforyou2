@@ -37,7 +37,6 @@ Form image attachments (FAC, immigrant) are compressed client-side when needed (
 
 ## Deploy
 
-- **Vercel** — see `vercel.json` (function duration limits for API/actions).
-- **Docker** — Windows-container `Dockerfile`; image conventionally `ghcr.io/bfpsoftware/bfpforyou2`. Requires Next `output: "standalone"` (already set in `next.config.ts`).
+See the deploy matrix in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (Vercel vs Windows Docker, limits, env).
 
 Production and deployment changes need human approval.

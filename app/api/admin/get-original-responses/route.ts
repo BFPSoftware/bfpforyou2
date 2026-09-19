@@ -1,10 +1,9 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import handleCatch from "@/common/handleCatch";
-import { FacOriginalResponsesAppID } from "@/common/env";
+import { FacOriginalResponsesAppID, requireBFPForYouAdminsAppID } from "@/common/env";
 import client from "@/hooks/useKintone";
 import { DateTime } from "luxon";
-import { CoordinatorsApp } from "@/features/admin/shared/setAdminSessionCookies";
 
 const ElemSchools = ["Jabutinsky", "Levi Eshkol", "Uziel", "HaDekel", "Zalman Aran", "Ben Zvi", "Orot - Boys", "Orot - Girls"];
 const Highschools = ["Devir", "Shachar", "Branco Weiss"];
@@ -18,7 +17,7 @@ export async function GET() {
             return new NextResponse("Unauthorized", { status: 401 });
         }
         const teacherResponse = await client.record.getRecord({
-            app: CoordinatorsApp,
+            app: requireBFPForYouAdminsAppID(),
             id: teacherId.value,
         });
 

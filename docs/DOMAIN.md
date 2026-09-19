@@ -29,7 +29,7 @@ Locales: English, Hebrew, Russian, Spanish, French. Locale is part of the URL an
 
 ## Admin roles
 
-Admins authenticate with an **access code** against the teachers/coordinators Kintone app (not end-user passwords).
+Admins authenticate with an **access code** against the BFP for You admins Kintone app (`BFPFORYOU_ADMINS_APPID`) — not end-user passwords.
 
 | Role | Login path | Session cookies | Scope |
 |------|------------|-----------------|-------|

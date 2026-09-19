@@ -16,7 +16,6 @@ export default function Home() {
     const t = useDictionary();
     const [code, setCode] = useState("");
     const [isCodeValid, setIsCodeValid] = useState<true | false>(true);
-    console.log("isCodeValid", isCodeValid);
     const [isCodeClosed, setIsCodeClosed] = useState<true | false | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     // 10 digits number

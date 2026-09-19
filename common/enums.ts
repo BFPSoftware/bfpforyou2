@@ -1,4 +1,3 @@
-import { TFunction } from "i18next";
 import { Dictionary } from "./locales/Dictionary-provider";
 
 export const Language = (t: Dictionary) => ({
@@ -74,10 +73,4 @@ export const HighGrades = (_t?: Dictionary) => ({
     10: "10",
     11: "11",
     12: "12",
-});
-
-/** @deprecated Use ElemGrades or HighGrades */
-export const Grades = (t: Dictionary) => ({
-    ...ElemGrades(t),
-    ...HighGrades(t),
 });

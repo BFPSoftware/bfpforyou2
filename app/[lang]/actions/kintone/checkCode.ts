@@ -15,7 +15,6 @@ const schema = z.object({
 
 export const checkCode = actionClient.schema(schema).action(async ({ parsedInput: { code } }) => {
     try {
-        debugger;
         const query1 = `status in ("Active")`;
         const settings = await client.record.getAllRecords({
             app: BfpforyouMasterAPPID as string,

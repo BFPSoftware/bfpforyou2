@@ -1,11 +1,10 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import handleCatch from "@/common/handleCatch";
-import { BeneficiaryApplicationFormAppID } from "@/common/env";
+import { BeneficiaryApplicationFormAppID, requireBFPForYouAdminsAppID } from "@/common/env";
 import client from "@/hooks/useKintone";
 import { DateTime } from "luxon";
 import { parseGiftCodes } from "@/features/admin/immigrant/utils/giftCodes";
-import { CoordinatorsApp } from "@/features/admin/shared/setAdminSessionCookies";
 
 const CODE_CHUNK_SIZE = 50;
 
@@ -19,7 +18,7 @@ export async function GET() {
         }
 
         const adminResponse = await client.record.getRecord({
-            app: CoordinatorsApp,
+            app: requireBFPForYouAdminsAppID(),
             id: immigrantAdminId.value,
         });
 

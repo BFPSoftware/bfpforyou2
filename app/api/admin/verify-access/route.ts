@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import handleCatch from "@/common/handleCatch";
+import { requireBFPForYouAdminsAppID } from "@/common/env";
 import client from "@/hooks/useKintone";
-import { CoordinatorsApp, setAdminSessionCookies } from "@/features/admin/shared/setAdminSessionCookies";
+import { setAdminSessionCookies } from "@/features/admin/shared/setAdminSessionCookies";
 
 export async function POST(request: Request) {
     try {
@@ -12,7 +13,7 @@ export async function POST(request: Request) {
         }
 
         const { records } = await client.record.getRecords({
-            app: CoordinatorsApp,
+            app: requireBFPForYouAdminsAppID(),
             query: `accessCode = "${accessCode.trim()}"`,
             fields: ["$id", "accessCode", "name", "school", "giftCodes"],
         });

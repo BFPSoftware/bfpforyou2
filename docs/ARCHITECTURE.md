@@ -29,7 +29,7 @@ There is **no traditional application database**. Persistent data lives in **Cyb
 | `types/` | Shared TypeScript types (programs, locales, Kintone field shapes) |
 | `public/` | Static assets |
 
-Localized pages live under `app/[lang]/…`. Supported locales: `en`, `he`, `ru`, `es`, `fr` (`types/locales.ts`). Dictionaries are JSON under `common/locales/` with `Dictionary-provider` — not a full i18next runtime, despite some i18next packages in `package.json`.
+Localized pages live under `app/[lang]/…`. Supported locales: `en`, `he`, `ru`, `es`, `fr` (`types/locales.ts`). Dictionaries are JSON under `common/locales/` with `Dictionary-provider` (custom dictionaries, not i18next).
 
 ## Request flow (high level)
 
@@ -59,16 +59,16 @@ Credentials and app IDs come from env via `common/env.ts`. Important apps includ
 - Master settings (`BFPFORYOU_MASTER_APPID`) — ticket/code ranges and program mapping
 - Beneficiary / immigrant applications
 - FAC applications and original-response apps
-- Teachers/coordinators (`KINTONE_TEACHERS_APP_ID` / `KINTONE_COORDINATORS_APP_ID`)
+- Teachers/coordinators admins (`BFPFORYOU_ADMINS_APPID` → `BFPForYouAdminsAppID`)
 - Error logs
 
 Client: `@kintone/rest-api-client` via `hooks/useKintone.ts` and related helpers.
 
-**File uploads:** Prefer `POST /api/kintone/uploadFile`. Images may be compressed client-side before upload. Older server-action upload paths are deprecated.
+**File uploads:** Prefer `POST /api/kintone/uploadFile`. Images may be compressed client-side before upload.
 
 ### Email
 
-Gmail via Google OAuth2 + nodemailer (`lib/email-service.ts`, `GOOGLE_*` env vars). Contact and confirmation endpoints under `app/api/email/`. Do not assume SendGrid is active despite leftover naming in places.
+Gmail via Google OAuth2 + nodemailer (`lib/email-service.ts`, `GOOGLE_*` env vars). Contact and confirmation endpoints under `app/api/email/`.
 
 ### Azure Translator
 
@@ -91,12 +91,22 @@ Under `app/api/`:
 
 ## Deployment
 
-Two supported targets:
+Two supported targets. Prefer documenting env/limit differences before changing upload or timeout behavior.
 
-1. **Vercel** — `vercel.json` sets `maxDuration: 20` for API and action paths. `next.config.ts` uses `output: "standalone"` and a large server-action body limit for uploads.
-2. **Docker (Windows containers)** — `Dockerfile` builds a standalone Node server on port 3000; image conventionally tagged `ghcr.io/bfpsoftware/bfpforyou2`.
+| | **Vercel** | **Docker (Windows)** |
+|--|------------|----------------------|
+| Config | `vercel.json` | `Dockerfile` |
+| Runtime | Vercel Node serverless / functions | Standalone `node server.js` on port 3000 |
+| Image | — | Conventionally `ghcr.io/bfpsoftware/bfpforyou2` |
+| Function duration | `maxDuration: 20` for `app/api/**/*.ts` and `app/[lang]/actions/**/*.ts` | Process lifetime (host-managed) |
+| Body / uploads | Watch Vercel request body limits; client compresses images; `next.config.ts` raises server-action body limit for large payloads | Generally host/network limited; still use `/api/kintone/uploadFile` |
+| Next output | `output: "standalone"` in `next.config.ts` (also used by Docker) | Requires standalone build (already configured) |
 
-Document deploy or env changes carefully; production changes need human approval.
+**Env (both):** Kintone (`KINTONE_USERNAME`, `KINTONE_PASSWORD`, app ID vars including `BFPFORYOU_ADMINS_APPID`), Google OAuth mail (`GOOGLE_*`), optional Azure Translator and `MAINTENANCE_MODE`. Never commit `.env`.
+
+**Known divergences:** Vercel has stricter request duration and body limits than a long-running Docker Node process. Form submit comments and `lib/kintone-client-upload.ts` may mention Vercel-oriented caps — validate both targets when changing upload or email timing.
+
+Production and deployment changes need human approval.
 
 ## Constraints for changes
 

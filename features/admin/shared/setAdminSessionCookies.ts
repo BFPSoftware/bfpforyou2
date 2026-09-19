@@ -1,8 +1,5 @@
 import { cookies } from "next/headers";
-import { TeachersAppID, CoordinatorsAppID } from "@/common/env";
 import { parseGiftCodes } from "@/features/admin/immigrant/utils/giftCodes";
-
-export const CoordinatorsApp = CoordinatorsAppID || TeachersAppID || "257";
 
 const cookieOpts = {
     httpOnly: false,

@@ -76,9 +76,6 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json(resp);
     } catch (e: any) {
-        console.log(e);
-        console.log("e.errors", e.errors);
-
         // Check for expired file key errors
         if (e.errors && Array.isArray(e.errors)) {
             const expiredFileError = e.errors.find(
@@ -102,9 +99,3 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Server error" }, { status: 505 });
     }
 }
-
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
