@@ -1,40 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BFP for You (`bfpforyou2`)
 
-## Getting Started
+Multilingual Next.js application for **BFP for You** program applications (FAC Elementary, FAC Highschool, New Immigrant) and admin review dashboards. Application data is stored in **Kintone**.
+
+## Stack (summary)
+
+- Next.js 15 (App Router) · React 19 · TypeScript
+- Tailwind CSS · shadcn/ui
+- Yarn (`yarn.lock`)
+- Kintone · Gmail (OAuth) email · Azure Translator (FAC)
+
+More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · domain rules: [docs/DOMAIN.md](docs/DOMAIN.md).
+
+## Getting started
+
+```bash
+yarn install
+yarn dev
+```
+
+Open [http://localhost:3000](http://localhost:3000). Copy local secrets from your team’s env template into `.env` (never commit it). Required categories include Kintone credentials/app IDs, Google OAuth for mail, and optionally Azure Translator and `MAINTENANCE_MODE`.
+
+Useful scripts: `yarn lint`, `yarn build`, `yarn start`.
+
+## Working with AI and Issues
+
+Development is Issue-driven: understand → plan → implement → verify → human review → ship.
+
+- [AGENTS.md](AGENTS.md) — rules for AI assistants
+- [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) — Issues, verification, git discipline
+
+Only humans decide what is **shipped**.
 
 ## Kintone image uploads
 
-Image attachments (FAC, immigrant) are **compressed client-side** (when needed) to stay under Vercel request body limits, then uploaded via a **Next.js server action** to Kintone. No browser-to-Kintone CORS configuration is required.
+Form image attachments (FAC, immigrant) are compressed client-side when needed (e.g. to stay under request body limits), then uploaded via **`POST /api/kintone/uploadFile`**. Prefer that API route over deprecated server-action upload helpers. No browser-to-Kintone CORS setup is required for this path.
 
-First, run the development server:
+## Deploy
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Vercel** — see `vercel.json` (function duration limits for API/actions).
+- **Docker** — Windows-container `Dockerfile`; image conventionally `ghcr.io/bfpsoftware/bfpforyou2`. Requires Next `output: "standalone"` (already set in `next.config.ts`).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Production and deployment changes need human approval.
